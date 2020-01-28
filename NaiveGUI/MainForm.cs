@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Web;
+using System.Linq;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
 using fastJSON;
-using System.Web;
-using System.Linq;
 
 namespace NaiveGUI
 {
@@ -72,7 +72,7 @@ namespace NaiveGUI
                         var group = l["remote"]["group"];
                         foreach(var r in Remotes)
                         {
-                            if(r.Name==name && r.Group==group)
+                            if(r.Name == name && r.Group == group)
                             {
                                 listener.Remote = r;
                                 break;
@@ -218,7 +218,7 @@ namespace NaiveGUI
                     var p = tree_remotes.Nodes.Add(r.Group, r.Group);
                     p.ImageKey = p.SelectedImageKey = "Dots";
 #if HORSE
-                    if(r.Group.EndsWith("horse",StringComparison.CurrentCultureIgnoreCase))
+                    if(r.Group.EndsWith("horse", StringComparison.CurrentCultureIgnoreCase))
                     {
                         p.ImageKey = p.SelectedImageKey = "Horse";
                     }
@@ -286,6 +286,12 @@ namespace NaiveGUI
             }
         }
 
+        private void checkBox_host_CheckedChanged(object sender, EventArgs e) => textBox_host.PasswordChar = checkBox_host.Checked ? '\0' : '*';
+
+        private void checkBox_username_CheckedChanged(object sender, EventArgs e) => textBox_username.PasswordChar = checkBox_host.Checked ? '\0' : '*';
+
+        private void checkBox_password_CheckedChanged(object sender, EventArgs e) => textBox_password.PasswordChar = checkBox_host.Checked ? '\0' : '*';
+
         private void tree_remotes_AfterCheck(object sender, TreeViewEventArgs e)
         {
             if(CurrentListener == null)
@@ -331,7 +337,7 @@ namespace NaiveGUI
             {
                 if(e.Item.Checked)
                 {
-                    if(l.Remote==null)
+                    if(l.Remote == null)
                     {
                         e.Item.Checked = false;
                         MessageBox.Show("You must select a remote before starting listener! Tick the checkbox in remote list to select it.", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
