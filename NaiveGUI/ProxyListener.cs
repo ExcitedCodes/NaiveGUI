@@ -19,9 +19,9 @@ namespace NaiveGUI
 
         public bool Working => BaseProcess == null ? false : BaseProcess.HasExited;
 
-        public ProxyListener()
+        public ProxyListener(UriBuilder listen)
         {
-
+            Listen = listen;
         }
 
         public void Start()
@@ -39,16 +39,46 @@ namespace NaiveGUI
             {
                 sb.Append(" --quic-version=").Append(Remote.QuicVersion);
             }
-            sb.Append(" --log=\"\"");
+            bool logging = MainForm.Instance.checkBox_logging.Checked;
+            if(logging)
+            {
+                sb.Append(" --log=\"\"");
+            }
             // TODO: --log, --log-net-log, --ssl-key-log-file
             var start = new ProcessStartInfo(NaivePath, sb.ToString())
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute=false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true
+                CreateNoWindow = true,
+                UseShellExecute = !logging,
+                RedirectStandardError = logging,
+                RedirectStandardOutput = logging
             };
             BaseProcess = Process.Start(start);
+            BaseProcess.Exited += (s, e) =>
+            {
+
+            };
+            if(logging)
+            {
+                BaseProcess.OutputDataReceived += (s, e) =>
+                {
+                    if(e.Data != null)
+                        MainForm.Instance.Invoke(new Action(() =>
+                        {
+                            MainForm.Instance.textBox_log.AppendText(e.Data);
+                        }));
+                };
+                BaseProcess.BeginOutputReadLine();
+                BaseProcess.ErrorDataReceived += (s, e) =>
+                {
+                    if(e.Data != null)
+                        MainForm.Instance.Invoke(new Action(() =>
+                        {
+                            MainForm.Instance.textBox_log.AppendText(e.Data);
+                        }));
+                };
+                BaseProcess.BeginErrorReadLine();
+            }
         }
 
         public void Stop()
@@ -68,7 +98,5 @@ namespace NaiveGUI
             catch { }
             BaseProcess = null;
         }
-
-
     }
 }
