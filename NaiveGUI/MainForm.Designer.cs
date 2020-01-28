@@ -42,12 +42,12 @@
             this.checkBox_username = new System.Windows.Forms.CheckBox();
             this.checkBox_password = new System.Windows.Forms.CheckBox();
             this.checkBox_host = new System.Windows.Forms.CheckBox();
-            this.button_save = new System.Windows.Forms.Button();
-            this.button_discard = new System.Windows.Forms.Button();
+            this.button_remote_save = new System.Windows.Forms.Button();
+            this.button_remote_discard = new System.Windows.Forms.Button();
             this.checkBox_padding = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox_remote_config = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button_remote_delete = new System.Windows.Forms.Button();
             this.textBox_group = new System.Windows.Forms.TextBox();
             this.textBox_name = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -62,6 +62,7 @@
             this.groupBox_remotes = new System.Windows.Forms.GroupBox();
             this.checkBox_logging = new System.Windows.Forms.CheckBox();
             this.textBox_log = new System.Windows.Forms.TextBox();
+            this.button_subscription = new System.Windows.Forms.Button();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
@@ -186,25 +187,25 @@
             this.checkBox_host.UseVisualStyleBackColor = true;
             this.checkBox_host.CheckedChanged += new System.EventHandler(this.checkBox_host_CheckedChanged);
             // 
-            // button_save
+            // button_remote_save
             // 
-            this.button_save.Location = new System.Drawing.Point(177, 207);
-            this.button_save.Name = "button_save";
-            this.button_save.Size = new System.Drawing.Size(64, 23);
-            this.button_save.TabIndex = 20;
-            this.button_save.Text = "Save";
-            this.button_save.UseVisualStyleBackColor = true;
-            this.button_save.Click += new System.EventHandler(this.button_save_Click);
+            this.button_remote_save.Location = new System.Drawing.Point(177, 207);
+            this.button_remote_save.Name = "button_remote_save";
+            this.button_remote_save.Size = new System.Drawing.Size(64, 23);
+            this.button_remote_save.TabIndex = 20;
+            this.button_remote_save.Text = "Save";
+            this.button_remote_save.UseVisualStyleBackColor = true;
+            this.button_remote_save.Click += new System.EventHandler(this.button_remote_save_Click);
             // 
-            // button_discard
+            // button_remote_discard
             // 
-            this.button_discard.Location = new System.Drawing.Point(107, 207);
-            this.button_discard.Name = "button_discard";
-            this.button_discard.Size = new System.Drawing.Size(64, 23);
-            this.button_discard.TabIndex = 21;
-            this.button_discard.Text = "Discard";
-            this.button_discard.UseVisualStyleBackColor = true;
-            this.button_discard.Click += new System.EventHandler(this.button_discard_Click);
+            this.button_remote_discard.Location = new System.Drawing.Point(107, 207);
+            this.button_remote_discard.Name = "button_remote_discard";
+            this.button_remote_discard.Size = new System.Drawing.Size(64, 23);
+            this.button_remote_discard.TabIndex = 21;
+            this.button_remote_discard.Text = "Discard";
+            this.button_remote_discard.UseVisualStyleBackColor = true;
+            this.button_remote_discard.Click += new System.EventHandler(this.button_remote_discard_Click);
             // 
             // checkBox_padding
             // 
@@ -227,7 +228,7 @@
             // 
             // groupBox_remote_config
             // 
-            this.groupBox_remote_config.Controls.Add(this.button1);
+            this.groupBox_remote_config.Controls.Add(this.button_remote_delete);
             this.groupBox_remote_config.Controls.Add(this.textBox_group);
             this.groupBox_remote_config.Controls.Add(this.textBox_name);
             this.groupBox_remote_config.Controls.Add(this.label6);
@@ -239,9 +240,9 @@
             this.groupBox_remote_config.Controls.Add(this.label4);
             this.groupBox_remote_config.Controls.Add(this.checkBox_padding);
             this.groupBox_remote_config.Controls.Add(this.textBox_username);
-            this.groupBox_remote_config.Controls.Add(this.button_discard);
+            this.groupBox_remote_config.Controls.Add(this.button_remote_discard);
             this.groupBox_remote_config.Controls.Add(this.textBox_password);
-            this.groupBox_remote_config.Controls.Add(this.button_save);
+            this.groupBox_remote_config.Controls.Add(this.button_remote_save);
             this.groupBox_remote_config.Controls.Add(this.checkBox_username);
             this.groupBox_remote_config.Controls.Add(this.checkBox_host);
             this.groupBox_remote_config.Controls.Add(this.checkBox_password);
@@ -253,14 +254,15 @@
             this.groupBox_remote_config.TabStop = false;
             this.groupBox_remote_config.Text = "Remote Config";
             // 
-            // button1
+            // button_remote_delete
             // 
-            this.button1.Location = new System.Drawing.Point(37, 207);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 23);
-            this.button1.TabIndex = 30;
-            this.button1.Text = "Delete";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button_remote_delete.Location = new System.Drawing.Point(37, 207);
+            this.button_remote_delete.Name = "button_remote_delete";
+            this.button_remote_delete.Size = new System.Drawing.Size(64, 23);
+            this.button_remote_delete.TabIndex = 30;
+            this.button_remote_delete.Text = "Delete";
+            this.button_remote_delete.UseVisualStyleBackColor = true;
+            this.button_remote_delete.Click += new System.EventHandler(this.button_remote_delete_Click);
             // 
             // textBox_group
             // 
@@ -312,9 +314,9 @@
             // 
             // button_remote_add
             // 
-            this.button_remote_add.Location = new System.Drawing.Point(267, 216);
+            this.button_remote_add.Location = new System.Drawing.Point(260, 216);
             this.button_remote_add.Name = "button_remote_add";
-            this.button_remote_add.Size = new System.Drawing.Size(48, 21);
+            this.button_remote_add.Size = new System.Drawing.Size(55, 21);
             this.button_remote_add.TabIndex = 26;
             this.button_remote_add.Text = "Add";
             this.button_remote_add.UseVisualStyleBackColor = true;
@@ -372,6 +374,7 @@
             // 
             // groupBox_remotes
             // 
+            this.groupBox_remotes.Controls.Add(this.button_subscription);
             this.groupBox_remotes.Controls.Add(this.button_remote_add);
             this.groupBox_remotes.Controls.Add(this.tree_remotes);
             this.groupBox_remotes.Location = new System.Drawing.Point(226, 12);
@@ -402,6 +405,15 @@
             this.textBox_log.Size = new System.Drawing.Size(796, 192);
             this.textBox_log.TabIndex = 31;
             // 
+            // button_subscription
+            // 
+            this.button_subscription.Location = new System.Drawing.Point(6, 216);
+            this.button_subscription.Name = "button_subscription";
+            this.button_subscription.Size = new System.Drawing.Size(168, 21);
+            this.button_subscription.TabIndex = 27;
+            this.button_subscription.Text = "Subscription";
+            this.button_subscription.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -413,6 +425,7 @@
             this.Controls.Add(this.groupBox_listener);
             this.Controls.Add(this.groupBox_remote_config);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Naive Proxy";
@@ -440,8 +453,8 @@
         private System.Windows.Forms.CheckBox checkBox_username;
         private System.Windows.Forms.CheckBox checkBox_password;
         private System.Windows.Forms.CheckBox checkBox_host;
-        private System.Windows.Forms.Button button_save;
-        private System.Windows.Forms.Button button_discard;
+        private System.Windows.Forms.Button button_remote_save;
+        private System.Windows.Forms.Button button_remote_discard;
         private System.Windows.Forms.CheckBox checkBox_padding;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox_remote_config;
@@ -461,7 +474,8 @@
         private System.Windows.Forms.GroupBox groupBox_remotes;
         internal System.Windows.Forms.CheckBox checkBox_logging;
         internal System.Windows.Forms.TextBox textBox_log;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button_remote_delete;
+        private System.Windows.Forms.Button button_subscription;
     }
 }
 

@@ -366,7 +366,28 @@ namespace NaiveGUI
 
         #region Button Events
 
-        private void button_save_Click(object sender, EventArgs e)
+        private void button_remote_add_Click(object sender, EventArgs e)
+        {
+            int i = 0;
+            string group = "Default";
+            if(tree_remotes.SelectedNode != null)
+            {
+                var node = tree_remotes.SelectedNode;
+                while(node.Parent != null)
+                {
+                    node = node.Parent;
+                }
+                group = node.Text;
+            }
+            var remote = new RemoteConfig(group, GetAvailableName(group));
+            Remotes.Add(remote);
+            RefreshRemoteTree(false);
+            tree_remotes.Nodes[remote.Group].Expand();
+            tree_remotes.SelectedNode = tree_remotes.Nodes[remote.Group].Nodes[remote.Name];
+            Save();
+        }
+
+        private void button_remote_save_Click(object sender, EventArgs e)
         {
             if(CurrentRemote != null)
             {
@@ -405,28 +426,17 @@ namespace NaiveGUI
             }
         }
 
-        private void button_remote_add_Click(object sender, EventArgs e)
-        {
-            int i = 0;
-            string group = "Default";
-            if(tree_remotes.SelectedNode != null)
-            {
-                var node = tree_remotes.SelectedNode;
-                while(node.Parent != null)
-                {
-                    node = node.Parent;
-                }
-                group = node.Text;
-            }
-            var remote = new RemoteConfig(group, GetAvailableName(group));
-            Remotes.Add(remote);
-            RefreshRemoteTree(false);
-            tree_remotes.Nodes[remote.Group].Expand();
-            tree_remotes.SelectedNode = tree_remotes.Nodes[remote.Group].Nodes[remote.Name];
-            Save();
-        }
+        private void button_remote_discard_Click(object sender, EventArgs e) => LoadConfigUI(CurrentRemote);
 
-        private void button_discard_Click(object sender, EventArgs e) => LoadConfigUI(CurrentRemote);
+        private void button_remote_delete_Click(object sender, EventArgs e)
+        {
+            if(CurrentRemote != null)
+            {
+                Remotes.Remove(CurrentRemote);
+                tree_remotes.SelectedNode.Remove();
+                Save();
+            }
+        }
 
         private void button_listener_add_Click(object sender, EventArgs e)
         {
