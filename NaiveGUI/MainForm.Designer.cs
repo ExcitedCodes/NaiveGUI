@@ -39,14 +39,15 @@
             this.comboBox_protocol = new System.Windows.Forms.ComboBox();
             this.textBox_username = new System.Windows.Forms.TextBox();
             this.textBox_password = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox_username = new System.Windows.Forms.CheckBox();
+            this.checkBox_password = new System.Windows.Forms.CheckBox();
+            this.checkBox_host = new System.Windows.Forms.CheckBox();
             this.button_save = new System.Windows.Forms.Button();
             this.button_discard = new System.Windows.Forms.Button();
             this.checkBox_padding = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox_remote_config = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.textBox_group = new System.Windows.Forms.TextBox();
             this.textBox_name = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -61,7 +62,6 @@
             this.groupBox_remotes = new System.Windows.Forms.GroupBox();
             this.checkBox_logging = new System.Windows.Forms.CheckBox();
             this.textBox_log = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
@@ -113,6 +113,7 @@
             // 
             this.textBox_host.Location = new System.Drawing.Point(71, 100);
             this.textBox_host.Name = "textBox_host";
+            this.textBox_host.PasswordChar = '*';
             this.textBox_host.Size = new System.Drawing.Size(169, 21);
             this.textBox_host.TabIndex = 9;
             // 
@@ -140,6 +141,7 @@
             // 
             this.textBox_username.Location = new System.Drawing.Point(90, 127);
             this.textBox_username.Name = "textBox_username";
+            this.textBox_username.PasswordChar = '*';
             this.textBox_username.Size = new System.Drawing.Size(150, 21);
             this.textBox_username.TabIndex = 13;
             // 
@@ -147,38 +149,42 @@
             // 
             this.textBox_password.Location = new System.Drawing.Point(90, 154);
             this.textBox_password.Name = "textBox_password";
+            this.textBox_password.PasswordChar = '*';
             this.textBox_password.Size = new System.Drawing.Size(150, 21);
             this.textBox_password.TabIndex = 15;
             // 
-            // checkBox1
+            // checkBox_username
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(6, 129);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(78, 16);
-            this.checkBox1.TabIndex = 17;
-            this.checkBox1.Text = "UserName:";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox_username.AutoSize = true;
+            this.checkBox_username.Location = new System.Drawing.Point(6, 129);
+            this.checkBox_username.Name = "checkBox_username";
+            this.checkBox_username.Size = new System.Drawing.Size(78, 16);
+            this.checkBox_username.TabIndex = 17;
+            this.checkBox_username.Text = "UserName:";
+            this.checkBox_username.UseVisualStyleBackColor = true;
+            this.checkBox_username.CheckedChanged += new System.EventHandler(this.checkBox_username_CheckedChanged);
             // 
-            // checkBox2
+            // checkBox_password
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(6, 156);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(78, 16);
-            this.checkBox2.TabIndex = 18;
-            this.checkBox2.Text = "Password:";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox_password.AutoSize = true;
+            this.checkBox_password.Location = new System.Drawing.Point(6, 156);
+            this.checkBox_password.Name = "checkBox_password";
+            this.checkBox_password.Size = new System.Drawing.Size(78, 16);
+            this.checkBox_password.TabIndex = 18;
+            this.checkBox_password.Text = "Password:";
+            this.checkBox_password.UseVisualStyleBackColor = true;
+            this.checkBox_password.CheckedChanged += new System.EventHandler(this.checkBox_password_CheckedChanged);
             // 
-            // checkBox3
+            // checkBox_host
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(6, 102);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(54, 16);
-            this.checkBox3.TabIndex = 19;
-            this.checkBox3.Text = "Host:";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox_host.AutoSize = true;
+            this.checkBox_host.Location = new System.Drawing.Point(6, 102);
+            this.checkBox_host.Name = "checkBox_host";
+            this.checkBox_host.Size = new System.Drawing.Size(54, 16);
+            this.checkBox_host.TabIndex = 19;
+            this.checkBox_host.Text = "Host:";
+            this.checkBox_host.UseVisualStyleBackColor = true;
+            this.checkBox_host.CheckedChanged += new System.EventHandler(this.checkBox_host_CheckedChanged);
             // 
             // button_save
             // 
@@ -236,9 +242,9 @@
             this.groupBox_remote_config.Controls.Add(this.button_discard);
             this.groupBox_remote_config.Controls.Add(this.textBox_password);
             this.groupBox_remote_config.Controls.Add(this.button_save);
-            this.groupBox_remote_config.Controls.Add(this.checkBox1);
-            this.groupBox_remote_config.Controls.Add(this.checkBox3);
-            this.groupBox_remote_config.Controls.Add(this.checkBox2);
+            this.groupBox_remote_config.Controls.Add(this.checkBox_username);
+            this.groupBox_remote_config.Controls.Add(this.checkBox_host);
+            this.groupBox_remote_config.Controls.Add(this.checkBox_password);
             this.groupBox_remote_config.Enabled = false;
             this.groupBox_remote_config.Location = new System.Drawing.Point(553, 12);
             this.groupBox_remote_config.Name = "groupBox_remote_config";
@@ -246,6 +252,15 @@
             this.groupBox_remote_config.TabIndex = 25;
             this.groupBox_remote_config.TabStop = false;
             this.groupBox_remote_config.Text = "Remote Config";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(37, 207);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 23);
+            this.button1.TabIndex = 30;
+            this.button1.Text = "Delete";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // textBox_group
             // 
@@ -387,15 +402,6 @@
             this.textBox_log.Size = new System.Drawing.Size(796, 192);
             this.textBox_log.TabIndex = 31;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(37, 207);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 23);
-            this.button1.TabIndex = 30;
-            this.button1.Text = "Delete";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -431,9 +437,9 @@
         private System.Windows.Forms.ComboBox comboBox_protocol;
         private System.Windows.Forms.TextBox textBox_username;
         private System.Windows.Forms.TextBox textBox_password;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox checkBox_username;
+        private System.Windows.Forms.CheckBox checkBox_password;
+        private System.Windows.Forms.CheckBox checkBox_host;
         private System.Windows.Forms.Button button_save;
         private System.Windows.Forms.Button button_discard;
         private System.Windows.Forms.CheckBox checkBox_padding;
