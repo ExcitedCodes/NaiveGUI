@@ -5,8 +5,14 @@ using System.Collections.Generic;
 
 namespace NaiveGUI
 {
+    /// <summary>
+    /// MainForm在这里扮演整个应用程序实例的角色
+    /// 应该是一个单实例的对象并且可以在任何地方用 <see cref="Instance"/> 获取
+    /// </summary>
     public partial class MainForm : Form
     {
+        public static MainForm Instance = null;
+
         public RemoteConfig CurrentRemote = null;
         public ProxyListener CurrentListener = null;
 
@@ -15,12 +21,25 @@ namespace NaiveGUI
 
         public MainForm()
         {
+            if(Instance != null)
+            {
+                throw new Exception("WTF dude");
+            }
+            Instance = this;
             InitializeComponent();
+        }
+
+        public void Save()
+        {
+
         }
 
         #region UI Refresh Functions
 
-        public void LoadConfig(RemoteConfig config)
+        /// <summary>
+        /// 加载一个 <see cref="RemoteConfig"/> 并将其中的设置展示到当前配置UI上
+        /// </summary>
+        public void LoadConfigUI(RemoteConfig config)
         {
             CurrentRemote = config;
             groupBox1.Enabled = config != null;
@@ -38,6 +57,9 @@ namespace NaiveGUI
             comboBox_quic.Text = config.QuicVersion == -1 ? "-" : config.QuicVersion.ToString();
         }
 
+        /// <summary>
+        /// 更新 <see cref="listView_listeners"/> 使其显示与当前的 <see cref="Listeners"/> 匹配
+        /// </summary>
         public void RefreshListenerList()
         {
             listView_listeners.BeginUpdate();
@@ -55,6 +77,9 @@ namespace NaiveGUI
             }
         }
 
+        /// <summary>
+        /// 更新 <see cref="tree_remotes"/> 使其显示与当前的 <see cref="Remotes"/> 匹配
+        /// </summary>
         public void RefreshRemoteTree(bool expandAll)
         {
             var state = expandAll ? null : tree_remotes.Nodes.GetExpansionState();
@@ -93,6 +118,9 @@ namespace NaiveGUI
             tree_remotes.EndUpdate();
         }
 
+        /// <summary>
+        /// 更新 <see cref="tree_remotes"/> 中项目的勾选状态, 使其显示与 <see cref="CurrentListener.Remote"/> 匹配
+        /// </summary>
         public void RefreshRemoteTreeCheckStatus()
         {
             if(CurrentListener != null)
@@ -113,6 +141,19 @@ namespace NaiveGUI
         #region General Events
 
         private void MainForm_Load(object sender, EventArgs e) { }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // TODO: Tray
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            foreach(var l in Listeners)
+            {
+                l.Stop();
+            }
+        }
 
         private void tree_remotes_AfterCheck(object sender, TreeViewEventArgs e)
         {
@@ -149,13 +190,19 @@ namespace NaiveGUI
         {
             if(e.Node.Tag is RemoteConfig cfg)
             {
-                LoadConfig(cfg);
+                LoadConfigUI(cfg);
             }
         }
 
         private void listView_listeners_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if(e.Item.Tag is ProxyListener l)
+           
+        }
+
+        private void listView_listeners_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tree_remotes.CheckBoxes = listView_listeners.SelectedItems.Count != 0;
+            if(tree_remotes.CheckBoxes && listView_listeners.SelectedItems[0].Tag is ProxyListener l)
             {
                 CurrentListener = l;
                 RefreshRemoteTreeCheckStatus();
@@ -247,14 +294,11 @@ namespace NaiveGUI
             // TODO: Save
         }
 
-        private void button_discard_Click(object sender, EventArgs e) => LoadConfig(CurrentRemote);
+        private void button_discard_Click(object sender, EventArgs e) => LoadConfigUI(CurrentRemote);
 
         private void button_listener_add_Click(object sender, EventArgs e)
         {
-            Listeners.Add(new ProxyListener()
-            {
-                Listen = new UriBuilder("socks", textBox_listener_address.Text, int.TryParse(textBox_listener_port.Text, out int port) ? port : 1080)
-            });
+            Listeners.Add(new ProxyListener(new UriBuilder("socks", textBox_listener_address.Text, int.TryParse(textBox_listener_port.Text, out int port) ? port : 1080)));
             // TODO: Save
             RefreshListenerList();
         }

@@ -59,6 +59,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBox_logging = new System.Windows.Forms.CheckBox();
+            this.textBox_log = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -79,6 +81,7 @@
             this.listView_listeners.View = System.Windows.Forms.View.Details;
             this.listView_listeners.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView_listeners_ItemChecked);
             this.listView_listeners.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_listeners_ItemSelectionChanged);
+            this.listView_listeners.SelectedIndexChanged += new System.EventHandler(this.listView_listeners_SelectedIndexChanged);
             // 
             // columnHeader2
             // 
@@ -87,7 +90,6 @@
             // 
             // tree_remotes
             // 
-            this.tree_remotes.CheckBoxes = true;
             this.tree_remotes.HideSelection = false;
             this.tree_remotes.ImageIndex = 0;
             this.tree_remotes.ImageList = this.imageList_remote;
@@ -362,11 +364,34 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Remotes";
             // 
+            // checkBox_logging
+            // 
+            this.checkBox_logging.AutoSize = true;
+            this.checkBox_logging.Location = new System.Drawing.Point(12, 291);
+            this.checkBox_logging.Name = "checkBox_logging";
+            this.checkBox_logging.Size = new System.Drawing.Size(108, 16);
+            this.checkBox_logging.TabIndex = 30;
+            this.checkBox_logging.Text = "Enable Logging";
+            this.checkBox_logging.UseVisualStyleBackColor = true;
+            // 
+            // textBox_log
+            // 
+            this.textBox_log.BackColor = System.Drawing.Color.Black;
+            this.textBox_log.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox_log.ForeColor = System.Drawing.Color.Silver;
+            this.textBox_log.Location = new System.Drawing.Point(12, 313);
+            this.textBox_log.Multiline = true;
+            this.textBox_log.Name = "textBox_log";
+            this.textBox_log.Size = new System.Drawing.Size(796, 162);
+            this.textBox_log.TabIndex = 31;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(820, 317);
+            this.ClientSize = new System.Drawing.Size(820, 487);
+            this.Controls.Add(this.textBox_log);
+            this.Controls.Add(this.checkBox_logging);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -374,6 +399,8 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Naive Proxy";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -381,6 +408,7 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -414,6 +442,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView listView_listeners;
         private System.Windows.Forms.GroupBox groupBox3;
+        internal System.Windows.Forms.CheckBox checkBox_logging;
+        internal System.Windows.Forms.TextBox textBox_log;
     }
 }
 
