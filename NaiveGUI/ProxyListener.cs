@@ -28,8 +28,8 @@ namespace NaiveGUI
         {
             Stop();
             var sb = new StringBuilder();
-            sb.Append("--listen=").Append(Listen.ToString())
-                .Append(" --proxy=").Append(Remote.Remote.ToString());
+            sb.Append("--listen=").Append(Listen.Uri.GetComponents(UriComponents.SchemeAndServer,UriFormat.SafeUnescaped))
+                .Append(" --proxy=").Append(Remote.Remote.Uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.SafeUnescaped));
             if(Remote.Padding)
             {
                 sb.Append(" --padding");
