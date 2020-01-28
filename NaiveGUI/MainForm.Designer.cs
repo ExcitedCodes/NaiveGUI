@@ -46,7 +46,7 @@
             this.button_discard = new System.Windows.Forms.Button();
             this.checkBox_padding = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox_remote_config = new System.Windows.Forms.GroupBox();
             this.textBox_group = new System.Windows.Forms.TextBox();
             this.textBox_name = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -57,13 +57,14 @@
             this.textBox_listener_address = new System.Windows.Forms.TextBox();
             this.button_listener_add = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox_listener = new System.Windows.Forms.GroupBox();
+            this.groupBox_remotes = new System.Windows.Forms.GroupBox();
             this.checkBox_logging = new System.Windows.Forms.CheckBox();
             this.textBox_log = new System.Windows.Forms.TextBox();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.button1 = new System.Windows.Forms.Button();
+            this.groupBox_remote_config.SuspendLayout();
+            this.groupBox_listener.SuspendLayout();
+            this.groupBox_remotes.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView_listeners
@@ -75,12 +76,11 @@
             this.listView_listeners.HideSelection = false;
             this.listView_listeners.Location = new System.Drawing.Point(6, 20);
             this.listView_listeners.Name = "listView_listeners";
-            this.listView_listeners.Size = new System.Drawing.Size(196, 209);
+            this.listView_listeners.Size = new System.Drawing.Size(196, 190);
             this.listView_listeners.TabIndex = 0;
             this.listView_listeners.UseCompatibleStateImageBehavior = false;
             this.listView_listeners.View = System.Windows.Forms.View.Details;
             this.listView_listeners.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView_listeners_ItemChecked);
-            this.listView_listeners.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_listeners_ItemSelectionChanged);
             this.listView_listeners.SelectedIndexChanged += new System.EventHandler(this.listView_listeners_SelectedIndexChanged);
             // 
             // columnHeader2
@@ -96,7 +96,7 @@
             this.tree_remotes.Location = new System.Drawing.Point(6, 20);
             this.tree_remotes.Name = "tree_remotes";
             this.tree_remotes.SelectedImageIndex = 0;
-            this.tree_remotes.Size = new System.Drawing.Size(309, 208);
+            this.tree_remotes.Size = new System.Drawing.Size(309, 190);
             this.tree_remotes.TabIndex = 7;
             this.tree_remotes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterCheck);
             this.tree_remotes.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterSelect);
@@ -182,9 +182,9 @@
             // 
             // button_save
             // 
-            this.button_save.Location = new System.Drawing.Point(165, 207);
+            this.button_save.Location = new System.Drawing.Point(177, 207);
             this.button_save.Name = "button_save";
-            this.button_save.Size = new System.Drawing.Size(75, 23);
+            this.button_save.Size = new System.Drawing.Size(64, 23);
             this.button_save.TabIndex = 20;
             this.button_save.Text = "Save";
             this.button_save.UseVisualStyleBackColor = true;
@@ -192,9 +192,9 @@
             // 
             // button_discard
             // 
-            this.button_discard.Location = new System.Drawing.Point(84, 207);
+            this.button_discard.Location = new System.Drawing.Point(107, 207);
             this.button_discard.Name = "button_discard";
-            this.button_discard.Size = new System.Drawing.Size(75, 23);
+            this.button_discard.Size = new System.Drawing.Size(64, 23);
             this.button_discard.TabIndex = 21;
             this.button_discard.Text = "Discard";
             this.button_discard.UseVisualStyleBackColor = true;
@@ -219,31 +219,33 @@
             this.label3.TabIndex = 24;
             this.label3.Text = "QUIC Version:";
             // 
-            // groupBox1
+            // groupBox_remote_config
             // 
-            this.groupBox1.Controls.Add(this.textBox_group);
-            this.groupBox1.Controls.Add(this.textBox_name);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.comboBox_quic);
-            this.groupBox1.Controls.Add(this.comboBox_protocol);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox_host);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.checkBox_padding);
-            this.groupBox1.Controls.Add(this.textBox_username);
-            this.groupBox1.Controls.Add(this.button_discard);
-            this.groupBox1.Controls.Add(this.textBox_password);
-            this.groupBox1.Controls.Add(this.button_save);
-            this.groupBox1.Controls.Add(this.checkBox1);
-            this.groupBox1.Controls.Add(this.checkBox3);
-            this.groupBox1.Controls.Add(this.checkBox2);
-            this.groupBox1.Location = new System.Drawing.Point(553, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(255, 243);
-            this.groupBox1.TabIndex = 25;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Remote Config";
+            this.groupBox_remote_config.Controls.Add(this.button1);
+            this.groupBox_remote_config.Controls.Add(this.textBox_group);
+            this.groupBox_remote_config.Controls.Add(this.textBox_name);
+            this.groupBox_remote_config.Controls.Add(this.label6);
+            this.groupBox_remote_config.Controls.Add(this.label5);
+            this.groupBox_remote_config.Controls.Add(this.comboBox_quic);
+            this.groupBox_remote_config.Controls.Add(this.comboBox_protocol);
+            this.groupBox_remote_config.Controls.Add(this.label3);
+            this.groupBox_remote_config.Controls.Add(this.textBox_host);
+            this.groupBox_remote_config.Controls.Add(this.label4);
+            this.groupBox_remote_config.Controls.Add(this.checkBox_padding);
+            this.groupBox_remote_config.Controls.Add(this.textBox_username);
+            this.groupBox_remote_config.Controls.Add(this.button_discard);
+            this.groupBox_remote_config.Controls.Add(this.textBox_password);
+            this.groupBox_remote_config.Controls.Add(this.button_save);
+            this.groupBox_remote_config.Controls.Add(this.checkBox1);
+            this.groupBox_remote_config.Controls.Add(this.checkBox3);
+            this.groupBox_remote_config.Controls.Add(this.checkBox2);
+            this.groupBox_remote_config.Enabled = false;
+            this.groupBox_remote_config.Location = new System.Drawing.Point(553, 12);
+            this.groupBox_remote_config.Name = "groupBox_remote_config";
+            this.groupBox_remote_config.Size = new System.Drawing.Size(255, 243);
+            this.groupBox_remote_config.TabIndex = 25;
+            this.groupBox_remote_config.TabStop = false;
+            this.groupBox_remote_config.Text = "Remote Config";
             // 
             // textBox_group
             // 
@@ -295,7 +297,7 @@
             // 
             // button_remote_add
             // 
-            this.button_remote_add.Location = new System.Drawing.Point(267, 234);
+            this.button_remote_add.Location = new System.Drawing.Point(267, 216);
             this.button_remote_add.Name = "button_remote_add";
             this.button_remote_add.Size = new System.Drawing.Size(48, 21);
             this.button_remote_add.TabIndex = 26;
@@ -305,7 +307,7 @@
             // 
             // textBox_listener_port
             // 
-            this.textBox_listener_port.Location = new System.Drawing.Point(134, 235);
+            this.textBox_listener_port.Location = new System.Drawing.Point(134, 216);
             this.textBox_listener_port.MaxLength = 5;
             this.textBox_listener_port.Name = "textBox_listener_port";
             this.textBox_listener_port.Size = new System.Drawing.Size(41, 21);
@@ -313,7 +315,7 @@
             // 
             // textBox_listener_address
             // 
-            this.textBox_listener_address.Location = new System.Drawing.Point(6, 235);
+            this.textBox_listener_address.Location = new System.Drawing.Point(6, 216);
             this.textBox_listener_address.MaxLength = 255;
             this.textBox_listener_address.Name = "textBox_listener_address";
             this.textBox_listener_address.Size = new System.Drawing.Size(120, 21);
@@ -322,7 +324,7 @@
             // button_listener_add
             // 
             this.button_listener_add.Font = new System.Drawing.Font("宋体", 10F);
-            this.button_listener_add.Location = new System.Drawing.Point(181, 235);
+            this.button_listener_add.Location = new System.Drawing.Point(181, 216);
             this.button_listener_add.Name = "button_listener_add";
             this.button_listener_add.Size = new System.Drawing.Size(19, 21);
             this.button_listener_add.TabIndex = 2;
@@ -333,41 +335,41 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(126, 240);
+            this.label9.Location = new System.Drawing.Point(126, 221);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(11, 12);
             this.label9.TabIndex = 14;
             this.label9.Text = ":";
             // 
-            // groupBox2
+            // groupBox_listener
             // 
-            this.groupBox2.Controls.Add(this.listView_listeners);
-            this.groupBox2.Controls.Add(this.textBox_listener_port);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.textBox_listener_address);
-            this.groupBox2.Controls.Add(this.button_listener_add);
-            this.groupBox2.Location = new System.Drawing.Point(12, 12);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(208, 262);
-            this.groupBox2.TabIndex = 27;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Listener";
+            this.groupBox_listener.Controls.Add(this.listView_listeners);
+            this.groupBox_listener.Controls.Add(this.textBox_listener_port);
+            this.groupBox_listener.Controls.Add(this.label9);
+            this.groupBox_listener.Controls.Add(this.textBox_listener_address);
+            this.groupBox_listener.Controls.Add(this.button_listener_add);
+            this.groupBox_listener.Location = new System.Drawing.Point(12, 12);
+            this.groupBox_listener.Name = "groupBox_listener";
+            this.groupBox_listener.Size = new System.Drawing.Size(208, 243);
+            this.groupBox_listener.TabIndex = 27;
+            this.groupBox_listener.TabStop = false;
+            this.groupBox_listener.Text = "Listener";
             // 
-            // groupBox3
+            // groupBox_remotes
             // 
-            this.groupBox3.Controls.Add(this.button_remote_add);
-            this.groupBox3.Controls.Add(this.tree_remotes);
-            this.groupBox3.Location = new System.Drawing.Point(226, 12);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(321, 262);
-            this.groupBox3.TabIndex = 28;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Remotes";
+            this.groupBox_remotes.Controls.Add(this.button_remote_add);
+            this.groupBox_remotes.Controls.Add(this.tree_remotes);
+            this.groupBox_remotes.Location = new System.Drawing.Point(226, 12);
+            this.groupBox_remotes.Name = "groupBox_remotes";
+            this.groupBox_remotes.Size = new System.Drawing.Size(321, 243);
+            this.groupBox_remotes.TabIndex = 28;
+            this.groupBox_remotes.TabStop = false;
+            this.groupBox_remotes.Text = "Remotes";
             // 
             // checkBox_logging
             // 
             this.checkBox_logging.AutoSize = true;
-            this.checkBox_logging.Location = new System.Drawing.Point(12, 291);
+            this.checkBox_logging.Location = new System.Drawing.Point(12, 261);
             this.checkBox_logging.Name = "checkBox_logging";
             this.checkBox_logging.Size = new System.Drawing.Size(108, 16);
             this.checkBox_logging.TabIndex = 30;
@@ -379,11 +381,20 @@
             this.textBox_log.BackColor = System.Drawing.Color.Black;
             this.textBox_log.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox_log.ForeColor = System.Drawing.Color.Silver;
-            this.textBox_log.Location = new System.Drawing.Point(12, 313);
+            this.textBox_log.Location = new System.Drawing.Point(12, 283);
             this.textBox_log.Multiline = true;
             this.textBox_log.Name = "textBox_log";
-            this.textBox_log.Size = new System.Drawing.Size(796, 162);
+            this.textBox_log.Size = new System.Drawing.Size(796, 192);
             this.textBox_log.TabIndex = 31;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(37, 207);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 23);
+            this.button1.TabIndex = 30;
+            this.button1.Text = "Delete";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -392,9 +403,9 @@
             this.ClientSize = new System.Drawing.Size(820, 487);
             this.Controls.Add(this.textBox_log);
             this.Controls.Add(this.checkBox_logging);
-            this.Controls.Add(this.groupBox3);
-            this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.groupBox_remotes);
+            this.Controls.Add(this.groupBox_listener);
+            this.Controls.Add(this.groupBox_remote_config);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
@@ -402,11 +413,11 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
+            this.groupBox_remote_config.ResumeLayout(false);
+            this.groupBox_remote_config.PerformLayout();
+            this.groupBox_listener.ResumeLayout(false);
+            this.groupBox_listener.PerformLayout();
+            this.groupBox_remotes.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -427,7 +438,7 @@
         private System.Windows.Forms.Button button_discard;
         private System.Windows.Forms.CheckBox checkBox_padding;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox_remote_config;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBox_quic;
         private System.Windows.Forms.Label label6;
@@ -439,11 +450,12 @@
         private System.Windows.Forms.TextBox textBox_listener_address;
         private System.Windows.Forms.Button button_listener_add;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox_listener;
         private System.Windows.Forms.ListView listView_listeners;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox_remotes;
         internal System.Windows.Forms.CheckBox checkBox_logging;
         internal System.Windows.Forms.TextBox textBox_log;
+        private System.Windows.Forms.Button button1;
     }
 }
 

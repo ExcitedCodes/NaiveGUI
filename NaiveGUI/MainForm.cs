@@ -1,7 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
+
+using fastJSON;
+using System.Web;
+using System.Linq;
 
 namespace NaiveGUI
 {
@@ -11,7 +16,11 @@ namespace NaiveGUI
     /// </summary>
     public partial class MainForm : Form
     {
+        public const int CONFIG_VERSION = 1;
+
         public static MainForm Instance = null;
+
+        public string ConfigPath = null;
 
         public RemoteConfig CurrentRemote = null;
         public ProxyListener CurrentListener = null;
@@ -19,19 +28,136 @@ namespace NaiveGUI
         public List<RemoteConfig> Remotes = new List<RemoteConfig>();
         public List<ProxyListener> Listeners = new List<ProxyListener>();
 
-        public MainForm()
+        public MainForm(string config)
         {
             if(Instance != null)
             {
                 throw new Exception("WTF dude");
             }
             Instance = this;
+
+            #region Components
+
             InitializeComponent();
+
+            #endregion
+
+            #region Load Config
+
+            ConfigPath = config;
+            if(File.Exists(ConfigPath))
+            {
+                var json = JSON.ToObject<Dictionary<string, dynamic>>(File.ReadAllText("config.json"));
+                if(json["version"] > CONFIG_VERSION && MessageBox.Show("The config.json has a newer version, continue loading may lost some config. Continue?", "Opps", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) != DialogResult.OK)
+                {
+                    Environment.Exit(0);
+                }
+                if(json.ContainsKey("remotes"))
+                {
+                    foreach(var r in json["remotes"])
+                    {
+                        try
+                        {
+                            Remotes.Add(ParseRemote(r));
+                        }
+                        catch { }
+                    }
+                }
+                if(json.ContainsKey("listeners"))
+                {
+                    foreach(var l in json["listeners"])
+                    {
+                        var listener = new ProxyListener(new UriBuilder(l["listen"]));
+                        var name = l["remote"]["name"];
+                        var group = l["remote"]["group"];
+                        foreach(var r in Remotes)
+                        {
+                            if(r.Name==name && r.Group==group)
+                            {
+                                listener.Remote = r;
+                                break;
+                            }
+                        }
+                        Listeners.Add(listener);
+                    }
+                }
+                RefreshListenerList();
+                RefreshRemoteTree(true);
+                RefreshRemoteTreeCheckStatus();
+            }
+
+            #endregion
+
         }
 
         public void Save()
         {
+            File.WriteAllText(ConfigPath, JSON.ToNiceJSON(new Dictionary<string, object>()
+            {
+                { "version", CONFIG_VERSION },
+                { "listeners", Listeners.Select(l => new Dictionary<string, object>()
+                {
+                    { "listen", l.Listen.ToString() },
+                    { "remote", new Dictionary<string,object>() {
+                        { "name", l.Remote==null ? "" : l.Remote.Name },
+                        { "group", l.Remote==null ? "" : l.Remote.Group }
+                    }}
+                }) },
+                { "remotes", Remotes.Select(r => {
+                    var uri = new UriBuilder(r.Remote.Uri);
+                    var query = HttpUtility.ParseQueryString("");
+                    query["name"]=r.Name;
+                    query["group"]=r.Group;
+                    query["padding"]=r.Padding.ToString();
+                    query["quic_version"]=r.QuicVersion.ToString();
+                    uri.Query = Uri.EscapeDataString(query.ToString());
+                    return uri.ToString();
+                }) },
+            }));
+        }
 
+        /// <summary>
+        /// 检查 <see cref="tree_remotes"/> 并找出一个和指定组名匹配的不重复的名称
+        /// </summary>
+        public string GetAvailableName(string group = "Default")
+        {
+            int i = 0;
+            if(tree_remotes.SelectedNode != null)
+            {
+                var node = tree_remotes.SelectedNode;
+                while(node.Parent != null)
+                {
+                    node = node.Parent;
+                }
+                group = node.Text;
+            }
+            if(tree_remotes.Nodes.ContainsKey(group))
+            {
+                while(tree_remotes.Nodes[group].Nodes.ContainsKey("NewRemote" + ++i)) ;
+            }
+            else
+            {
+                i = 1;
+            }
+            return "NewRemote" + i;
+        }
+
+        /// <summary>
+        /// 将 <see cref="RemoteConfig"/> 对应的 Uri 字符串解析为对应的实例
+        /// </summary>
+        public RemoteConfig ParseRemote(string data)
+        {
+            var uri = new UriBuilder(data);
+            var query = HttpUtility.ParseQueryString(Uri.UnescapeDataString(uri.Query));
+
+            string group = query["group"] ?? "Default";
+
+            return new RemoteConfig(group, query["name"] ?? GetAvailableName(group))
+            {
+                Remote = uri,
+                Padding = query["padding"] != null && bool.TryParse(query["padding"], out bool padding) && padding,
+                QuicVersion = int.TryParse(query["quic_version"] ?? "-1", out int quic) ? quic : -1
+            };
         }
 
         #region UI Refresh Functions
@@ -42,8 +168,8 @@ namespace NaiveGUI
         public void LoadConfigUI(RemoteConfig config)
         {
             CurrentRemote = config;
-            groupBox1.Enabled = config != null;
-            if(!groupBox1.Enabled)
+            groupBox_remote_config.Enabled = config != null;
+            if(!groupBox_remote_config.Enabled)
             {
                 return;
             }
@@ -92,7 +218,7 @@ namespace NaiveGUI
                     var p = tree_remotes.Nodes.Add(r.Group, r.Group);
                     p.ImageKey = p.SelectedImageKey = "Dots";
 #if HORSE
-                    if(r.Group.EndsWith("horse"))
+                    if(r.Group.EndsWith("horse",StringComparison.CurrentCultureIgnoreCase))
                     {
                         p.ImageKey = p.SelectedImageKey = "Horse";
                     }
@@ -104,6 +230,12 @@ namespace NaiveGUI
                     var node = group.Nodes.Add(r.Name, r.Name);
                     node.Tag = r;
                     node.SelectedImageKey = node.ImageKey = "Naive";
+#if HORSE
+                    if(r.Name.EndsWith("horse", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        node.SelectedImageKey = node.ImageKey = "Horse";
+                    }
+#endif
                 }
             }
             if(expandAll)
@@ -127,7 +259,6 @@ namespace NaiveGUI
             {
                 foreach(var i in tree_remotes.Nodes.Descendants())
                 {
-                    // TODO: Check parent
                     if(i.Tag is RemoteConfig cfg)
                     {
                         i.Checked = CurrentListener.Remote == cfg;
@@ -172,13 +303,13 @@ namespace NaiveGUI
             {
                 if(!e.Node.Checked && CurrentListener.Remote == cfg)
                 {
-                    e.Node.Checked = true;
+                    CurrentListener.Remote = null;
                 }
                 else if(e.Node.Checked)
                 {
                     CurrentListener.Remote = cfg;
                 }
-                // TODO: Save
+                Save();
             }
             if(e.Action != TreeViewAction.Unknown)
             {
@@ -194,9 +325,25 @@ namespace NaiveGUI
             }
         }
 
-        private void listView_listeners_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void listView_listeners_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-           
+            if(e.Item.Tag is ProxyListener l)
+            {
+                if(e.Item.Checked)
+                {
+                    if(l.Remote==null)
+                    {
+                        e.Item.Checked = false;
+                        MessageBox.Show("You must select a remote before starting listener! Tick the checkbox in remote list to select it.", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    l.Start();
+                }
+                else
+                {
+                    l.Stop();
+                }
+            }
         }
 
         private void listView_listeners_SelectedIndexChanged(object sender, EventArgs e)
@@ -206,21 +353,6 @@ namespace NaiveGUI
             {
                 CurrentListener = l;
                 RefreshRemoteTreeCheckStatus();
-            }
-        }
-
-        private void listView_listeners_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            if(e.Item.Tag is ProxyListener l)
-            {
-                if(e.Item.Checked)
-                {
-                    l.Start();
-                }
-                else
-                {
-                    l.Stop();
-                }
             }
         }
 
@@ -262,6 +394,8 @@ namespace NaiveGUI
                 }
                 CurrentRemote.Name = textBox_name.Text;
                 CurrentRemote.Group = textBox_group.Text;
+                Save();
+                RefreshRemoteTree(false);
             }
         }
 
@@ -278,20 +412,12 @@ namespace NaiveGUI
                 }
                 group = node.Text;
             }
-            if(tree_remotes.Nodes.ContainsKey(group))
-            {
-                while(tree_remotes.Nodes[group].Nodes.ContainsKey("NewRemote" + ++i)) ;
-            }
-            else
-            {
-                i = 1;
-            }
-            var remote = new RemoteConfig(group, "NewRemote" + i);
+            var remote = new RemoteConfig(group, GetAvailableName(group));
             Remotes.Add(remote);
             RefreshRemoteTree(false);
             tree_remotes.Nodes[remote.Group].Expand();
             tree_remotes.SelectedNode = tree_remotes.Nodes[remote.Group].Nodes[remote.Name];
-            // TODO: Save
+            Save();
         }
 
         private void button_discard_Click(object sender, EventArgs e) => LoadConfigUI(CurrentRemote);
@@ -299,7 +425,7 @@ namespace NaiveGUI
         private void button_listener_add_Click(object sender, EventArgs e)
         {
             Listeners.Add(new ProxyListener(new UriBuilder("socks", textBox_listener_address.Text, int.TryParse(textBox_listener_port.Text, out int port) ? port : 1080)));
-            // TODO: Save
+            Save();
             RefreshListenerList();
         }
 
