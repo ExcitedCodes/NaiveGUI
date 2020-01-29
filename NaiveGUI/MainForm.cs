@@ -184,22 +184,65 @@ namespace NaiveGUI
         }
 
         /// <summary>
-        /// 更新 <see cref="listView_listeners"/> 使其显示与当前的 <see cref="Listeners"/> 匹配
+        /// 更新 <see cref="listView_listeners"/> 和 <see cref="toolStripMenuItem_listeners"/> 使其显示与当前的 <see cref="Listeners"/> 匹配.
+        /// 已确保方法将在主线程中执行
         /// </summary>
         public void RefreshListenerList()
         {
+            if(InvokeRequired)
+            {
+                Invoke(new Action(RefreshListenerList));
+                return;
+            }
             listView_listeners.BeginUpdate();
             listView_listeners.Items.Clear();
+            toolStripMenuItem_listeners.DropDownItems.Clear();
             foreach(var l in Listeners)
             {
-                var item = listView_listeners.Items.Add(l.Listen.ToString());
-                item.Checked = l.Working;
-                item.Tag = l;
+                var list =listView_listeners.Items.Add(new ListViewItem(l.Listen.ToString())
+                {
+                    Tag = l,
+                    Checked = l.Enabled
+                });
+
+                var tray = new ToolStripMenuItem(l.Listen.ToString())
+                {
+                    Tag = l,
+                    Checked = l.Enabled
+                };
+                tray.Click += (s, e) =>
+                {
+                    list.Checked = tray.Checked = l.ToggleEnabled();
+                };
+                tray.DropDownItems.Add("Placeholder");
+                tray.DropDownOpening += listener_DropDownOpening;
+                toolStripMenuItem_listeners.DropDownItems.Add(tray);
             }
             listView_listeners.EndUpdate();
             if(listView_listeners.Items.Count > 0)
             {
                 listView_listeners.Items[0].Selected = true;
+            }
+        }
+
+        private void listener_DropDownOpening(object sender, EventArgs e)
+        {
+            var tray = sender as ToolStripMenuItem;
+            var listener = tray.Tag as ProxyListener;
+            tray.DropDownItems.Clear();
+            foreach(var r in Remotes)
+            {
+                var item = new ToolStripMenuItem(r.Group + "=>" + r.Name)
+                {
+                    Tag = r,
+                    Checked = r == listener.Remote
+                };
+                item.Click += (s, ev) =>
+                {
+                    listener.Remote = r;
+                    RefreshRemoteTreeCheckStatus();
+                };
+                tray.DropDownItems.Add(item);
             }
         }
 
@@ -269,13 +312,37 @@ namespace NaiveGUI
 
         #endregion
 
+        #region Tray Events
+
+        private void trayIcon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left)
+            {
+                Show();
+                BringToFront();
+                Activate();
+            }
+        }
+
+        private void toolStripMenuItem_exit_Click(object sender, EventArgs e)
+        {
+            FormClosing -= MainForm_FormClosing;
+            Close();
+        }
+
+        #endregion
+
         #region General Events
 
         private void MainForm_Load(object sender, EventArgs e) { }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // TODO: Tray
+            if(e.CloseReason == CloseReason.UserClosing)
+            {
+                Hide();
+                e.Cancel = true;
+            }
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -333,22 +400,12 @@ namespace NaiveGUI
 
         private void listView_listeners_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if(e.Item.Tag is ProxyListener l)
+            if(e.Item.Tag is ProxyListener l && e.Item.Checked != l.Enabled)
             {
-                if(e.Item.Checked)
-                {
-                    if(l.Remote == null)
-                    {
-                        e.Item.Checked = false;
-                        MessageBox.Show("You must select a remote before starting listener! Tick the checkbox in remote list to select it.", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                    l.Start();
-                }
-                else
-                {
-                    l.Stop();
-                }
+                e.Item.Checked = l.ToggleEnabled();
+                // TODO: This is just for updating tray menu status.
+                // Use a more elegant method later.
+                RefreshListenerList();
             }
         }
 
