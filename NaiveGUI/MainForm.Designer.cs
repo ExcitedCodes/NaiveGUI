@@ -65,9 +65,9 @@
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip_tray = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem_listeners = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator_listeners = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer_main = new System.Windows.Forms.Timer(this.components);
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
@@ -93,7 +93,7 @@
             // columnHeader2
             // 
             this.columnHeader2.Text = "EndPoint";
-            this.columnHeader2.Width = 180;
+            this.columnHeader2.Width = 175;
             // 
             // tree_remotes
             // 
@@ -398,6 +398,7 @@
             this.button_subscription.TabIndex = 27;
             this.button_subscription.Text = "Subscription";
             this.button_subscription.UseVisualStyleBackColor = true;
+            this.button_subscription.Click += new System.EventHandler(this.button_subscription_Click);
             // 
             // checkBox_logging
             // 
@@ -431,29 +432,29 @@
             // contextMenuStrip_tray
             // 
             this.contextMenuStrip_tray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem_listeners,
-            this.toolStripSeparator1,
+            this.toolStripSeparator_listeners,
             this.toolStripMenuItem_exit});
             this.contextMenuStrip_tray.Name = "contextMenuStrip_tray";
-            this.contextMenuStrip_tray.Size = new System.Drawing.Size(181, 76);
+            this.contextMenuStrip_tray.Size = new System.Drawing.Size(97, 32);
+            this.contextMenuStrip_tray.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_tray_Opening);
             // 
-            // toolStripMenuItem_listeners
+            // toolStripSeparator_listeners
             // 
-            this.toolStripMenuItem_listeners.Name = "toolStripMenuItem_listeners";
-            this.toolStripMenuItem_listeners.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem_listeners.Text = "Listeners";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator_listeners.Name = "toolStripSeparator_listeners";
+            this.toolStripSeparator_listeners.Size = new System.Drawing.Size(93, 6);
             // 
             // toolStripMenuItem_exit
             // 
             this.toolStripMenuItem_exit.Name = "toolStripMenuItem_exit";
-            this.toolStripMenuItem_exit.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_exit.Size = new System.Drawing.Size(96, 22);
             this.toolStripMenuItem_exit.Text = "Exit";
             this.toolStripMenuItem_exit.Click += new System.EventHandler(this.toolStripMenuItem_exit_Click);
+            // 
+            // timer_main
+            // 
+            this.timer_main.Enabled = true;
+            this.timer_main.Interval = 50;
+            this.timer_main.Tick += new System.EventHandler(this.timer_main_Tick);
             // 
             // MainForm
             // 
@@ -468,8 +469,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "MainForm";
-            this.Text = "Naive Proxy";
+            this.Text = "Naïve Proxy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -520,9 +522,9 @@
         private System.Windows.Forms.Button button_subscription;
         private System.Windows.Forms.NotifyIcon trayIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_tray;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_listeners;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator_listeners;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_exit;
+        private System.Windows.Forms.Timer timer_main;
     }
 }
 
