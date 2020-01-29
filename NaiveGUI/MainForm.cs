@@ -18,6 +18,7 @@ namespace NaiveGUI
     {
         public const int CONFIG_VERSION = 1;
 
+        public static ulong Tick = 0;
         public static MainForm Instance = null;
 
         public string ConfigPath = null;
@@ -67,7 +68,7 @@ namespace NaiveGUI
                 {
                     foreach(var l in json["listeners"])
                     {
-                        var listener = new ProxyListener(new UriBuilder(l["listen"]));
+                        var listener = new ProxyListener(new UriBuilder(l["listen"]), l.ContainsKey("enable") ? l["enable"] : false);
                         var name = l["remote"]["name"];
                         var group = l["remote"]["group"];
                         foreach(var r in Remotes)
@@ -77,6 +78,10 @@ namespace NaiveGUI
                                 listener.Remote = r;
                                 break;
                             }
+                        }
+                        if(listener.Enabled)
+                        {
+                            listener.Start();
                         }
                         Listeners.Add(listener);
                     }
@@ -90,6 +95,8 @@ namespace NaiveGUI
 
         }
 
+        #region General Methods
+
         public void Save()
         {
             File.WriteAllText(ConfigPath, JSON.ToNiceJSON(new Dictionary<string, object>()
@@ -97,6 +104,7 @@ namespace NaiveGUI
                 { "version", CONFIG_VERSION },
                 { "listeners", Listeners.Select(l => new Dictionary<string, object>()
                 {
+                    { "enable", l.Enabled },
                     { "listen", l.Listen.ToString() },
                     { "remote", new Dictionary<string,object>() {
                         { "name", l.Remote==null ? "" : l.Remote.Name },
@@ -155,10 +163,14 @@ namespace NaiveGUI
             return new RemoteConfig(group, query["name"] ?? GetAvailableName(group))
             {
                 Remote = uri,
-                Padding = query["padding"] != null && bool.TryParse(query["padding"], out bool padding) && padding,
+                Padding = bool.TryParse(query["padding"] ?? "False", out bool padding) && padding,
                 QuicVersion = int.TryParse(query["quic_version"] ?? "-1", out int quic) ? quic : -1
             };
         }
+
+        public void BalloonTip(string title, string text, ToolTipIcon icon, int timeout = 3) => trayIcon.ShowBalloonTip(timeout, title, text, icon);
+
+        #endregion
 
         #region UI Refresh Functions
 
@@ -175,7 +187,7 @@ namespace NaiveGUI
             }
             textBox_name.Text = config.Name;
             textBox_group.Text = config.Group;
-            comboBox_protocol.Text = config.Remote.Scheme;
+            comboBox_protocol.Text = config.Remote.Scheme.ToUpper();
             textBox_host.Text = config.Remote.Host + (config.Remote.Port != -1 ? (":" + config.Remote.Port) : "");
             textBox_username.Text = config.Remote.UserName;
             textBox_password.Text = config.Remote.Password;
@@ -196,53 +208,54 @@ namespace NaiveGUI
             }
             listView_listeners.BeginUpdate();
             listView_listeners.Items.Clear();
-            toolStripMenuItem_listeners.DropDownItems.Clear();
+
+            #region Clear Tray Items
+
+            for(int i = 0;i < contextMenuStrip_tray.Items.Count;)
+            {
+                if(contextMenuStrip_tray.Items[i].Tag is ProxyListener)
+                {
+                    contextMenuStrip_tray.Items.RemoveAt(i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            #endregion
+
+            int insertIndex = 0;
             foreach(var l in Listeners)
             {
-                var list =listView_listeners.Items.Add(new ListViewItem(l.Listen.ToString())
+                var list = listView_listeners.Items.Add(new ListViewItem(l.Listen.ToString())
                 {
                     Tag = l,
                     Checked = l.Enabled
                 });
 
-                var tray = new ToolStripMenuItem(l.Listen.ToString())
+                #region Insert Tray Items
+
+                var item = new ToolStripMenuItem(l.Listen.ToString())
                 {
                     Tag = l,
                     Checked = l.Enabled
                 };
-                tray.Click += (s, e) =>
+                item.Click += (s, e) =>
                 {
-                    list.Checked = tray.Checked = l.ToggleEnabled();
+                    list.Checked = item.Checked = l.ToggleEnabled();
                 };
-                tray.DropDownItems.Add("Placeholder");
-                tray.DropDownOpening += listener_DropDownOpening;
-                toolStripMenuItem_listeners.DropDownItems.Add(tray);
+                item.DropDownItems.Add("Placeholder");
+                item.DropDownOpening += toolStripMenuItem_listener_DropDownOpening;
+                contextMenuStrip_tray.Items.Insert(insertIndex++, item);
+
+                #endregion
             }
+
             listView_listeners.EndUpdate();
             if(listView_listeners.Items.Count > 0)
             {
                 listView_listeners.Items[0].Selected = true;
-            }
-        }
-
-        private void listener_DropDownOpening(object sender, EventArgs e)
-        {
-            var tray = sender as ToolStripMenuItem;
-            var listener = tray.Tag as ProxyListener;
-            tray.DropDownItems.Clear();
-            foreach(var r in Remotes)
-            {
-                var item = new ToolStripMenuItem(r.Group + "=>" + r.Name)
-                {
-                    Tag = r,
-                    Checked = r == listener.Remote
-                };
-                item.Click += (s, ev) =>
-                {
-                    listener.Remote = r;
-                    RefreshRemoteTreeCheckStatus();
-                };
-                tray.DropDownItems.Add(item);
             }
         }
 
@@ -330,6 +343,47 @@ namespace NaiveGUI
             Close();
         }
 
+        private void toolStripMenuItem_listener_DropDownOpening(object sender, EventArgs e)
+        {
+            var tray = sender as ToolStripMenuItem;
+            var listener = tray.Tag as ProxyListener;
+            tray.DropDownItems.Clear();
+            var groups = new Dictionary<string, ToolStripMenuItem>();
+            foreach(var r in Remotes)
+            {
+                if(!groups.ContainsKey(r.Group))
+                {
+                    tray.DropDownItems.Add(groups[r.Group] = new ToolStripMenuItem(r.Group));
+                }
+                if(r == listener.Remote)
+                {
+                    groups[r.Group].Checked = true;
+                }
+                var item = new ToolStripMenuItem(r.Name)
+                {
+                    Tag = r,
+                    Checked = r == listener.Remote
+                };
+                item.Click += (s, ev) =>
+                {
+                    listener.Remote = r;
+                    RefreshRemoteTreeCheckStatus();
+                };
+                groups[r.Group].DropDownItems.Add(item);
+            }
+        }
+
+        private void contextMenuStrip_tray_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            foreach(ToolStripItem item in contextMenuStrip_tray.Items)
+            {
+                if(item is ToolStripMenuItem menu && item.Tag is ProxyListener l)
+                {
+                    menu.Checked = l.Enabled;
+                }
+            }
+        }
+
         #endregion
 
         #region General Events
@@ -347,6 +401,7 @@ namespace NaiveGUI
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            timer_main.Enabled = false;
             foreach(var l in Listeners)
             {
                 l.Stop();
@@ -403,9 +458,6 @@ namespace NaiveGUI
             if(e.Item.Tag is ProxyListener l && e.Item.Checked != l.Enabled)
             {
                 e.Item.Checked = l.ToggleEnabled();
-                // TODO: This is just for updating tray menu status.
-                // Use a more elegant method later.
-                RefreshListenerList();
             }
         }
 
@@ -419,13 +471,24 @@ namespace NaiveGUI
             }
         }
 
+        /// <summary>
+        /// Main Tick, 20 tick/s.
+        /// </summary>
+        private void timer_main_Tick(object sender, EventArgs e)
+        {
+            Tick++;
+            foreach(var l in Listeners)
+            {
+                l.Tick(Tick);
+            }
+        }
+
         #endregion
 
         #region Button Events
 
         private void button_remote_add_Click(object sender, EventArgs e)
         {
-            int i = 0;
             string group = "Default";
             if(tree_remotes.SelectedNode != null)
             {
@@ -451,7 +514,7 @@ namespace NaiveGUI
                 var host = textBox_host.Text.Split(':');
                 if(host.Length > 2)
                 {
-                    Trace.Fail("Illegal host");
+                    MessageBox.Show("Illegal host, please check your input.\n\nExamples: \nprprpr.com:2333\nexcited.com\n233.233.233.233", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 if(host.Length < 2)
@@ -463,7 +526,7 @@ namespace NaiveGUI
                 {
                     CurrentRemote.Remote.Port = port;
                 }
-                CurrentRemote.Remote.Scheme = comboBox_protocol.Text;
+                CurrentRemote.Remote.Scheme = comboBox_protocol.Text.ToLower();
                 CurrentRemote.Remote.Host = host[0];
                 CurrentRemote.Remote.UserName = textBox_username.Text;
                 CurrentRemote.Remote.Password = textBox_password.Text;
@@ -500,6 +563,11 @@ namespace NaiveGUI
             Listeners.Add(new ProxyListener(new UriBuilder("socks", textBox_listener_address.Text, int.TryParse(textBox_listener_port.Text, out int port) ? port : 1080)));
             Save();
             RefreshListenerList();
+        }
+
+        private void button_subscription_Click(object sender, EventArgs e)
+        {
+            Trace.Fail("咕!");
         }
 
         #endregion

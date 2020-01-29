@@ -9,20 +9,19 @@ namespace NaiveGUI
     {
         public static string NaivePath = "naive.exe";
 
-        public bool Enabled = false;
+        /// <summary>
+        /// 设置此属性请使用 <see cref="ToggleEnabled"/>
+        /// </summary>
+        public bool Enabled { get; private set; }
 
         public bool Running => BaseProcess != null && !BaseProcess.HasExited;
 
+        /// <summary>
         /// Listens at addr:port with protocol &lt;proto&gt;.
         /// Allowed values for proto: "socks", "http", "redir".
         /// </summary>
         public UriBuilder Listen = null;
 
-        public Process BaseProcess = null;
-
-        /// <summary>
-        /// 设置此属性请使用 <see cref="SetRemote"/>
-        /// </summary>
         public RemoteConfig Remote
         {
             get => this._remote;
@@ -31,7 +30,7 @@ namespace NaiveGUI
                 this._remote = value;
                 if(Running)
                 {
-                    BaseProcess.Exited -= process_Exited;
+                    // TODO: This may trigger fail check, lock required
                     Stop();
                     Start();
                 }
@@ -39,11 +38,42 @@ namespace NaiveGUI
         }
         private RemoteConfig _remote;
 
-        public int FailCounter = 0;
+        public Process BaseProcess = null;
 
-        public ProxyListener(UriBuilder listen)
+        public int FailCounter = 0;
+        public DateTime LastStart = DateTime.Now;
+
+        public ProxyListener(UriBuilder listen, bool enabled = false)
         {
             Listen = listen;
+            Enabled = enabled;
+        }
+
+        public void Tick(ulong Tick)
+        {
+            if(Enabled && Tick % 20 == 0)
+            {
+                if(!Running)
+                {
+                    if(DateTime.Now - LastStart < TimeSpan.FromSeconds(10))
+                    {
+                        if(++FailCounter > 3)
+                        {
+                            Enabled = false;
+                            MainForm.Instance.BalloonTip(Listen.ToString(), "Listener crashed for too many times, manually maintenance required.", ToolTipIcon.Error);
+                            MainForm.Instance.RefreshListenerList();
+                            MainForm.Instance.Save();
+                            return;
+                        }
+                        MainForm.Instance.BalloonTip(Listen.ToString(), "Listener crashed, restarting...", ToolTipIcon.Error);
+                    }
+                    Start();
+                }
+                else if(FailCounter != 0 && DateTime.Now - LastStart > TimeSpan.FromSeconds(30))
+                {
+                    FailCounter = 0;
+                }
+            }
         }
 
         public bool ToggleEnabled()
@@ -56,6 +86,7 @@ namespace NaiveGUI
             Enabled = !Enabled;
             if(Enabled)
             {
+                FailCounter = 0;
                 Start();
             }
             else
@@ -63,11 +94,6 @@ namespace NaiveGUI
                 Stop();
             }
             return Enabled;
-        }
-
-        public void Tick()
-        {
-
         }
 
         public void Start()
@@ -90,7 +116,7 @@ namespace NaiveGUI
             {
                 sb.Append(" --log=\"\"");
             }
-            // TODO: --log, --log-net-log, --ssl-key-log-file
+            // TODO: --log-net-log, --ssl-key-log-file
             var start = new ProcessStartInfo(NaivePath, sb.ToString())
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
@@ -99,29 +125,33 @@ namespace NaiveGUI
                 RedirectStandardError = logging,
                 RedirectStandardOutput = logging
             };
-            BaseProcess = Process.Start(start);
-            BaseProcess.Exited += process_Exited;
-            if(logging)
+            LastStart = DateTime.Now;
+            try
             {
-                BaseProcess.OutputDataReceived += (s, e) =>
+                BaseProcess = Process.Start(start);
+                if(logging)
                 {
-                    if(e.Data != null)
-                        MainForm.Instance.Invoke(new Action(() =>
-                        {
-                            MainForm.Instance.textBox_log.AppendText(e.Data);
-                        }));
-                };
-                BaseProcess.BeginOutputReadLine();
-                BaseProcess.ErrorDataReceived += (s, e) =>
-                {
-                    if(e.Data != null)
-                        MainForm.Instance.Invoke(new Action(() =>
-                        {
-                            MainForm.Instance.textBox_log.AppendText(e.Data);
-                        }));
-                };
-                BaseProcess.BeginErrorReadLine();
+                    BaseProcess.OutputDataReceived += (s, e) =>
+                    {
+                        if(e.Data != null)
+                            MainForm.Instance.Invoke(new Action(() =>
+                            {
+                                MainForm.Instance.textBox_log.AppendText(e.Data);
+                            }));
+                    };
+                    BaseProcess.BeginOutputReadLine();
+                    BaseProcess.ErrorDataReceived += (s, e) =>
+                    {
+                        if(e.Data != null)
+                            MainForm.Instance.Invoke(new Action(() =>
+                            {
+                                MainForm.Instance.textBox_log.AppendText(e.Data);
+                            }));
+                    };
+                    BaseProcess.BeginErrorReadLine();
+                }
             }
+            catch { }
         }
 
         public void Stop()
@@ -132,7 +162,6 @@ namespace NaiveGUI
             }
             try
             {
-                FailCounter = -1;
                 if(!BaseProcess.HasExited && !BaseProcess.CloseMainWindow())
                 {
                     BaseProcess.Kill();
@@ -141,11 +170,6 @@ namespace NaiveGUI
             }
             catch { }
             BaseProcess = null;
-        }
-
-        protected void process_Exited(object sender, EventArgs args)
-        {
-
         }
     }
 }
