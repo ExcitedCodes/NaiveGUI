@@ -60,12 +60,18 @@
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox_listener = new System.Windows.Forms.GroupBox();
             this.groupBox_remotes = new System.Windows.Forms.GroupBox();
+            this.button_subscription = new System.Windows.Forms.Button();
             this.checkBox_logging = new System.Windows.Forms.CheckBox();
             this.textBox_log = new System.Windows.Forms.TextBox();
-            this.button_subscription = new System.Windows.Forms.Button();
+            this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStrip_tray = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem_listeners = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
+            this.contextMenuStrip_tray.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView_listeners
@@ -384,6 +390,15 @@
             this.groupBox_remotes.TabStop = false;
             this.groupBox_remotes.Text = "Remotes";
             // 
+            // button_subscription
+            // 
+            this.button_subscription.Location = new System.Drawing.Point(6, 216);
+            this.button_subscription.Name = "button_subscription";
+            this.button_subscription.Size = new System.Drawing.Size(168, 21);
+            this.button_subscription.TabIndex = 27;
+            this.button_subscription.Text = "Subscription";
+            this.button_subscription.UseVisualStyleBackColor = true;
+            // 
             // checkBox_logging
             // 
             this.checkBox_logging.AutoSize = true;
@@ -405,14 +420,40 @@
             this.textBox_log.Size = new System.Drawing.Size(796, 192);
             this.textBox_log.TabIndex = 31;
             // 
-            // button_subscription
+            // trayIcon
             // 
-            this.button_subscription.Location = new System.Drawing.Point(6, 216);
-            this.button_subscription.Name = "button_subscription";
-            this.button_subscription.Size = new System.Drawing.Size(168, 21);
-            this.button_subscription.TabIndex = 27;
-            this.button_subscription.Text = "Subscription";
-            this.button_subscription.UseVisualStyleBackColor = true;
+            this.trayIcon.ContextMenuStrip = this.contextMenuStrip_tray;
+            this.trayIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("trayIcon.Icon")));
+            this.trayIcon.Text = "NaiveGUI";
+            this.trayIcon.Visible = true;
+            this.trayIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.trayIcon_MouseClick);
+            // 
+            // contextMenuStrip_tray
+            // 
+            this.contextMenuStrip_tray.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem_listeners,
+            this.toolStripSeparator1,
+            this.toolStripMenuItem_exit});
+            this.contextMenuStrip_tray.Name = "contextMenuStrip_tray";
+            this.contextMenuStrip_tray.Size = new System.Drawing.Size(181, 76);
+            // 
+            // toolStripMenuItem_listeners
+            // 
+            this.toolStripMenuItem_listeners.Name = "toolStripMenuItem_listeners";
+            this.toolStripMenuItem_listeners.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_listeners.Text = "Listeners";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // toolStripMenuItem_exit
+            // 
+            this.toolStripMenuItem_exit.Name = "toolStripMenuItem_exit";
+            this.toolStripMenuItem_exit.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem_exit.Text = "Exit";
+            this.toolStripMenuItem_exit.Click += new System.EventHandler(this.toolStripMenuItem_exit_Click);
             // 
             // MainForm
             // 
@@ -437,6 +478,7 @@
             this.groupBox_listener.ResumeLayout(false);
             this.groupBox_listener.PerformLayout();
             this.groupBox_remotes.ResumeLayout(false);
+            this.contextMenuStrip_tray.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -476,6 +518,11 @@
         internal System.Windows.Forms.TextBox textBox_log;
         private System.Windows.Forms.Button button_remote_delete;
         private System.Windows.Forms.Button button_subscription;
+        private System.Windows.Forms.NotifyIcon trayIcon;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_tray;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_listeners;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_exit;
     }
 }
 
