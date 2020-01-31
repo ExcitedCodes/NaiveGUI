@@ -68,6 +68,7 @@
             this.toolStripSeparator_listeners = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_main = new System.Windows.Forms.Timer(this.components);
+            this.checkBox_autorun = new System.Windows.Forms.CheckBox();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
@@ -456,11 +457,23 @@
             this.timer_main.Interval = 50;
             this.timer_main.Tick += new System.EventHandler(this.timer_main_Tick);
             // 
+            // checkBox_autorun
+            // 
+            this.checkBox_autorun.AutoSize = true;
+            this.checkBox_autorun.Location = new System.Drawing.Point(126, 261);
+            this.checkBox_autorun.Name = "checkBox_autorun";
+            this.checkBox_autorun.Size = new System.Drawing.Size(84, 16);
+            this.checkBox_autorun.TabIndex = 32;
+            this.checkBox_autorun.Text = "Auto Start";
+            this.checkBox_autorun.UseVisualStyleBackColor = true;
+            this.checkBox_autorun.CheckedChanged += new System.EventHandler(this.checkBox_autorun_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 487);
+            this.Controls.Add(this.checkBox_autorun);
             this.Controls.Add(this.textBox_log);
             this.Controls.Add(this.checkBox_logging);
             this.Controls.Add(this.groupBox_remotes);
@@ -525,6 +538,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator_listeners;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_exit;
         private System.Windows.Forms.Timer timer_main;
+        internal System.Windows.Forms.CheckBox checkBox_autorun;
     }
 }
 

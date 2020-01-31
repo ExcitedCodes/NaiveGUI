@@ -1,12 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Diagnostics;
 using System.Windows.Forms;
+using System.Security.Principal;
 
 namespace NaiveGUI
 {
     static class Program
     {
+        public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        public static readonly string AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Utils.Md5(Application.ExecutablePath) + ".lnk";
+
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
@@ -17,6 +22,20 @@ namespace NaiveGUI
             foreach(var a in args)
             {
                 var split = a.Split('=');
+                if(split.Length == 2 && (split[0] == "--autorun"))
+                {
+                    // Restricted to the binary itself, sometimes parent is x64 process and there's an exception
+                    try
+                    {
+                        var parent = ParentProcessFinder.GetParentProcess(Process.GetCurrentProcess().Handle);
+                        if(parent != null && parent.Modules[0].FileName == Application.ExecutablePath)
+                        {
+                            SetAutoRun(bool.TryParse(split[1], out bool start) && start);
+                        }
+                    }
+                    catch { }
+                    return;
+                }
                 if(split.Length == 2 && (split[0] == "-c" || split[0] == "--config"))
                 {
                     config = split[1];
@@ -28,7 +47,7 @@ namespace NaiveGUI
             var mutex = new Mutex(true, "NaiveGUI_" + Utils.Md5(full), out bool created);
             if(created)
             {
-                Application.Run(new MainForm(full));
+                Application.Run(new MainForm(full, File.Exists(AutoRunFile)));
                 mutex.ReleaseMutex();
             }
             else
@@ -39,6 +58,57 @@ namespace NaiveGUI
                     "Config: " + config + "\n" +
                     "Full Path: " + full, "Oops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        public static bool SetAutoRun(bool start)
+        {
+            try
+            {
+                if(start)
+                {
+                    if(File.Exists(AutoRunFile))
+                    {
+                        File.Delete(AutoRunFile);
+                    }
+                    // Don't use using here, IWshRuntimeLibrary.File will cause name conflict.
+                    var shortcut = (IWshRuntimeLibrary.IWshShortcut)new IWshRuntimeLibrary.WshShell().CreateShortcut(AutoRunFile);
+                    shortcut.TargetPath = Application.ExecutablePath;
+                    shortcut.WorkingDirectory = Application.StartupPath;
+                    shortcut.Description = "Naive Proxy GUI Auto Start";
+                    shortcut.Save();
+                }
+                else if(File.Exists(AutoRunFile))
+                {
+                    File.Delete(AutoRunFile);
+                }
+                return true;
+            }
+            catch(Exception e)
+            {
+                if(IsAdministrator)
+                {
+                    MessageBox.Show("Failed to set autostart status even I have administrator privilege.\nYou may wanted to check your anti-virus software.\n\n" + e.ToString(), "Oops", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else if(MessageBox.Show("Failed to set autostart status.\nGenerally this shouldn't happen, do you want to try again as administrator?\nAlso make sure your anti-virus software isn't blocking this progress.", "Oops", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo(Application.ExecutablePath)
+                        {
+                            Verb = "runas",
+                            Arguments = "--autorun=" + start.ToString(),
+                            UseShellExecute = true,
+                            WorkingDirectory = Environment.CurrentDirectory
+                        }).WaitForExit();
+                        return true;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unable to elevate the process.", "WTF", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            return false;
         }
     }
 }

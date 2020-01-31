@@ -29,7 +29,7 @@ namespace NaiveGUI
         public List<RemoteConfig> Remotes = new List<RemoteConfig>();
         public List<ProxyListener> Listeners = new List<ProxyListener>();
 
-        public MainForm(string config)
+        public MainForm(string config,bool autorun)
         {
             if(Instance != null)
             {
@@ -40,6 +40,11 @@ namespace NaiveGUI
             #region Components
 
             InitializeComponent();
+            if(Program.IsAdministrator)
+            {
+                Text += " (Administrator)";
+            }
+            checkBox_autorun.Checked = autorun;
 
             #endregion
 
@@ -413,6 +418,8 @@ namespace NaiveGUI
         private void checkBox_username_CheckedChanged(object sender, EventArgs e) => textBox_username.PasswordChar = checkBox_host.Checked ? '\0' : '*';
 
         private void checkBox_password_CheckedChanged(object sender, EventArgs e) => textBox_password.PasswordChar = checkBox_host.Checked ? '\0' : '*';
+
+        private void checkBox_autorun_CheckedChanged(object sender, EventArgs e) => Program.SetAutoRun(checkBox_autorun.Checked);
 
         private void tree_remotes_AfterCheck(object sender, TreeViewEventArgs e)
         {
