@@ -415,9 +415,9 @@ namespace NaiveGUI
 
         private void checkBox_host_CheckedChanged(object sender, EventArgs e) => textBox_host.PasswordChar = checkBox_host.Checked ? '\0' : '*';
 
-        private void checkBox_username_CheckedChanged(object sender, EventArgs e) => textBox_username.PasswordChar = checkBox_host.Checked ? '\0' : '*';
+        private void checkBox_username_CheckedChanged(object sender, EventArgs e) => textBox_username.PasswordChar = checkBox_username.Checked ? '\0' : '*';
 
-        private void checkBox_password_CheckedChanged(object sender, EventArgs e) => textBox_password.PasswordChar = checkBox_host.Checked ? '\0' : '*';
+        private void checkBox_password_CheckedChanged(object sender, EventArgs e) => textBox_password.PasswordChar = checkBox_password.Checked ? '\0' : '*';
 
         private void checkBox_autorun_CheckedChanged(object sender, EventArgs e) => Program.SetAutoRun(checkBox_autorun.Checked);
 

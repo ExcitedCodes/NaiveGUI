@@ -136,7 +136,7 @@ namespace NaiveGUI
                         if(e.Data != null)
                             MainForm.Instance.Invoke(new Action(() =>
                             {
-                                MainForm.Instance.textBox_log.AppendText(e.Data);
+                                MainForm.Instance.textBox_log.AppendText(e.Data.Replace("\r", "").Replace("\n", Environment.NewLine));
                             }));
                     };
                     BaseProcess.BeginOutputReadLine();
@@ -145,7 +145,7 @@ namespace NaiveGUI
                         if(e.Data != null)
                             MainForm.Instance.Invoke(new Action(() =>
                             {
-                                MainForm.Instance.textBox_log.AppendText(e.Data);
+                                MainForm.Instance.textBox_log.AppendText(e.Data.Replace("\r", "").Replace("\n", Environment.NewLine));
                             }));
                     };
                     BaseProcess.BeginErrorReadLine();
