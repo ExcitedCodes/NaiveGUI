@@ -29,7 +29,7 @@ namespace NaiveGUI
         public List<RemoteConfig> Remotes = new List<RemoteConfig>();
         public List<ProxyListener> Listeners = new List<ProxyListener>();
 
-        public MainForm(string config,bool autorun)
+        public MainForm(string config, bool autorun)
         {
             if(Instance != null)
             {
@@ -438,7 +438,14 @@ namespace NaiveGUI
             {
                 if(!e.Node.Checked && CurrentListener.Remote == cfg)
                 {
-                    CurrentListener.Remote = null;
+                    if(CurrentListener.Enabled)
+                    {
+                        e.Node.Checked = true;
+                    }
+                    else
+                    {
+                        CurrentListener.Remote = null;
+                    }
                 }
                 else if(e.Node.Checked)
                 {
@@ -470,8 +477,24 @@ namespace NaiveGUI
 
         private void listView_listeners_SelectedIndexChanged(object sender, EventArgs e)
         {
-            tree_remotes.CheckBoxes = listView_listeners.SelectedItems.Count != 0;
-            if(tree_remotes.CheckBoxes && listView_listeners.SelectedItems[0].Tag is ProxyListener l)
+            bool target = listView_listeners.SelectedItems.Count != 0;
+            if(tree_remotes.CheckBoxes ^ target)
+            {
+                var state = tree_remotes.Nodes.GetExpansionState();
+                tree_remotes.CheckBoxes = target;
+                tree_remotes.Nodes.SetExpansionState(state);
+                if(target)
+                {
+                    foreach(TreeNode n in tree_remotes.Nodes)
+                    {
+                        if(n.Parent == null)
+                        {
+                            tree_remotes.HideCheckBox(n);
+                        }
+                    }
+                }
+            }
+            if(target && listView_listeners.SelectedItems[0].Tag is ProxyListener l)
             {
                 CurrentListener = l;
                 RefreshRemoteTreeCheckStatus();
@@ -561,6 +584,11 @@ namespace NaiveGUI
             {
                 Remotes.Remove(CurrentRemote);
                 tree_remotes.SelectedNode.Remove();
+                // Remove parent if the group is empty
+                if(tree_remotes.SelectedNode.Parent == null && tree_remotes.SelectedNode.Nodes.Count == 0)
+                {
+                    tree_remotes.SelectedNode.Remove();
+                }
                 Save();
             }
         }
