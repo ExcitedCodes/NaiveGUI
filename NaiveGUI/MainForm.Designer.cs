@@ -53,13 +53,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox_quic = new System.Windows.Forms.ComboBox();
             this.button_remote_add = new System.Windows.Forms.Button();
-            this.textBox_listener_port = new System.Windows.Forms.TextBox();
-            this.textBox_listener_address = new System.Windows.Forms.TextBox();
+            this.textBox_listener_endpoint = new System.Windows.Forms.TextBox();
             this.button_listener_add = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
             this.groupBox_listener = new System.Windows.Forms.GroupBox();
             this.groupBox_remotes = new System.Windows.Forms.GroupBox();
             this.button_subscription = new System.Windows.Forms.Button();
+            this.tree_remotes = new System.Windows.Forms.TreeView();
             this.checkBox_logging = new System.Windows.Forms.CheckBox();
             this.textBox_log = new System.Windows.Forms.TextBox();
             this.trayIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -68,11 +67,14 @@
             this.toolStripMenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_main = new System.Windows.Forms.Timer(this.components);
             this.checkBox_autorun = new System.Windows.Forms.CheckBox();
-            this.tree_remotes = new System.Windows.Forms.TreeView();
+            this.contextMenuStrip_listener = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
             this.contextMenuStrip_tray.SuspendLayout();
+            this.contextMenuStrip_listener.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView_listeners
@@ -80,14 +82,17 @@
             this.listView_listeners.CheckBoxes = true;
             this.listView_listeners.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader2});
+            this.listView_listeners.ContextMenuStrip = this.contextMenuStrip_listener;
             this.listView_listeners.FullRowSelect = true;
             this.listView_listeners.HideSelection = false;
+            this.listView_listeners.LabelEdit = true;
             this.listView_listeners.Location = new System.Drawing.Point(6, 20);
             this.listView_listeners.Name = "listView_listeners";
             this.listView_listeners.Size = new System.Drawing.Size(196, 190);
             this.listView_listeners.TabIndex = 0;
             this.listView_listeners.UseCompatibleStateImageBehavior = false;
             this.listView_listeners.View = System.Windows.Forms.View.Details;
+            this.listView_listeners.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.listView_listeners_AfterLabelEdit);
             this.listView_listeners.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.listView_listeners_ItemChecked);
             this.listView_listeners.SelectedIndexChanged += new System.EventHandler(this.listView_listeners_SelectedIndexChanged);
             // 
@@ -316,21 +321,13 @@
             this.button_remote_add.UseVisualStyleBackColor = true;
             this.button_remote_add.Click += new System.EventHandler(this.button_remote_add_Click);
             // 
-            // textBox_listener_port
+            // textBox_listener_endpoint
             // 
-            this.textBox_listener_port.Location = new System.Drawing.Point(134, 216);
-            this.textBox_listener_port.MaxLength = 5;
-            this.textBox_listener_port.Name = "textBox_listener_port";
-            this.textBox_listener_port.Size = new System.Drawing.Size(41, 21);
-            this.textBox_listener_port.TabIndex = 1;
-            // 
-            // textBox_listener_address
-            // 
-            this.textBox_listener_address.Location = new System.Drawing.Point(6, 216);
-            this.textBox_listener_address.MaxLength = 255;
-            this.textBox_listener_address.Name = "textBox_listener_address";
-            this.textBox_listener_address.Size = new System.Drawing.Size(120, 21);
-            this.textBox_listener_address.TabIndex = 0;
+            this.textBox_listener_endpoint.Location = new System.Drawing.Point(6, 216);
+            this.textBox_listener_endpoint.MaxLength = 255;
+            this.textBox_listener_endpoint.Name = "textBox_listener_endpoint";
+            this.textBox_listener_endpoint.Size = new System.Drawing.Size(169, 21);
+            this.textBox_listener_endpoint.TabIndex = 0;
             // 
             // button_listener_add
             // 
@@ -343,21 +340,10 @@
             this.button_listener_add.UseVisualStyleBackColor = true;
             this.button_listener_add.Click += new System.EventHandler(this.button_listener_add_Click);
             // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(126, 221);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(11, 12);
-            this.label9.TabIndex = 14;
-            this.label9.Text = ":";
-            // 
             // groupBox_listener
             // 
             this.groupBox_listener.Controls.Add(this.listView_listeners);
-            this.groupBox_listener.Controls.Add(this.textBox_listener_port);
-            this.groupBox_listener.Controls.Add(this.label9);
-            this.groupBox_listener.Controls.Add(this.textBox_listener_address);
+            this.groupBox_listener.Controls.Add(this.textBox_listener_endpoint);
             this.groupBox_listener.Controls.Add(this.button_listener_add);
             this.groupBox_listener.Location = new System.Drawing.Point(12, 12);
             this.groupBox_listener.Name = "groupBox_listener";
@@ -387,6 +373,19 @@
             this.button_subscription.Text = "Subscription";
             this.button_subscription.UseVisualStyleBackColor = true;
             this.button_subscription.Click += new System.EventHandler(this.button_subscription_Click);
+            // 
+            // tree_remotes
+            // 
+            this.tree_remotes.HideSelection = false;
+            this.tree_remotes.ImageIndex = 0;
+            this.tree_remotes.ImageList = this.imageList_remote;
+            this.tree_remotes.Location = new System.Drawing.Point(6, 20);
+            this.tree_remotes.Name = "tree_remotes";
+            this.tree_remotes.SelectedImageIndex = 0;
+            this.tree_remotes.Size = new System.Drawing.Size(309, 190);
+            this.tree_remotes.TabIndex = 7;
+            this.tree_remotes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterCheck);
+            this.tree_remotes.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterSelect);
             // 
             // checkBox_logging
             // 
@@ -455,18 +454,28 @@
             this.checkBox_autorun.UseVisualStyleBackColor = true;
             this.checkBox_autorun.CheckedChanged += new System.EventHandler(this.checkBox_autorun_CheckedChanged);
             // 
-            // tree_remotes
+            // contextMenuStrip_listener
             // 
-            this.tree_remotes.HideSelection = false;
-            this.tree_remotes.ImageIndex = 0;
-            this.tree_remotes.ImageList = this.imageList_remote;
-            this.tree_remotes.Location = new System.Drawing.Point(6, 20);
-            this.tree_remotes.Name = "tree_remotes";
-            this.tree_remotes.SelectedImageIndex = 0;
-            this.tree_remotes.Size = new System.Drawing.Size(309, 190);
-            this.tree_remotes.TabIndex = 7;
-            this.tree_remotes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterCheck);
-            this.tree_remotes.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterSelect);
+            this.contextMenuStrip_listener.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.contextMenuStrip_listener.Name = "contextMenuStrip_listener";
+            this.contextMenuStrip_listener.Size = new System.Drawing.Size(114, 48);
+            this.contextMenuStrip_listener.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_endpoint_Opening);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -494,6 +503,7 @@
             this.groupBox_listener.PerformLayout();
             this.groupBox_remotes.ResumeLayout(false);
             this.contextMenuStrip_tray.ResumeLayout(false);
+            this.contextMenuStrip_listener.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -522,10 +532,8 @@
         private System.Windows.Forms.TextBox textBox_name;
         private System.Windows.Forms.Button button_remote_add;
         private System.Windows.Forms.ImageList imageList_remote;
-        private System.Windows.Forms.TextBox textBox_listener_port;
-        private System.Windows.Forms.TextBox textBox_listener_address;
+        private System.Windows.Forms.TextBox textBox_listener_endpoint;
         private System.Windows.Forms.Button button_listener_add;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox_listener;
         private System.Windows.Forms.ListView listView_listeners;
         private System.Windows.Forms.GroupBox groupBox_remotes;
@@ -539,6 +547,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_exit;
         private System.Windows.Forms.Timer timer_main;
         internal System.Windows.Forms.CheckBox checkBox_autorun;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip_listener;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
     }
 }
 

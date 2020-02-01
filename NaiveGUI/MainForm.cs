@@ -73,7 +73,7 @@ namespace NaiveGUI
                 {
                     foreach(var l in json["listeners"])
                     {
-                        var listener = new ProxyListener(new UriBuilder(l["listen"]), l.ContainsKey("enable") ? l["enable"] : false);
+                        var listener = new ProxyListener(l["listen"], l.ContainsKey("enable") ? l["enable"] : false);
                         var name = l["remote"]["name"];
                         var group = l["remote"]["group"];
                         foreach(var r in Remotes)
@@ -413,6 +413,15 @@ namespace NaiveGUI
             }
         }
 
+        private void button_subscription_Click(object sender, EventArgs e)
+        {
+            Trace.Fail("咕!");
+        }
+
+        #endregion
+
+        #region Remote UI Events
+
         private void checkBox_host_CheckedChanged(object sender, EventArgs e) => textBox_host.PasswordChar = checkBox_host.Checked ? '\0' : '*';
 
         private void checkBox_username_CheckedChanged(object sender, EventArgs e) => textBox_username.PasswordChar = checkBox_username.Checked ? '\0' : '*';
@@ -447,7 +456,7 @@ namespace NaiveGUI
                         CurrentListener.Remote = null;
                     }
                 }
-                else if(e.Node.Checked)
+                else if(e.Node.Checked && CurrentListener.Remote != cfg)
                 {
                     CurrentListener.Remote = cfg;
                 }
@@ -466,56 +475,6 @@ namespace NaiveGUI
                 LoadConfigUI(cfg);
             }
         }
-
-        private void listView_listeners_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            if(e.Item.Tag is ProxyListener l && e.Item.Checked != l.Enabled)
-            {
-                e.Item.Checked = l.ToggleEnabled();
-            }
-        }
-
-        private void listView_listeners_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            bool target = listView_listeners.SelectedItems.Count != 0;
-            if(tree_remotes.CheckBoxes ^ target)
-            {
-                var state = tree_remotes.Nodes.GetExpansionState();
-                tree_remotes.CheckBoxes = target;
-                tree_remotes.Nodes.SetExpansionState(state);
-                if(target)
-                {
-                    foreach(TreeNode n in tree_remotes.Nodes)
-                    {
-                        if(n.Parent == null)
-                        {
-                            tree_remotes.HideCheckBox(n);
-                        }
-                    }
-                }
-            }
-            if(target && listView_listeners.SelectedItems[0].Tag is ProxyListener l)
-            {
-                CurrentListener = l;
-                RefreshRemoteTreeCheckStatus();
-            }
-        }
-
-        /// <summary>
-        /// Main Tick, 20 tick/s.
-        /// </summary>
-        private void timer_main_Tick(object sender, EventArgs e)
-        {
-            Tick++;
-            foreach(var l in Listeners)
-            {
-                l.Tick(Tick);
-            }
-        }
-
-        #endregion
-
-        #region Button Events
 
         private void button_remote_add_Click(object sender, EventArgs e)
         {
@@ -593,16 +552,108 @@ namespace NaiveGUI
             }
         }
 
-        private void button_listener_add_Click(object sender, EventArgs e)
+        #endregion
+
+        #region Listener UI Events
+
+        private void listView_listeners_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            Listeners.Add(new ProxyListener(new UriBuilder("socks", textBox_listener_address.Text, int.TryParse(textBox_listener_port.Text, out int port) ? port : 1080)));
-            Save();
-            RefreshListenerList();
+            if(e.Item.Tag is ProxyListener l && e.Item.Checked != l.Enabled)
+            {
+                e.Item.Checked = l.ToggleEnabled();
+            }
         }
 
-        private void button_subscription_Click(object sender, EventArgs e)
+        private void listView_listeners_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Trace.Fail("咕!");
+            bool target = listView_listeners.SelectedItems.Count != 0;
+            if(!target)
+            {
+                CurrentListener = null;
+            }
+            if(tree_remotes.CheckBoxes ^ target)
+            {
+                var state = tree_remotes.Nodes.GetExpansionState();
+                tree_remotes.CheckBoxes = target;
+                tree_remotes.Nodes.SetExpansionState(state);
+                if(target)
+                {
+                    foreach(TreeNode n in tree_remotes.Nodes)
+                    {
+                        if(n.Parent == null)
+                        {
+                            tree_remotes.HideCheckBox(n);
+                        }
+                    }
+                }
+            }
+            if(target && listView_listeners.SelectedItems[0].Tag is ProxyListener l)
+            {
+                CurrentListener = l;
+                RefreshRemoteTreeCheckStatus();
+            }
+        }
+
+        private void listView_listeners_AfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            if(e.Label == null)
+            {
+                return;
+            }
+            var label = e.Label;
+            var uri = ProxyListener.FilterListeningAddress(ref label);
+            if(!listView_listeners.Items.ContainsKey(label))
+            {
+                listView_listeners.Items[e.Item].Text = label;
+                ((ProxyListener)listView_listeners.Items[e.Item].Tag).Listen = uri;
+                Save();
+            }
+            e.CancelEdit = true;
+        }
+
+        private void contextMenuStrip_endpoint_Opening(object sender, System.ComponentModel.CancelEventArgs e) => e.Cancel = listView_listeners.SelectedItems.Count != 1;
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(listView_listeners.SelectedItems.Count == 1)
+            {
+                listView_listeners.SelectedItems[0].BeginEdit();
+            }
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(listView_listeners.SelectedItems.Count == 1)
+            {
+                Listeners.Remove((ProxyListener)listView_listeners.SelectedItems[0].Tag);
+                RefreshListenerList();
+                Save();
+            }
+        }
+
+        private void button_listener_add_Click(object sender, EventArgs e)
+        {
+            var address = textBox_listener_endpoint.Text;
+            var uri = ProxyListener.FilterListeningAddress(ref address);
+            if(!listView_listeners.Items.ContainsKey(address))
+            {
+                Listeners.Add(new ProxyListener(uri));
+                Save();
+                RefreshListenerList();
+            }
+            textBox_listener_endpoint.Clear();
+        }
+
+        /// <summary>
+        /// Main Tick, 20 tick/s.
+        /// </summary>
+        private void timer_main_Tick(object sender, EventArgs e)
+        {
+            Tick++;
+            foreach(var l in Listeners)
+            {
+                l.Tick(Tick);
+            }
         }
 
         #endregion
