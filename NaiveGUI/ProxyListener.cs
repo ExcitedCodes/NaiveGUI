@@ -9,6 +9,23 @@ namespace NaiveGUI
     {
         public static string NaivePath = "naive.exe";
 
+        public static Uri FilterListeningAddress(ref string input)
+        {
+            var builder = new UriBuilder(input);
+            switch(builder.Scheme)
+            {
+            case "socks":
+            case "http":
+            case "redir":
+                break;
+            default:
+                builder.Scheme = "socks";
+                break;
+            }
+            input = builder.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped);
+            return builder.Uri;
+        }
+
         /// <summary>
         /// 设置此属性请使用 <see cref="ToggleEnabled"/>
         /// </summary>
@@ -20,7 +37,19 @@ namespace NaiveGUI
         /// Listens at addr:port with protocol &lt;proto&gt;.
         /// Allowed values for proto: "socks", "http", "redir".
         /// </summary>
-        public UriBuilder Listen = null;
+        public Uri Listen
+        {
+            get => this._listen;
+            set
+            {
+                this._listen = value;
+                if(Running)
+                {
+                    Start();
+                }
+            }
+        }
+        private Uri _listen = null;
 
         public RemoteConfig Remote
         {
@@ -30,8 +59,6 @@ namespace NaiveGUI
                 this._remote = value;
                 if(Running)
                 {
-                    // TODO: This may trigger fail check, lock required
-                    Stop();
                     Start();
                 }
             }
@@ -43,7 +70,9 @@ namespace NaiveGUI
         public int FailCounter = 0;
         public DateTime LastStart = DateTime.Now;
 
-        public ProxyListener(UriBuilder listen, bool enabled = false)
+        public ProxyListener(string listen, bool enabled = false) : this(FilterListeningAddress(ref listen), enabled) { }
+
+        public ProxyListener(Uri listen, bool enabled = false)
         {
             Listen = listen;
             Enabled = enabled;
@@ -96,11 +125,14 @@ namespace NaiveGUI
             return Enabled;
         }
 
+        /// <summary>
+        /// Will restart if already running
+        /// </summary>
         public void Start()
         {
             Stop();
             var sb = new StringBuilder();
-            sb.Append("--listen=").Append(Listen.Uri.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped))
+            sb.Append("--listen=").Append(Listen.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped))
                 .Append(" --proxy=").Append(Remote.Remote.Uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.SafeUnescaped));
             if(Remote.Padding)
             {
