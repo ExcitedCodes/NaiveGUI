@@ -64,6 +64,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteConfig.cs" />
     <Compile Include="ProxyListener.cs" />
+    <Compile Include="Subscription\SubscriptionData.cs" />
+    <Compile Include="Subscription\SubscriptionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Subscription\SubscriptionForm.Designer.cs">
+      <DependentUpon>SubscriptionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Subscription\SubscriptionManager.cs" />
     <Compile Include="TreeViewExtension.cs" />
     <Compile Include="Utils.cs" />
     <EmbeddedResource Include="MainForm.resx">
@@ -78,6 +86,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Subscription\SubscriptionForm.resx">
+      <DependentUpon>SubscriptionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

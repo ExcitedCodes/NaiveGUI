@@ -2,11 +2,12 @@
 using System.IO;
 using System.Web;
 using System.Linq;
-using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
 using fastJSON;
+
+using NaiveGUI.Subscription;
 
 namespace NaiveGUI
 {
@@ -25,6 +26,8 @@ namespace NaiveGUI
 
         public RemoteConfig CurrentRemote = null;
         public ProxyListener CurrentListener = null;
+
+        public SubscriptionManager Subscriptions = new SubscriptionManager();
 
         public List<RemoteConfig> Remotes = new List<RemoteConfig>();
         public List<ProxyListener> Listeners = new List<ProxyListener>();
@@ -91,6 +94,20 @@ namespace NaiveGUI
                         Listeners.Add(listener);
                     }
                 }
+                if(json.ContainsKey("subscriptions"))
+                {
+                    var sub = (Dictionary<string, dynamic>)json["subscriptions"];
+                    Subscriptions.LastUpdate = DateTime.Parse(sub["last_update"]);
+                    Subscriptions.UpdateInterval = (int)sub["update_interval"];
+                    foreach(Dictionary<string, dynamic> s in sub["data"])
+                    {
+                        Subscriptions.Add(new SubscriptionData()
+                        {
+                            URL = s["url"],
+                            LastUpdate = DateTime.Parse(s["last_update"])
+                        });
+                    }
+                }
                 RefreshListenerList();
                 RefreshRemoteTree(true);
                 RefreshRemoteTreeCheckStatus();
@@ -116,6 +133,9 @@ namespace NaiveGUI
                         { "group", l.Remote==null ? "" : l.Remote.Group }
                     }}
                 }) },
+                // If you are reading this part and thinking:
+                // "Why the hell the developer use uri to save remotes?!"
+                // 我只能说一句无可奉告
                 { "remotes", Remotes.Select(r => {
                     var uri = new UriBuilder(r.Remote.Uri);
                     var query = HttpUtility.ParseQueryString("");
@@ -126,6 +146,16 @@ namespace NaiveGUI
                     uri.Query = Uri.EscapeDataString(query.ToString());
                     return uri.ToString();
                 }) },
+                { "subscriptions", new Dictionary<string, object>()
+                {
+                    { "data",Subscriptions.Select(s => new Dictionary<string,object>()
+                    {
+                        { "url",s.URL },
+                        { "last_update",s.LastUpdate.ToString() }
+                    })},
+                    { "last_update",Subscriptions.LastUpdate.ToString() },
+                    { "update_interval",Subscriptions.UpdateInterval },
+                }}
             }));
         }
 
@@ -413,10 +443,21 @@ namespace NaiveGUI
             }
         }
 
-        private void button_subscription_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Main Tick, 20 tick/s.
+        /// </summary>
+        private void timer_main_Tick(object sender, EventArgs e)
         {
-            Trace.Fail("咕!");
+            Tick++;
+            foreach(var l in Listeners)
+            {
+                l.Tick(Tick);
+            }
         }
+
+        private void timer_subscription_Tick(object sender, EventArgs e) => Subscriptions.Update();
+
+        private void button_subscription_Click(object sender, EventArgs e) => new SubscriptionForm().ShowDialog();
 
         #endregion
 
@@ -642,18 +683,6 @@ namespace NaiveGUI
                 RefreshListenerList();
             }
             textBox_listener_endpoint.Clear();
-        }
-
-        /// <summary>
-        /// Main Tick, 20 tick/s.
-        /// </summary>
-        private void timer_main_Tick(object sender, EventArgs e)
-        {
-            Tick++;
-            foreach(var l in Listeners)
-            {
-                l.Tick(Tick);
-            }
         }
 
         #endregion
