@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.listView_listeners = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tree_remotes = new System.Windows.Forms.TreeView();
             this.imageList_remote = new System.Windows.Forms.ImageList(this.components);
             this.textBox_host = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -69,6 +68,7 @@
             this.toolStripMenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_main = new System.Windows.Forms.Timer(this.components);
             this.checkBox_autorun = new System.Windows.Forms.CheckBox();
+            this.tree_remotes = new System.Windows.Forms.TreeView();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
@@ -95,19 +95,6 @@
             // 
             this.columnHeader2.Text = "EndPoint";
             this.columnHeader2.Width = 175;
-            // 
-            // tree_remotes
-            // 
-            this.tree_remotes.HideSelection = false;
-            this.tree_remotes.ImageIndex = 0;
-            this.tree_remotes.ImageList = this.imageList_remote;
-            this.tree_remotes.Location = new System.Drawing.Point(6, 20);
-            this.tree_remotes.Name = "tree_remotes";
-            this.tree_remotes.SelectedImageIndex = 0;
-            this.tree_remotes.Size = new System.Drawing.Size(309, 190);
-            this.tree_remotes.TabIndex = 7;
-            this.tree_remotes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterCheck);
-            this.tree_remotes.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterSelect);
             // 
             // imageList_remote
             // 
@@ -467,6 +454,19 @@
             this.checkBox_autorun.Text = "Auto Start";
             this.checkBox_autorun.UseVisualStyleBackColor = true;
             this.checkBox_autorun.CheckedChanged += new System.EventHandler(this.checkBox_autorun_CheckedChanged);
+            // 
+            // tree_remotes
+            // 
+            this.tree_remotes.HideSelection = false;
+            this.tree_remotes.ImageIndex = 0;
+            this.tree_remotes.ImageList = this.imageList_remote;
+            this.tree_remotes.Location = new System.Drawing.Point(6, 20);
+            this.tree_remotes.Name = "tree_remotes";
+            this.tree_remotes.SelectedImageIndex = 0;
+            this.tree_remotes.Size = new System.Drawing.Size(309, 190);
+            this.tree_remotes.TabIndex = 7;
+            this.tree_remotes.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterCheck);
+            this.tree_remotes.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tree_remotes_AfterSelect);
             // 
             // MainForm
             // 
