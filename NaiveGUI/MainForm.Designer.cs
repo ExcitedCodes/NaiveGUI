@@ -70,6 +70,7 @@
             this.contextMenuStrip_listener = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer_subscription = new System.Windows.Forms.Timer(this.components);
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
@@ -477,6 +478,12 @@
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
+            // timer_subscription
+            // 
+            this.timer_subscription.Enabled = true;
+            this.timer_subscription.Interval = 60000;
+            this.timer_subscription.Tick += new System.EventHandler(this.timer_subscription_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -540,7 +547,6 @@
         internal System.Windows.Forms.CheckBox checkBox_logging;
         internal System.Windows.Forms.TextBox textBox_log;
         private System.Windows.Forms.Button button_remote_delete;
-        private System.Windows.Forms.Button button_subscription;
         private System.Windows.Forms.NotifyIcon trayIcon;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_tray;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator_listeners;
@@ -550,6 +556,8 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip_listener;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        internal System.Windows.Forms.Button button_subscription;
+        private System.Windows.Forms.Timer timer_subscription;
     }
 }
 
