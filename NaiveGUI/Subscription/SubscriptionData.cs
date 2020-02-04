@@ -39,7 +39,7 @@ namespace NaiveGUI.Subscription
                         "name": "Name here!",
                         "host": "xxx.xxx",
                         "port": 2333,
-                        "scheme": "socks", // optional
+                        "scheme": "https", // optional
                         "username": "UserXD", // optional
                         "password": "Password0", // optional
                         "padding": true, // optional
@@ -65,7 +65,7 @@ namespace NaiveGUI.Subscription
                     foreach(Dictionary<string, dynamic> r in kv.Value)
                     {
                         // Can't find a better solution in current
-                        string name = r["name"], host = r["host"], scheme = r.ContainsKey("scheme") ? r["scheme"] : "socks",
+                        string name = r["name"], host = r["host"], scheme = r.ContainsKey("scheme") ? r["scheme"] : "https",
                             username = r.ContainsKey("username") ? r["username"] : null, password = r.ContainsKey("password") ? r["password"] : null;
                         int port = r.ContainsKey("port") ? (r["port"] is string ? int.Parse(r["port"]) : (int)r["port"]) : -1,
                             quic_version = r.ContainsKey("quic_version") ? (r["quic_version"] is string ? int.Parse(r["quic_version"]) : (int)r["quic_version"]) : -1;
