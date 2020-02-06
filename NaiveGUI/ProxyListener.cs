@@ -26,6 +26,14 @@ namespace NaiveGUI
             return builder.Uri;
         }
 
+        public static void LogOutput(object sender, DataReceivedEventArgs e)
+        {
+            if(e.Data != null)
+            {
+                MainForm.Instance.Invoke(new Action(() => MainForm.Instance.textBox_log.AppendText(e.Data.Replace("\r", "").Replace("\n", "") + Environment.NewLine)));
+            }
+        }
+
         /// <summary>
         /// 设置此属性请使用 <see cref="ToggleEnabled"/>
         /// </summary>
@@ -163,23 +171,9 @@ namespace NaiveGUI
                 BaseProcess = Process.Start(start);
                 if(logging)
                 {
-                    BaseProcess.OutputDataReceived += (s, e) =>
-                    {
-                        if(e.Data != null)
-                            MainForm.Instance.Invoke(new Action(() =>
-                            {
-                                MainForm.Instance.textBox_log.AppendText(e.Data.Replace("\r", "").Replace("\n", Environment.NewLine));
-                            }));
-                    };
+                    BaseProcess.OutputDataReceived += LogOutput;
                     BaseProcess.BeginOutputReadLine();
-                    BaseProcess.ErrorDataReceived += (s, e) =>
-                    {
-                        if(e.Data != null)
-                            MainForm.Instance.Invoke(new Action(() =>
-                            {
-                                MainForm.Instance.textBox_log.AppendText(e.Data.Replace("\r", "").Replace("\n", Environment.NewLine));
-                            }));
-                    };
+                    BaseProcess.ErrorDataReceived += LogOutput;
                     BaseProcess.BeginErrorReadLine();
                 }
             }
