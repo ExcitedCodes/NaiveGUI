@@ -10,7 +10,7 @@ namespace NaiveGUI
     static class Program
     {
         public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-        public static readonly string AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Utils.Md5(Application.ExecutablePath) + ".lnk";
+        public static string AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Utils.Md5(Application.ExecutablePath) + ".lnk";
 
         /// <summary>
         /// 应用程序的主入口点。
@@ -18,6 +18,7 @@ namespace NaiveGUI
         [STAThread]
         static void Main(string[] args)
         {
+            bool minimize = false;
             var config = "config.json";
             foreach(var a in args)
             {
@@ -40,14 +41,19 @@ namespace NaiveGUI
                 {
                     config = split[1];
                 }
+                else if(split[0] == "--minimize")
+                {
+                    minimize = true;
+                }
             }
             var full = Path.GetFullPath(config);
+            AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Utils.Md5(Application.ExecutablePath + full) + ".lnk";
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var mutex = new Mutex(true, "NaiveGUI_" + Utils.Md5(full), out bool created);
             if(created)
             {
-                Application.Run(new MainForm(full, File.Exists(AutoRunFile)));
+                Application.Run(new MainForm(full, minimize, File.Exists(AutoRunFile)));
                 mutex.ReleaseMutex();
             }
             else
@@ -68,11 +74,12 @@ namespace NaiveGUI
                 {
                     if(File.Exists(AutoRunFile))
                     {
-                        File.Delete(AutoRunFile);
+                        return true;
                     }
                     // Don't use using here, IWshRuntimeLibrary.File will cause name conflict.
                     var shortcut = (IWshRuntimeLibrary.IWshShortcut)new IWshRuntimeLibrary.WshShell().CreateShortcut(AutoRunFile);
                     shortcut.TargetPath = Application.ExecutablePath;
+                    shortcut.Arguments = "--minimize --config=\"" + MainForm.Instance.ConfigPath.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     shortcut.WorkingDirectory = Application.StartupPath;
                     shortcut.Description = "Naive Proxy GUI Auto Start";
                     shortcut.Save();

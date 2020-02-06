@@ -22,6 +22,7 @@ namespace NaiveGUI
         public static ulong Tick = 0;
         public static MainForm Instance = null;
 
+        public bool OverrideHidden = false;
         public string ConfigPath = null;
 
         public RemoteConfig CurrentRemote = null;
@@ -32,7 +33,7 @@ namespace NaiveGUI
         public List<RemoteConfig> Remotes = new List<RemoteConfig>();
         public List<ProxyListener> Listeners = new List<ProxyListener>();
 
-        public MainForm(string config, bool autorun)
+        public MainForm(string config, bool minimize, bool autorun)
         {
             if(Instance != null)
             {
@@ -43,6 +44,7 @@ namespace NaiveGUI
             #region Components
 
             InitializeComponent();
+            OverrideHidden = minimize;
             if(Program.IsAdministrator)
             {
                 Text += " (Administrator)";
@@ -115,6 +117,15 @@ namespace NaiveGUI
 
             #endregion
 
+        }
+
+        protected override void SetVisibleCore(bool value)
+        {
+            base.SetVisibleCore(OverrideHidden ? false : value);
+            if(OverrideHidden)
+            {
+                OverrideHidden = false;
+            }
         }
 
         #region General Methods
