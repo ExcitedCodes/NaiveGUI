@@ -470,6 +470,16 @@ namespace NaiveGUI
 
         private void button_subscription_Click(object sender, EventArgs e) => new SubscriptionForm().ShowDialog();
 
+        private void button_log_clear_Click(object sender, EventArgs e) => textBox_log.Clear();
+
+        private void button_log_save_Click(object sender, EventArgs e)
+        {
+            if(saveFileDialog_log.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllText(saveFileDialog_log.FileName, textBox_log.Text);
+            }
+        }
+
         #endregion
 
         #region Remote UI Events

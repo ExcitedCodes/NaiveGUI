@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.listView_listeners = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStrip_listener = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList_remote = new System.Windows.Forms.ImageList(this.components);
             this.textBox_host = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -67,15 +70,15 @@
             this.toolStripMenuItem_exit = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_main = new System.Windows.Forms.Timer(this.components);
             this.checkBox_autorun = new System.Windows.Forms.CheckBox();
-            this.contextMenuStrip_listener = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.timer_subscription = new System.Windows.Forms.Timer(this.components);
+            this.button_log_clear = new System.Windows.Forms.Button();
+            this.button_log_save = new System.Windows.Forms.Button();
+            this.saveFileDialog_log = new System.Windows.Forms.SaveFileDialog();
+            this.contextMenuStrip_listener.SuspendLayout();
             this.groupBox_remote_config.SuspendLayout();
             this.groupBox_listener.SuspendLayout();
             this.groupBox_remotes.SuspendLayout();
             this.contextMenuStrip_tray.SuspendLayout();
-            this.contextMenuStrip_listener.SuspendLayout();
             this.SuspendLayout();
             // 
             // listView_listeners
@@ -101,6 +104,29 @@
             // 
             this.columnHeader2.Text = "EndPoint";
             this.columnHeader2.Width = 175;
+            // 
+            // contextMenuStrip_listener
+            // 
+            this.contextMenuStrip_listener.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.editToolStripMenuItem,
+            this.deleteToolStripMenuItem});
+            this.contextMenuStrip_listener.Name = "contextMenuStrip_listener";
+            this.contextMenuStrip_listener.Size = new System.Drawing.Size(114, 48);
+            this.contextMenuStrip_listener.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_endpoint_Opening);
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
+            // 
+            // deleteToolStripMenuItem
+            // 
+            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.deleteToolStripMenuItem.Text = "Delete";
+            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // imageList_remote
             // 
@@ -406,6 +432,8 @@
             this.textBox_log.Location = new System.Drawing.Point(12, 283);
             this.textBox_log.Multiline = true;
             this.textBox_log.Name = "textBox_log";
+            this.textBox_log.ReadOnly = true;
+            this.textBox_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox_log.Size = new System.Drawing.Size(796, 192);
             this.textBox_log.TabIndex = 31;
             // 
@@ -455,40 +483,45 @@
             this.checkBox_autorun.UseVisualStyleBackColor = true;
             this.checkBox_autorun.CheckedChanged += new System.EventHandler(this.checkBox_autorun_CheckedChanged);
             // 
-            // contextMenuStrip_listener
-            // 
-            this.contextMenuStrip_listener.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.editToolStripMenuItem,
-            this.deleteToolStripMenuItem});
-            this.contextMenuStrip_listener.Name = "contextMenuStrip_listener";
-            this.contextMenuStrip_listener.Size = new System.Drawing.Size(114, 48);
-            this.contextMenuStrip_listener.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_endpoint_Opening);
-            // 
-            // editToolStripMenuItem
-            // 
-            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.editToolStripMenuItem.Text = "Edit";
-            this.editToolStripMenuItem.Click += new System.EventHandler(this.editToolStripMenuItem_Click);
-            // 
-            // deleteToolStripMenuItem
-            // 
-            this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
-            this.deleteToolStripMenuItem.Text = "Delete";
-            this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-            // 
             // timer_subscription
             // 
             this.timer_subscription.Enabled = true;
             this.timer_subscription.Interval = 60000;
             this.timer_subscription.Tick += new System.EventHandler(this.timer_subscription_Tick);
             // 
+            // button_log_clear
+            // 
+            this.button_log_clear.Location = new System.Drawing.Point(759, 261);
+            this.button_log_clear.Name = "button_log_clear";
+            this.button_log_clear.Size = new System.Drawing.Size(49, 20);
+            this.button_log_clear.TabIndex = 33;
+            this.button_log_clear.Text = "Clear";
+            this.button_log_clear.UseVisualStyleBackColor = true;
+            this.button_log_clear.Click += new System.EventHandler(this.button_log_clear_Click);
+            // 
+            // button_log_save
+            // 
+            this.button_log_save.Location = new System.Drawing.Point(704, 261);
+            this.button_log_save.Name = "button_log_save";
+            this.button_log_save.Size = new System.Drawing.Size(49, 20);
+            this.button_log_save.TabIndex = 34;
+            this.button_log_save.Text = "Save";
+            this.button_log_save.UseVisualStyleBackColor = true;
+            this.button_log_save.Click += new System.EventHandler(this.button_log_save_Click);
+            // 
+            // saveFileDialog_log
+            // 
+            this.saveFileDialog_log.AddExtension = false;
+            this.saveFileDialog_log.Filter = "Log File|*.log|All Files|*.*";
+            this.saveFileDialog_log.Title = "Save Log";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 487);
+            this.Controls.Add(this.button_log_save);
+            this.Controls.Add(this.button_log_clear);
             this.Controls.Add(this.checkBox_autorun);
             this.Controls.Add(this.textBox_log);
             this.Controls.Add(this.checkBox_logging);
@@ -504,13 +537,13 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.contextMenuStrip_listener.ResumeLayout(false);
             this.groupBox_remote_config.ResumeLayout(false);
             this.groupBox_remote_config.PerformLayout();
             this.groupBox_listener.ResumeLayout(false);
             this.groupBox_listener.PerformLayout();
             this.groupBox_remotes.ResumeLayout(false);
             this.contextMenuStrip_tray.ResumeLayout(false);
-            this.contextMenuStrip_listener.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -558,6 +591,9 @@
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
         internal System.Windows.Forms.Button button_subscription;
         private System.Windows.Forms.Timer timer_subscription;
+        private System.Windows.Forms.Button button_log_clear;
+        private System.Windows.Forms.Button button_log_save;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog_log;
     }
 }
 
