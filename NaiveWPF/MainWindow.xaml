@@ -1,0 +1,132 @@
+﻿<Window x:Class="NaiveGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NaiveGUI"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Title="MainWindow" 
+        Height="350" 
+        Width="700"
+        WindowStyle="None"
+        WindowState="Normal" 
+        AllowsTransparency="True"
+        ResizeMode="CanResize"
+        MouseDown="WindowDrag" Background="Transparent">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
+    </WindowChrome.WindowChrome>
+    <Window.Resources>
+        <LinearGradientBrush x:Key="TabGradientSelected" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#09a9ff" Offset="0"/>
+            <GradientStop Color="#09a9ff" Offset="0.02"/>
+            <GradientStop Color="#1a4685" Offset="0.02000001"/>
+            <GradientStop Color="#1e3371" Offset="0.2"/>
+        </LinearGradientBrush>
+        <Style x:Key="TabButtonBase" TargetType="Button">
+            <Setter Property="Height" Value="36"></Setter>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="FontSize" Value="13"></Setter>
+            <Setter Property="FontFamily" Value="{DynamicResource MaterialDesignFont}"></Setter>
+            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Border CornerRadius="3">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <StackPanel.Background>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#1a2b52" Offset="0"/>
+                        <GradientStop Color="#07112f" Offset="1"/>
+                    </LinearGradientBrush>
+                </StackPanel.Background>
+                <Image Source="16028985@1x.png" Margin="0,16,0,0" Width="110"/>
+                <Button Content="Proxy" Tag="0" Margin="0,8,0,0" Click="ButtonTab_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource TabButtonBase}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentTab.Value}" Value="0">
+                                    <Setter Property="Background" Value="{StaticResource TabGradientSelected}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Content="Subscription" Tag="1" Click="ButtonTab_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource TabButtonBase}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentTab.Value}" Value="1">
+                                    <Setter Property="Background" Value="{StaticResource TabGradientSelected}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Content="Log" Tag="2" Click="ButtonTab_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource TabButtonBase}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentTab.Value}" Value="2">
+                                    <Setter Property="Background" Value="{StaticResource TabGradientSelected}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Content="Settings" Tag="3" Click="ButtonTab_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource TabButtonBase}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentTab.Value}" Value="3">
+                                    <Setter Property="Background" Value="{StaticResource TabGradientSelected}"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+            <Border Grid.Column="1" CornerRadius="0,3,3,0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#3b455e"/>
+                        <GradientStop Color="#161d34" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" HorizontalAlignment="Right" Width="24" Height="24" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0" Margin="0,4.5,4,0.5" Click="ButtonHide_Click">
+                        <Line X1="0" X2="12" Stroke="White" StrokeThickness="1.5" Margin="0,8,0,0" />
+                    </Button>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="tabContents">
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
