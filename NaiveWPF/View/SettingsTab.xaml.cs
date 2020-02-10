@@ -15,14 +15,8 @@ namespace NaiveGUI.View
             DataContext = Main = main;
         }
 
-        private void ToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
+        private void ToggleButtonAutoRun_Checked(object sender, System.Windows.RoutedEventArgs e) => App.SetAutoRun(true);
 
-        }
-
-        private void ToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
-        {
-
-        }
+        private void ToggleButtonAutoRun_Unchecked(object sender, System.Windows.RoutedEventArgs e) => App.SetAutoRun(false);
     }
 }

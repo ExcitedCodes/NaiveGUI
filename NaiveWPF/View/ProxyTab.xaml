@@ -86,16 +86,18 @@
                 </ListView.ItemContainerStyle>
             </ListView>
             <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Remote</TextBlock>
-            <TreeView ItemsSource="{Binding Remotes}" Foreground="White" Margin="16">
+            <TreeView Foreground="White" Margin="16" ItemsSource="{Binding Remotes}" Name="WTF" SelectedItemChanged="WTF_SelectedItemChanged">
+                <TreeView.ItemContainerStyle>
+                    <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
+                        <Setter Property="IsSelected" Value="{Binding Selected.Value}" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type Data:RemoteConfigGroup}" ItemsSource="{Binding}">
                         <TextBlock Text="{Binding Name}" Margin="3 2" />
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type Data:RemoteConfig}">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox></CheckBox>
-                            <TextBlock Text="{Binding Name}" Margin="3 2" />
-                        </StackPanel>
+                        <TextBlock Text="{Binding Name}" Margin="3 2" />
                     </DataTemplate>
                 </TreeView.Resources>
             </TreeView>

@@ -70,7 +70,7 @@ namespace NaiveGUI
             AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Utils.Md5(ExecutablePath + full) + ".lnk";
             if(created)
             {
-                MainWindow = new MainWindow(config, false);
+                MainWindow = new MainWindow(config, File.Exists(AutoRunFile));
                 if(!minimize)
                 {
                     MainWindow.Show();

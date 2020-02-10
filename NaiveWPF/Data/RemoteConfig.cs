@@ -15,6 +15,8 @@ namespace NaiveGUI.Data
         /// </summary>
         public bool Padding { get; set; } = false;
 
+        public Prop<bool> Selected { get; set; } = new Prop<bool>();
+
         /// <summary>
         /// Listens at addr:port with protocol &lt;proto&gt;.
         /// Allowed values for proto: "socks", "http", "redir".

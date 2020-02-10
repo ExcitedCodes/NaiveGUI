@@ -32,7 +32,7 @@ namespace NaiveGUI.Data
         {
             if(e.Data != null)
             {
-                // MainForm.Instance.Invoke(new Action(() => MainForm.Instance.textBox_log.AppendText(e.Data.Replace("\r", "").Replace("\n", "") + Environment.NewLine)));
+                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.Log(e.Data.Replace("\r", "").Replace("\n", "")));
             }
         }
 
@@ -127,7 +127,6 @@ namespace NaiveGUI.Data
                         {
                             Enabled = false;
                             MainWindow.Instance.BalloonTip(Listen.ToString(), "Listener crashed for too many times, manually maintenance required.");
-                            // TODO: MainWindow.Instance.RefreshListenerList();
                             MainWindow.Instance.Save();
                             return;
                         }
@@ -176,7 +175,7 @@ namespace NaiveGUI.Data
                 sb.Append(" --padding");
             }
             // TODO: --host-resolver-rules=
-            bool logging = MainWindow.Instance.Logging;
+            bool logging = MainWindow.Instance.Logging.Value;
             if(logging)
             {
                 sb.Append(" --log=\"\"");
