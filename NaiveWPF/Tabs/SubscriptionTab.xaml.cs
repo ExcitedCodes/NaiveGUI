@@ -7,9 +7,12 @@ namespace NaiveGUI
     /// </summary>
     public partial class SubscriptionTab : UserControl
     {
-        public SubscriptionTab()
+        MainWindow Main;
+
+        public SubscriptionTab(MainWindow main)
         {
             InitializeComponent();
+            DataContext = Main = main;
         }
     }
 }

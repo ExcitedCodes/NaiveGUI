@@ -7,9 +7,12 @@ namespace NaiveGUI
     /// </summary>
     public partial class LogTab : UserControl
     {
-        public LogTab()
+        MainWindow Main;
+
+        public LogTab(MainWindow main)
         {
             InitializeComponent();
+            DataContext = Main = main;
         }
     }
 }

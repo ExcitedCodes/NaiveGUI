@@ -13,8 +13,8 @@
             TextOptions.TextRenderingMode="Auto"        
             FontFamily="{DynamicResource MaterialDesignFont}"
              d:DesignHeight="315" d:DesignWidth="580">
-    <StackPanel>
-        <TextBlock Foreground="#DDFFFFFF" FontSize="20" Margin="16,0,0,0">Log</TextBlock>
-        
-    </StackPanel>
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Log</TextBlock>
+        <TextBox Margin="8,8,8,8" IsReadOnly="True" CaretBrush="{x:Null}"  BorderBrush="{x:Null}" Foreground="Silver" Text="LOLLLLLLSDADS" materialDesign:TextFieldAssist.DecorationVisibility="Hidden"/>
+    </DockPanel>
 </UserControl>
