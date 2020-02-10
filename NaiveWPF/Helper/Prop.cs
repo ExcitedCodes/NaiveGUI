@@ -2,7 +2,7 @@
 
 namespace NaiveGUI
 {
-    public class Prop<T> : INotifyPropertyChanged where T : struct
+    public class Prop<T> : INotifyPropertyChanged
     {
         public T Value
         {

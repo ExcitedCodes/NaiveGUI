@@ -81,10 +81,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helper\SelectableTextBlock.cs" />
     <Compile Include="Tabs\LogTab.xaml.cs">
       <DependentUpon>LogTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Prop.cs" />
+    <Compile Include="Helper\Prop.cs" />
     <Compile Include="Tabs\SubscriptionTab.xaml.cs">
       <DependentUpon>SubscriptionTab.xaml</DependentUpon>
     </Compile>
