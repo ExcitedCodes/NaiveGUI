@@ -90,6 +90,7 @@ namespace NaiveGUI
                 {
                     Environment.Exit(0);
                 }
+                Logging.Value = json.ContainsKey("logging") && json["logging"];
                 if(json.ContainsKey("remotes"))
                 {
                     foreach(KeyValuePair<string, object> g in json["remotes"])
@@ -164,6 +165,8 @@ namespace NaiveGUI
 
             DataContext = this;
 
+            Logging.PropertyChanged += (s, e) => Save();
+
             Listeners.Add(new AddListenerButton());
 
             SwitchTab(0);
@@ -171,9 +174,11 @@ namespace NaiveGUI
 
         public void Save()
         {
+            (Tabs[0] as ProxyTab).SayWTF();
             File.WriteAllText(ConfigPath, JSON.ToNiceJSON(new Dictionary<string, object>()
             {
                 { "version", CONFIG_VERSION },
+                { "logging", Logging.Value },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
                     { "enable", l.Real.Enabled },
                     { "listen", l.Real.Listen.ToString() },
@@ -200,7 +205,9 @@ namespace NaiveGUI
                 */
             }));
         }
-        
+
+        public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
+
         private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e) => Show();
 
         public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);

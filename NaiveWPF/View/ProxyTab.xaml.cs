@@ -31,7 +31,37 @@ namespace NaiveGUI.View
             if(border.DataContext is Listener l)
             {
                 Main.CurrentListener = l;
+                SayWTF();
             }
+        }
+
+        bool WTFing = false;
+
+        // TODO: Remove this
+        public void SayWTF()
+        {
+            WTFing = true;
+            foreach(RemoteConfigGroup g in Main.Remotes)
+            {
+                foreach(RemoteConfig r in g)
+                {
+                    r.Selected.Value = Main.CurrentListener != null && Main.CurrentListener.Remote == r;
+                }
+            }
+            WTFing = false;
+        }
+
+        private void WTF_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if(WTFing)
+            {
+                return;
+            }
+            if(WTF.SelectedItem is RemoteConfig r && Main.CurrentListener != null)
+            {
+                Main.CurrentListener.Remote = r;
+            }
+            SayWTF();
         }
     }
 }
