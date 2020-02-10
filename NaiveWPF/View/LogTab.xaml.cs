@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
 
-namespace NaiveGUI
+namespace NaiveGUI.View
 {
     /// <summary>
     /// LogTab.xaml 的交互逻辑

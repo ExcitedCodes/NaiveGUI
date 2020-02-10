@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace NaiveGUI
+namespace NaiveGUI.View
 {
     /// <summary>
     /// SettingsTab.xaml 的交互逻辑
@@ -13,6 +13,16 @@ namespace NaiveGUI
         {
             InitializeComponent();
             DataContext = Main = main;
+        }
+
+        private void ToggleButton_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+
+        }
+
+        private void ToggleButton_Unchecked(object sender, System.Windows.RoutedEventArgs e)
+        {
+
         }
     }
 }

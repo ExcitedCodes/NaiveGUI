@@ -1,15 +1,15 @@
 ﻿using System.Windows.Controls;
 
-namespace NaiveGUI
+namespace NaiveGUI.View
 {
     /// <summary>
-    /// SubscriptionTab.xaml 的交互逻辑
+    /// ProxyTab.xaml 的交互逻辑
     /// </summary>
-    public partial class SubscriptionTab : UserControl
+    public partial class ProxyTab : UserControl
     {
         MainWindow Main;
 
-        public SubscriptionTab(MainWindow main)
+        public ProxyTab(MainWindow main)
         {
             InitializeComponent();
             DataContext = Main = main;
