@@ -34,14 +34,26 @@
             <GradientStop Color="#ee1e3371" Offset="0.5" />
             <GradientStop Color="#001e3371" Offset="1"/>
         </LinearGradientBrush>
-        <Storyboard Duration="00:00:00.1" x:Key="TabDeactiveAnimation">
+        <Storyboard x:Key="TabDeactiveAnimation">
             <PointAnimation Duration="00:00:00.1" Storyboard.TargetProperty="(Background).(LinearGradientBrush.EndPoint)" From="1,0" To="0,0" />
         </Storyboard>
-        <Storyboard Duration="00:00:00.25" x:Key="TabActiveAnimation">
-            <DoubleAnimation Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[0].(GradientStop.Offset)" From="0" To="0.1" />
-            <DoubleAnimation Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" From="0" To="0.1" />
-            <DoubleAnimation Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" From="0.1" To="0.4" />
-            <ColorAnimation Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[3].(GradientStop.Color)" From="#001e3371" To="#1e3371" />
+        <Storyboard x:Key="TabActiveAnimation">
+            <DoubleAnimation Duration="00:00:00.25" Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[0].(GradientStop.Offset)" From="0" To="0.02" />
+            <DoubleAnimation Duration="00:00:00.25" Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[1].(GradientStop.Offset)" From="0" To="0.02" />
+            <DoubleAnimation Duration="00:00:00.25" Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[2].(GradientStop.Offset)" From="0.02" To="0.1" />
+            <ColorAnimation Duration="00:00:00.25" Storyboard.TargetProperty="(Background).(LinearGradientBrush.GradientStops)[3].(GradientStop.Color)" From="#001e3371" To="#1e3371" />
+        </Storyboard>
+        <Storyboard x:Key="TabHideAnimation" Completed="StoryboardTabHideAnimation_Completed">
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.15" Storyboard.TargetProperty="Opacity">
+                <LinearDoubleKeyFrame KeyTime="00:00:00" Value="1"></LinearDoubleKeyFrame>
+                <LinearDoubleKeyFrame KeyTime="00:00:00.15" Value="0"></LinearDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="TabShowAnimation">
+            <DoubleAnimationUsingKeyFrames Duration="00:00:00.1" Storyboard.TargetProperty="Opacity">
+                <LinearDoubleKeyFrame KeyTime="00:00:00" Value="0"></LinearDoubleKeyFrame>
+                <LinearDoubleKeyFrame KeyTime="00:00:00.1" Value="1"></LinearDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
         </Storyboard>
         <Style x:Key="TabButtonBase" TargetType="Button">
             <Setter Property="Height" Value="48"></Setter>
@@ -230,8 +242,11 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Grid Grid.Column="1">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Name="tabContents" Margin="0,32,0,0">
-                </ScrollViewer>
+                <Border Name="tabContents" Margin="0,24,0,0" RenderTransformOrigin="0.5,0.5">
+                    <Border.RenderTransform>
+                        <TranslateTransform Y="0"/>
+                    </Border.RenderTransform>
+                </Border>
                 <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="32" Height="32" 
                             Background="{x:Null}" BorderBrush="{x:Null}" Padding="0" Margin="0,5,5,0" Click="ButtonHide_Click">
                     <Line X1="0" X2="16" Stroke="White" StrokeThickness="1.5" Margin="0,8,0,0" />

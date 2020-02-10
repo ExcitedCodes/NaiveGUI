@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Runtime.InteropServices;
+using System.Windows.Media.Animation;
 
 namespace NaiveGUI
 {
@@ -45,7 +46,7 @@ namespace NaiveGUI
             SwitchTab(0);
         }
 
-        public void Log(string data, string newline = "\n")
+        public void Log(string data, string newline = "\r\n")
         {
             LogBuffer.Append(data).Append(newline);
             RaisePropertyChanged("LogBuffer");
@@ -54,7 +55,13 @@ namespace NaiveGUI
         public void SwitchTab(int id)
         {
             CurrentTab.Value = id;
-            tabContents.Content = Tabs[id];
+            tabContents.BeginStoryboard(Resources["TabHideAnimation"] as Storyboard);
+        }
+
+        private void StoryboardTabHideAnimation_Completed(object sender, EventArgs e)
+        {
+            tabContents.Child = Tabs[CurrentTab.Value];
+            tabContents.BeginStoryboard(Resources["TabShowAnimation"] as Storyboard);
         }
 
         private void WindowDrag(object sender, MouseButtonEventArgs e)
@@ -67,8 +74,12 @@ namespace NaiveGUI
 
         private void ButtonTab_Click(object sender, RoutedEventArgs e)
         {
-            SwitchTab(int.Parse((sender as Button).Tag as string));
-            RaisePropertyChanged("CurrentTabTester");
+            int id = int.Parse((sender as Button).Tag as string);
+            if(CurrentTab.Value != id)
+            {
+                SwitchTab(id);
+                RaisePropertyChanged("CurrentTabTester");
+            }
         }
 
         #region INotifyPropertyChanged
