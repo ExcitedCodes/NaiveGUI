@@ -14,7 +14,7 @@
             FontFamily="{DynamicResource MaterialDesignFont}"
              d:DesignHeight="315" d:DesignWidth="580">
     <StackPanel>
-        <TextBlock Foreground="#DDFFFFFF" FontSize="20" Margin="16,0,0,0">Proxy</TextBlock>
+        <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Proxy</TextBlock>
         
     </StackPanel>
 </UserControl>

@@ -7,9 +7,12 @@ namespace NaiveGUI
     /// </summary>
     public partial class ProxyTab : UserControl
     {
-        public ProxyTab()
+        MainWindow Main;
+
+        public ProxyTab(MainWindow main)
         {
             InitializeComponent();
+            DataContext = Main = main;
         }
     }
 }

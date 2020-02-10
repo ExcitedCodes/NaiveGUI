@@ -7,9 +7,12 @@ namespace NaiveGUI
     /// </summary>
     public partial class SettingsTab : UserControl
     {
-        public SettingsTab()
+        MainWindow Main;
+
+        public SettingsTab(MainWindow main)
         {
             InitializeComponent();
+            DataContext = Main = main;
         }
     }
 }
