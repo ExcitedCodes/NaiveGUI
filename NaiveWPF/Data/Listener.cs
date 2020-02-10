@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Text;
+using System.Windows;
 using System.Diagnostics;
+using System.Windows.Media;
+using System.ComponentModel;
 
 namespace NaiveGUI.Data
 {
-    public class Listener : IListener
+    public class Listener : IListener, INotifyPropertyChanged
     {
         public static string NaivePath = "naive.exe";
 
@@ -33,12 +36,27 @@ namespace NaiveGUI.Data
             }
         }
 
+        public bool IsReal => true;
         public Listener Real => this;
+
+        public int ShadowOpacity => MainWindow.Instance.CurrentListener == this ? 16 : 0;
+        public string StatusText => Enabled ? (Running ? "Active" : "Error") : "Disabled";
+        public Brush StatusColor => (Brush)(Enabled ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
 
         /// <summary>
         /// 设置此属性请使用 <see cref="ToggleEnabled"/>
         /// </summary>
-        public virtual bool Enabled { get; private set; }
+        public virtual bool Enabled
+        {
+            get => _enabled;
+            private set
+            {
+                _enabled = value;
+                RaisePropertyChanged("StatusText");
+                RaisePropertyChanged("StatusColor");
+            }
+        }
+        private bool _enabled;
 
         public virtual bool Running => BaseProcess != null && !BaseProcess.HasExited;
 
@@ -48,13 +66,17 @@ namespace NaiveGUI.Data
         /// </summary>
         public virtual Uri Listen
         {
-            get => this._listen;
+            get => _listen;
             set
             {
-                this._listen = value;
-                if(Running)
+                if(Running && Listen != value)
                 {
-                    // Start();
+                    _listen = value;
+                    Start();
+                }
+                else
+                {
+                    _listen = value;
                 }
             }
         }
@@ -64,24 +86,27 @@ namespace NaiveGUI.Data
 
         public RemoteConfig Remote
         {
-            get => this._remote;
+            get => _remote;
             set
             {
-                this._remote = value;
-                if(Running)
+                if(Running && _remote != value)
                 {
-                    // Start();
+                    this._remote = value;
+                    Start();
+                }
+                else
+                {
+                    this._remote = value;
                 }
             }
         }
-
         private RemoteConfig _remote;
 
         public Process BaseProcess = null;
 
         public int FailCounter = 0;
         public DateTime LastStart = DateTime.Now;
-        /*
+
         public Listener(string listen, bool enabled = false) : this(FilterListeningAddress(ref listen), enabled) { }
 
         public Listener(Uri listen, bool enabled = false)
@@ -101,12 +126,12 @@ namespace NaiveGUI.Data
                         if(++FailCounter > 3)
                         {
                             Enabled = false;
-                            MainForm.Instance.BalloonTip(Listen.ToString(), "Listener crashed for too many times, manually maintenance required.", ToolTipIcon.Error);
-                            MainForm.Instance.RefreshListenerList();
-                            MainForm.Instance.Save();
+                            MainWindow.Instance.BalloonTip(Listen.ToString(), "Listener crashed for too many times, manually maintenance required.");
+                            // TODO: MainWindow.Instance.RefreshListenerList();
+                            MainWindow.Instance.Save();
                             return;
                         }
-                        MainForm.Instance.BalloonTip(Listen.ToString(), "Listener crashed, restarting...", ToolTipIcon.Error);
+                        MainWindow.Instance.BalloonTip(Listen.ToString(), "Listener crashed, restarting...");
                     }
                     Start();
                 }
@@ -121,7 +146,7 @@ namespace NaiveGUI.Data
         {
             if(Remote == null)
             {
-               // MessageBox.Show("You must select a remote before starting listener! Tick the checkbox in remote list to select it.", "Oops", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You must select a remote before starting listener! Tick the checkbox in remote list to select it.", "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return Enabled = false;
             }
             Enabled = !Enabled;
@@ -151,7 +176,7 @@ namespace NaiveGUI.Data
                 sb.Append(" --padding");
             }
             // TODO: --host-resolver-rules=
-            bool logging = MainForm.Instance.checkBox_logging.Checked;
+            bool logging = MainWindow.Instance.Logging;
             if(logging)
             {
                 sb.Append(" --log=\"\"");
@@ -196,6 +221,14 @@ namespace NaiveGUI.Data
             }
             catch { }
             BaseProcess = null;
-        }*/
+        }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        #endregion
     }
 }

@@ -2,6 +2,7 @@
 {
     public interface IListener
     {
+        bool IsReal { get; }
         Listener Real { get; }
     }
 }

@@ -13,7 +13,7 @@
              TextOptions.TextFormattingMode="Ideal" 
              TextOptions.TextRenderingMode="Auto"        
              FontFamily="{DynamicResource MaterialDesignFont}" 
-             d:DesignWidth="690" d:DesignHeight="358">
+             d:DesignWidth="690" d:DesignHeight="600">
     <UserControl.Resources>
         <Data:DesignerMainWindow x:Key="designerContext"/>
     </UserControl.Resources>
@@ -44,7 +44,7 @@
                 <ListView.Resources>
                     <DataTemplate DataType="{x:Type Data:AddListenerButton}">
                         <Border CornerRadius="2" Width="192" Height="88" BorderThickness="4" Opacity="0.5" BorderBrush="White">
-                            <Button Width="192" Height="88" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Width="192" Height="88" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonAddListener_Click">
                                 <materialDesign:PackIcon Kind="AddCircleOutline" RenderTransformOrigin="0.5,0.5" Foreground="White">
                                     <materialDesign:PackIcon.RenderTransform>
                                         <ScaleTransform ScaleX="3" ScaleY="3"/>
@@ -54,13 +54,10 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type Data:Listener}">
-                        <Border CornerRadius="2" Width="192" Height="88" Padding="16">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="0.5,1">
-                                    <GradientStop Color="#29bce7" Offset="0"/>
-                                    <GradientStop Color="#019fd9" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Border.Background>
+                        <Border CornerRadius="2" Width="192" Height="88" Padding="16" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="16" RenderingBias="Quality" Opacity="{Binding ShadowOpacity}"/>
+                            </Border.Effect>
                             <Grid>
                                 <TextBlock Foreground="White" FontSize="20" Text="{Binding Listen.Host, Mode=OneWay}"/>
                                 <TextBlock FontSize="12" Foreground="White" Opacity="0.8" VerticalAlignment="Bottom">
@@ -68,14 +65,9 @@
                                     ·
                                     <Run Text="{Binding SchemeUpper, Mode=OneWay}"></Run>
                                 </TextBlock>
-                                <TextBlock Foreground="White" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                                    Active
-                                </TextBlock>
-                                <Ellipse Width="12" Height="12" Fill="GreenYellow" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,40,2">
-                                    <Ellipse.Effect>
-                                        <BlurEffect Radius="5"/>
-                                    </Ellipse.Effect>
-                                </Ellipse>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                                    <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -100,7 +92,10 @@
                         <TextBlock Text="{Binding Name}" Margin="3 2" />
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type Data:RemoteConfig}">
-                        <TextBlock Text="{Binding Name}" Margin="3 2" />
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox></CheckBox>
+                            <TextBlock Text="{Binding Name}" Margin="3 2" />
+                        </StackPanel>
                     </DataTemplate>
                 </TreeView.Resources>
             </TreeView>
