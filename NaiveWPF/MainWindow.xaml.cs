@@ -22,9 +22,7 @@ namespace NaiveGUI
         private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         public static MainWindow Instance = null;
-
-        public StringBuilder LogBuffer = new StringBuilder();
-
+        
         public UserControl[] Tabs = null;
         public Prop<int> CurrentTab { get; set; } = new Prop<int>();
 
@@ -33,6 +31,7 @@ namespace NaiveGUI
         public MainWindow()
         {
             Instance = this;
+
             Tabs = new UserControl[] {
                 new ProxyTab(this),
                 new SubscriptionTab(this),
@@ -40,28 +39,10 @@ namespace NaiveGUI
                 new SettingsTab(this)
             };
             CurrentTabTester = new TabIndexTester(this);
-            DataContext = this;
             InitializeComponent();
+            DataContext = this;
 
             SwitchTab(0);
-        }
-
-        public void Log(string data, string newline = "\r\n")
-        {
-            LogBuffer.Append(data).Append(newline);
-            RaisePropertyChanged("LogBuffer");
-        }
-
-        public void SwitchTab(int id)
-        {
-            CurrentTab.Value = id;
-            tabContents.BeginStoryboard(Resources["TabHideAnimation"] as Storyboard);
-        }
-
-        private void StoryboardTabHideAnimation_Completed(object sender, EventArgs e)
-        {
-            tabContents.Child = Tabs[CurrentTab.Value];
-            tabContents.BeginStoryboard(Resources["TabShowAnimation"] as Storyboard);
         }
 
         private void WindowDrag(object sender, MouseButtonEventArgs e)
@@ -71,6 +52,14 @@ namespace NaiveGUI
         }
 
         private void ButtonHide_Click(object sender, RoutedEventArgs e) => Hide();
+
+        #region Tab Switching
+
+        public void SwitchTab(int id)
+        {
+            CurrentTab.Value = id;
+            tabContents.BeginStoryboard(Resources["TabHideAnimation"] as Storyboard);
+        }
 
         private void ButtonTab_Click(object sender, RoutedEventArgs e)
         {
@@ -82,6 +71,14 @@ namespace NaiveGUI
             }
         }
 
+        private void StoryboardTabHideAnimation_Completed(object sender, EventArgs e)
+        {
+            tabContents.Child = Tabs[CurrentTab.Value];
+            tabContents.BeginStoryboard(Resources["TabShowAnimation"] as Storyboard);
+        }
+
+        #endregion
+
         #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -89,17 +86,5 @@ namespace NaiveGUI
         public void RaisePropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         #endregion
-
-        public class TabIndexTester
-        {
-            public MainWindow Main;
-
-            public bool this[int offset] => Main.CurrentTab == offset;
-
-            public TabIndexTester(MainWindow main)
-            {
-                Main = main;
-            }
-        }
     }
 }

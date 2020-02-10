@@ -82,6 +82,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helper\SelectableTextBlock.cs" />
+    <Compile Include="Helper\TabIndexTester.cs" />
     <Compile Include="Tabs\LogTab.xaml.cs">
       <DependentUpon>LogTab.xaml</DependentUpon>
     </Compile>
