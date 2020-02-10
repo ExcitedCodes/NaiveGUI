@@ -9,11 +9,20 @@ namespace NaiveGUI.Data
         {
             new DesignerListener()
             {
-                Listen = new Uri("socks://0.0.0.0:1080")
+                Listen = new Uri("socks://0.0.0.0:1080"),
+                EnabledReal = false
             },
             new DesignerListener()
             {
-                Listen = new Uri("http://255.255.255.255:65535")
+                Listen = new Uri("http://255.255.255.255:65535"),
+                EnabledReal = true,
+                RunningReal = true
+            },
+            new DesignerListener()
+            {
+                Listen = new Uri("http://255.255.255.255:65535"),
+                EnabledReal = true,
+                RunningReal = false
             },
             new AddListenerButton()
         };
@@ -43,11 +52,13 @@ namespace NaiveGUI.Data
 
     public class DesignerListener : Listener
     {
-        public override Uri Listen { get; set; } = new Uri("socks://127.0.0.1:2333");
+        public new int ShadowOpacity => 16;
         public override bool Enabled => EnabledReal;
         public override bool Running => RunningReal;
 
         public bool EnabledReal;
         public bool RunningReal;
+
+        public DesignerListener() : base(new Uri("socks://127.0.0.1:2333")) { }
     }
 }

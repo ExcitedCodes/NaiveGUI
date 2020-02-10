@@ -5,23 +5,31 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NaiveGUI.View"
              mc:Ignorable="d" 
-            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-            TextElement.FontWeight="Regular"
-            TextElement.FontSize="13"
-            TextOptions.TextFormattingMode="Ideal" 
-            TextOptions.TextRenderingMode="Auto"        
-            FontFamily="{DynamicResource MaterialDesignFont}"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             FontFamily="{DynamicResource MaterialDesignFont}"
              d:DesignHeight="315" d:DesignWidth="580">
     <StackPanel>
         <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Settings</TextBlock>
-        <StackPanel Orientation="Horizontal" Margin="24">
+        <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" HorizontalAlignment="Left" Background="#019fd9" RenderTransformOrigin="0.5,0.5" Cursor="Hand" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked">
                 <ToggleButton.RenderTransform>
                     <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
                 </ToggleButton.RenderTransform>
             </ToggleButton>
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Start on boot</TextBlock>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
+            <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" HorizontalAlignment="Left" Background="#019fd9" RenderTransformOrigin="0.5,0.5" Cursor="Hand" IsChecked="{Binding Logging.Value}">
+                <ToggleButton.RenderTransform>
+                    <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                </ToggleButton.RenderTransform>
+            </ToggleButton>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Enable logging</TextBlock>
         </StackPanel>
     </StackPanel>
 </UserControl>

@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:NaiveGUI"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}" TextElement.FontWeight="Regular" TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
@@ -252,5 +253,12 @@
                 </Button>
             </Grid>
         </Border>
+        <tb:TaskbarIcon x:Name="trayIcon" TrayLeftMouseUp="TrayIcon_TrayLeftMouseUp" IconSource="icon.ico">
+            <tb:TaskbarIcon.TrayToolTip>
+                <ToolTip Placement="Mouse">
+                    <TextBlock>NaiveGUI - Running</TextBlock>
+                </ToolTip>
+            </tb:TaskbarIcon.TrayToolTip>
+        </tb:TaskbarIcon>
     </Grid>
 </Window>
