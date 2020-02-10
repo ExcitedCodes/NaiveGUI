@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.ComponentModel;
@@ -7,6 +6,10 @@ using System.Windows.Interop;
 using System.Windows.Controls;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Animation;
+using System.Collections.ObjectModel;
+
+using NaiveGUI.View;
+using NaiveGUI.Data;
 
 namespace NaiveGUI
 {
@@ -22,9 +25,12 @@ namespace NaiveGUI
         private static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
         public static MainWindow Instance = null;
-        
+
         public UserControl[] Tabs = null;
         public Prop<int> CurrentTab { get; set; } = new Prop<int>();
+
+        public ObservableCollection<IListener> Listeners { get; set; } = new ObservableCollection<IListener>();
+        public ObservableCollection<RemoteConfigGroup> Remotes { get; set; } = new ObservableCollection<RemoteConfigGroup>();
 
         public TabIndexTester CurrentTabTester { get; set; }
 
@@ -41,6 +47,14 @@ namespace NaiveGUI
             CurrentTabTester = new TabIndexTester(this);
             InitializeComponent();
             DataContext = this;
+            
+            Listeners.Add(new AddListenerButton());
+
+            var g = new RemoteConfigGroup("GroupA")
+            {
+                new RemoteConfig("XD")
+            };
+            Remotes.Add(g);
 
             SwitchTab(0);
         }

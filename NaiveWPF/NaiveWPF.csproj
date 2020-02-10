@@ -81,19 +81,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Helper\SelectableTextBlock.cs" />
-    <Compile Include="Helper\TabIndexTester.cs" />
-    <Compile Include="Tabs\LogTab.xaml.cs">
+    <Compile Include="Data\DesignerMainWindow.cs" />
+    <Compile Include="Data\AddListenerButton.cs" />
+    <Compile Include="Data\IListener.cs" />
+    <Compile Include="Data\Listener.cs" />
+    <Compile Include="Data\RemoteConfigGroup.cs" />
+    <Compile Include="SelectableTextBlock.cs" />
+    <Compile Include="TabIndexTester.cs" />
+    <Compile Include="Data\RemoteConfig.cs" />
+    <Compile Include="View\LogTab.xaml.cs">
       <DependentUpon>LogTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helper\Prop.cs" />
-    <Compile Include="Tabs\SubscriptionTab.xaml.cs">
+    <Compile Include="Prop.cs" />
+    <Compile Include="View\SubscriptionTab.xaml.cs">
       <DependentUpon>SubscriptionTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tabs\ProxyTab.xaml.cs">
+    <Compile Include="View\ProxyTab.xaml.cs">
       <DependentUpon>ProxyTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tabs\SettingsTab.xaml.cs">
+    <Compile Include="View\SettingsTab.xaml.cs">
       <DependentUpon>SettingsTab.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
@@ -108,19 +114,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Tabs\LogTab.xaml">
+    <Page Include="View\LogTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Tabs\SubscriptionTab.xaml">
+    <Page Include="View\SubscriptionTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Tabs\ProxyTab.xaml">
+    <Page Include="View\ProxyTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Tabs\SettingsTab.xaml">
+    <Page Include="View\SettingsTab.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
