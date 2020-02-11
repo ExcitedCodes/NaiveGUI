@@ -27,7 +27,7 @@ namespace NaiveGUI.View
 
         private void Listener_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.OriginalSource is TextBlock t && (string)t.Tag == "XD")
+            if(e.Source is FrameworkElement el && (string)el.Tag == "XD")
             {
                 return;
             }
@@ -43,7 +43,7 @@ namespace NaiveGUI.View
         private void Listener_MouseEvent(object sender, MouseEventArgs e)
         {
             var border = sender as Border;
-            if(!(border.DataContext as Listener).Selected)
+            if(border.DataContext is Listener l && !l.Selected)
             {
                 if(border.IsMouseOver)
                 {
@@ -77,6 +77,20 @@ namespace NaiveGUI.View
             if(textblock.DataContext is Listener l)
             {
                 l.ToggleEnabled();
+            }
+        }
+
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if((sender as Button).DataContext is Listener l)
+            {
+                e.Handled = true;
+                if(l.Enabled)
+                {
+                    l.ToggleEnabled();
+                }
+                Main.Listeners.Remove(l);
+                Main.Save();
             }
         }
 

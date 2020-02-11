@@ -208,7 +208,12 @@ namespace NaiveGUI
 
         public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
 
-        private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e) => Show();
+        private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
+        {
+            Show();
+            Topmost = true; // Still using this in 2020?
+            Topmost = false;
+        }
 
         public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);
 
