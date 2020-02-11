@@ -52,7 +52,7 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type Data:Listener}">
-                        <Border CornerRadius="2" Width="192" Height="88" Padding="16" Cursor="Hand" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" 
+                        <Border CornerRadius="2" Width="192" Height="88" Cursor="Hand" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" 
                                 d:DataContext="{StaticResource DesignerData_Listener}" MouseEnter="Listener_MouseEvent" MouseLeave="Listener_MouseEvent" Initialized="Listener_Initialized">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup Name="ShadowState">
@@ -60,18 +60,21 @@
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.3"/>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="2"/>
+                                            <DoubleAnimation Duration="00:00:00" Storyboard.TargetName="DeleteButton" Storyboard.TargetProperty="Opacity" To="0"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState Name="Hover">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.6"/>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="3"/>
+                                            <DoubleAnimation Storyboard.TargetName="DeleteButton" Storyboard.TargetProperty="Opacity" To="1"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState Name="Selected">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="1"/>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="6"/>
+                                            <DoubleAnimation Storyboard.TargetName="DeleteButton" Storyboard.TargetProperty="Opacity" To="1"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualStateGroup.Transitions>
@@ -85,13 +88,20 @@
                                 <DropShadowEffect BlurRadius="16" RenderingBias="Quality" ShadowDepth="2" Opacity="0.3"/>
                             </Border.Effect>
                             <Grid>
-                                <TextBlock Foreground="White" FontSize="20" Text="{Binding Listen.Host, Mode=OneWay}"/>
-                                <TextBlock FontSize="12" Foreground="White" Opacity="0.8" VerticalAlignment="Bottom">
+                                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Width="16" Height="16" Margin="0,8,8,0" Style="{StaticResource MaterialDesignIconForegroundButton}" Click="ButtonDelete_Click" Name="DeleteButton" Opacity="0" Panel.ZIndex="666">
+                                    <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Tag="XD">
+                                        <materialDesign:PackIcon.RenderTransform>
+                                            <ScaleTransform ScaleX="0.6" ScaleY="0.6"/>
+                                        </materialDesign:PackIcon.RenderTransform>
+                                    </materialDesign:PackIcon>
+                                </Button>
+                                <TextBlock Foreground="White" FontSize="20" Text="{Binding Listen.Host, Mode=OneWay}" Margin="16,16,0,0"/>
+                                <TextBlock FontSize="12" Foreground="White" Opacity="0.8" VerticalAlignment="Bottom" Margin="16,0,0,16">
                                     <Run Text="{Binding Listen.Port, Mode=OneWay}"></Run>
                                     ·
                                     <Run Text="{Binding SchemeUpper, Mode=OneWay}"></Run>
                                 </TextBlock>
-                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="ScrollNS" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD"/>
+                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="../lightning.cur" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD" Margin="0,0,16,16"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -118,10 +128,10 @@
                 </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type Data:RemoteConfigGroup}" ItemsSource="{Binding}">
-                        <emoji:TextBlock Text="{Binding Name}" Margin="3 1" FontSize="16" />
+                        <emoji:TextBlock Text="{Binding Name}" Margin="3 2" FontSize="16" />
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type Data:RemoteConfig}">
-                        <emoji:TextBlock Text="{Binding Name}" Margin="3 1" FontSize="16" />
+                        <emoji:TextBlock Text="{Binding Name}" Margin="3 2" FontSize="16" />
                     </DataTemplate>
                 </TreeView.Resources>
             </TreeView>
