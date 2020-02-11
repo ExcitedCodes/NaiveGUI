@@ -16,30 +16,73 @@
              d:DesignHeight="315" d:DesignWidth="580">
     <StackPanel>
         <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Subscription</TextBlock>
-        <ListView ItemsSource="{Binding Subscriptions, Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="ListView_SelectionChanged" SelectionMode="Single" Margin="8,0,0,0">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <materialDesign:Card x:Name="Border">
+        <ListView ItemsSource="{Binding Subscriptions, Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="ListView_SelectionChanged" SelectionMode="Single" Margin="16,8,0,8">
+            <ListView.Resources>
+                <DataTemplate DataType="{x:Type Data:FakeSubscription}">
+                    <Border Width="195" Height="60" CornerRadius="2" BorderThickness="4" Opacity="0.5" BorderBrush="White">
+                        <Button Width="195" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonAdd_Click">
+                            <materialDesign:PackIcon Kind="AddCircleOutline" RenderTransformOrigin="0.5,0.5" Foreground="White">
+                                <materialDesign:PackIcon.RenderTransform>
+                                    <ScaleTransform ScaleX="3" ScaleY="3"/>
+                                </materialDesign:PackIcon.RenderTransform>
+                            </materialDesign:PackIcon>
+                        </Button>
+                    </Border>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type Data:Subscription}">
+                    <materialDesign:Card>
                         <materialDesign:Card.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0,0">
                                 <GradientStop Color="#434892" Offset="0"/>
                                 <GradientStop Color="#363169" Offset="1"/>
                             </LinearGradientBrush>
                         </materialDesign:Card.Background>
-                        <StackPanel Orientation="Horizontal" Margin="12">
-                            <CheckBox VerticalAlignment="Center" IsChecked="{Binding Enabled.Value}" RenderTransformOrigin="0.5,0.5" Margin="4,0,4,0" Cursor="Hand" Checked="CheckBox_CheckChanged" Unchecked="CheckBox_CheckChanged">
-                                <CheckBox.RenderTransform>
-                                    <ScaleTransform ScaleX="1.4" ScaleY="1.4"/>
-                                </CheckBox.RenderTransform>
-                            </CheckBox>
-                            <StackPanel Margin="8 0 0 0">
-                                <TextBlock FontWeight="Bold" Text="{Binding Name.Value}" FontSize="16" />
-                                <TextBlock Text="{Binding LastUpdate.Value, Mode=OneWay}" FontSize="14" />
+                        <Grid>
+                            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Width="16" Height="16" Margin="0,4,4,0" Click="ButtonDelete_Click" Name="DeleteButton" Panel.ZIndex="666">
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconForegroundButton}">
+                                        <Setter Property="Opacity" Value="0"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMouseOver, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type materialDesign:Card}}}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="00:00:00.1" Storyboard.TargetProperty="Opacity" To="0.8"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Duration="00:00:00.1" Storyboard.TargetProperty="Opacity" To="0"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                    <materialDesign:PackIcon.RenderTransform>
+                                        <ScaleTransform ScaleX="0.6" ScaleY="0.6"/>
+                                    </materialDesign:PackIcon.RenderTransform>
+                                </materialDesign:PackIcon>
+                            </Button>
+                            <StackPanel Orientation="Horizontal" Margin="12">
+                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding Enabled.Value}" RenderTransformOrigin="0.5,0.5" Margin="0,0,4,0" Cursor="Hand" Checked="CheckBox_CheckChanged" Unchecked="CheckBox_CheckChanged">
+                                    <CheckBox.RenderTransform>
+                                        <ScaleTransform ScaleX="1.4" ScaleY="1.4"/>
+                                    </CheckBox.RenderTransform>
+                                </CheckBox>
+                                <StackPanel Margin="8 0 0 0">
+                                    <TextBlock FontWeight="Bold" Text="{Binding Name.Value}" FontSize="16" />
+                                    <TextBlock Text="{Binding LastUpdate.Value, Mode=OneWay}" FontSize="14" />
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
                     </materialDesign:Card>
                 </DataTemplate>
-            </ListView.ItemTemplate>
+            </ListView.Resources>
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal" />
@@ -48,12 +91,12 @@
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Margin" Value="16"/>
+                    <Setter Property="Margin" Value="8"/>
                     <Setter Property="Padding" Value="0"/>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <WrapPanel Orientation="Horizontal" Margin="24,16,24,0">
+        <WrapPanel Orientation="Horizontal" Margin="24,0,24,0">
             <ToggleButton IsChecked="{Binding AutoUpdate}"/>
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Auto Update</TextBlock>
             <StackPanel Orientation="Horizontal" IsEnabled="{Binding AutoUpdate}">

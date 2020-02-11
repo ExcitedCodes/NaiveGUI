@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace NaiveGUI.Data
 {
-    public class RemoteConfigGroup : List<RemoteConfig>
+    public class RemoteConfigGroup : ObservableCollection<RemoteConfig>
     {
         public string Name { get; set; } = null;
 

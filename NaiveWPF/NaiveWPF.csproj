@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -77,21 +77,23 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Designer.cs" />
-    <Compile Include="Data\AddListenerButton.cs" />
+    <Compile Include="Data\FakeListener.cs" />
+    <Compile Include="Data\FakeSubscription.cs" />
     <Compile Include="Data\IListener.cs" />
+    <Compile Include="Data\ISubscription.cs" />
     <Compile Include="Data\Listener.cs" />
+    <Compile Include="Data\ProxyType.cs" />
     <Compile Include="Data\RemoteConfigGroup.cs" />
-    <Compile Include="Data\SubscriptionData.cs" />
-    <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="ParentProcessFinder.cs" />
-    <Compile Include="SelectableTextBlock.cs" />
-    <Compile Include="TabIndexTester.cs" />
+    <Compile Include="Data\Subscription.cs" />
+    <Compile Include="Helper\ModelBase.cs" />
+    <Compile Include="Helper\ParentProcessFinder.cs" />
+    <Compile Include="Helper\SelectableTextBlock.cs" />
+    <Compile Include="Helper\TabIndexTester.cs" />
     <Compile Include="Data\RemoteConfig.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="View\LogTab.xaml.cs">
       <DependentUpon>LogTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Prop.cs" />
+    <Compile Include="Helper\Prop.cs" />
     <Compile Include="View\SubscriptionTab.xaml.cs">
       <DependentUpon>SubscriptionTab.xaml</DependentUpon>
     </Compile>
@@ -169,10 +171,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="16028985%401x.png" />
+    <Resource Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Resources\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Emoji.Wpf">
@@ -200,7 +202,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="lightning.cur" />
+    <Resource Include="Resources\lightning.cur" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

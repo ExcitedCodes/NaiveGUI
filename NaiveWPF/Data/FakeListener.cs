@@ -1,6 +1,6 @@
 ﻿namespace NaiveGUI.Data
 {
-    public class AddListenerButton : IListener
+    public class FakeListener : IListener
     {
         public bool IsReal => false;
         public Listener Real => null;

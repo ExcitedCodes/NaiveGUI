@@ -1,5 +1,7 @@
 ﻿using System;
 
+using NaiveGUI.Helper;
+
 namespace NaiveGUI.Data
 {
     public class RemoteConfig
@@ -7,8 +9,10 @@ namespace NaiveGUI.Data
         /// <summary>
         /// 原则上 <see cref="Name"/> 和 <see cref="Group"/> 构成唯一索引且均不可为Null
         /// </summary>
-        public string Name { get; set; } = null;
-        public RemoteConfigGroup Group { get; set; } = null;
+        public string Name { get; set; }
+        public RemoteConfigGroup Group { get; set; }
+
+        public ProxyType Type { get; set; } = ProxyType.Unknown;
 
         /// <summary>
         /// Obfuscates traffic by adding length paddings.
@@ -26,9 +30,10 @@ namespace NaiveGUI.Data
             Port = -1
         };
 
-        public RemoteConfig(string name)
+        public RemoteConfig(string name, ProxyType type)
         {
             Name = name;
+            Type = type;
         }
     }
 }

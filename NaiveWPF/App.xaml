@@ -12,10 +12,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Red.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
-            
-            
-            
             <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignSwitchToggleButton}">
                 <Setter Property="Cursor" Value="Hand"></Setter>
                 <Setter Property="HorizontalAlignment" Value="Left"></Setter>

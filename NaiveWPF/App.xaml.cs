@@ -1,10 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Net;
+using System.Text;
 using System.Windows;
 using System.Threading;
+using System.Reflection;
 using System.Diagnostics;
 using System.Security.Principal;
+using System.Security.Cryptography;
 using System.Runtime.InteropServices;
+
+using NaiveGUI.Helper;
 
 namespace NaiveGUI
 {
@@ -18,73 +24,13 @@ namespace NaiveGUI
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
-        
+
         public static readonly string ExecutablePath = Process.GetCurrentProcess().MainModule.FileName;
         public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public static string AutoRunFile { get; private set; }
 
         public static App Instance = null;
-
-        public Mutex AppMutex = null;
-
-        public App() : base()
-        {
-            Instance = this;
-        }
-
-        private void Application_Exit(object sender, ExitEventArgs e) => AppMutex?.ReleaseMutex();
-
-        private void Application_Startup(object sender, StartupEventArgs e)
-        {
-            var config = "config.json";
-            var minimize = false;
-            foreach(var a in e.Args)
-            {
-                var split = a.Split('=');
-                if(split.Length == 2 && (split[0] == "--autorun"))
-                {
-                    // Restricted to the binary itself, sometimes parent is x64 process and there's an exception
-                    try
-                    {
-                        var parent = ParentProcessFinder.GetParentProcess(Process.GetCurrentProcess().Handle);
-                        if(parent != null && parent.Modules[0].FileName == ExecutablePath)
-                        {
-                            SetAutoRun(bool.TryParse(split[1], out bool start) && start);
-                        }
-                    }
-                    catch { }
-                    return;
-                }
-                if(split.Length == 2 && (split[0] == "-c" || split[0] == "--config"))
-                {
-                    config = split[1];
-                }
-                else if(split[0] == "--minimize")
-                {
-                    minimize = true;
-                }
-            }
-            var full = Path.GetFullPath(config);
-            AppMutex = new Mutex(true, "NaiveGUI_" + Utils.Md5(full), out bool created);
-            AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Utils.Md5(ExecutablePath + full) + ".lnk";
-            if(created)
-            {
-                MainWindow = new MainWindow(config, File.Exists(AutoRunFile));
-                if(!minimize)
-                {
-                    MainWindow.Show();
-                }
-            }
-            else
-            {
-                MessageBox.Show("There's already an NaiveGUI instance running, please look for its tray icon.\n" +
-                    "If you want to run multiple instances, please copy the program to a different path or use --config/-c=yourconfig.json to specify config path.\n" +
-                    "\n" +
-                    "Config: " + config + "\n" +
-                    "Full Path: " + full, "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
 
         public static bool SetAutoRun(bool start)
         {
@@ -136,6 +82,140 @@ namespace NaiveGUI
                 }
             }
             return false;
+        }
+
+        public static string DefaultUserAgent = "NaiveGUI/" + Assembly.GetExecutingAssembly().GetName().Version + " (Potato NT) not AppleWebKit (not KHTML, not like Gecko) not Chrome not Safari";
+
+        public static string HttpGetString(string url, Encoding encoding = null, int timeoutMs = 5000, bool redirect = false, IWebProxy proxy = null)
+        {
+            if(encoding == null)
+            {
+                encoding = Encoding.UTF8;
+            }
+            return encoding.GetString(HttpGetBytes(url, timeoutMs, redirect, proxy));
+        }
+
+        public static byte[] HttpGetBytes(string url, int timeoutMs = -1, bool redirect = false, IWebProxy proxy = null)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            if(url.StartsWith("//"))
+            {
+                url = "https:" + url;
+            }
+            var request = WebRequest.CreateHttp(url);
+            request.Method = "GET";
+            request.UserAgent = DefaultUserAgent;
+            request.Credentials = CredentialCache.DefaultCredentials;
+            request.AllowAutoRedirect = redirect;
+            if(proxy != null)
+            {
+                request.Proxy = proxy;
+            }
+            if(timeoutMs > 0)
+            {
+                request.Timeout = timeoutMs;
+            }
+            using(var response = request.GetResponse() as HttpWebResponse)
+            {
+                if(response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception("Bad HTTP Status(" + url + "):" + response.StatusCode + " " + response.StatusDescription);
+                }
+                using(var ms = new MemoryStream())
+                {
+                    response.GetResponseStream().CopyTo(ms);
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        public static string Md5(byte[] data)
+        {
+            try
+            {
+                StringBuilder Result = new StringBuilder();
+                foreach(byte Temp in new MD5CryptoServiceProvider().ComputeHash(data))
+                {
+                    if(Temp < 16)
+                    {
+                        Result.Append("0");
+                        Result.Append(Temp.ToString("x"));
+                    }
+                    else
+                    {
+                        Result.Append(Temp.ToString("x"));
+                    }
+                }
+                return Result.ToString();
+            }
+            catch
+            {
+                return "0000000000000000";
+            }
+        }
+
+        public static string Md5(string Data) => Md5(EncodeByteArray(Data));
+
+        public static byte[] EncodeByteArray(string data) => data == null ? null : Encoding.UTF8.GetBytes(data);
+
+        public Mutex AppMutex = null;
+
+        public App() : base()
+        {
+            Instance = this;
+        }
+
+        private void Application_Exit(object sender, ExitEventArgs e) => AppMutex?.ReleaseMutex();
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            var config = "config.json";
+            var minimize = false;
+            foreach(var a in e.Args)
+            {
+                var split = a.Split('=');
+                if(split.Length == 2 && (split[0] == "--autorun"))
+                {
+                    // Restricted to the binary itself, sometimes parent is x64 process and there's an exception
+                    try
+                    {
+                        var parent = ParentProcessFinder.GetParentProcess(Process.GetCurrentProcess().Handle);
+                        if(parent != null && parent.Modules[0].FileName == ExecutablePath)
+                        {
+                            SetAutoRun(bool.TryParse(split[1], out bool start) && start);
+                        }
+                    }
+                    catch { }
+                    return;
+                }
+                if(split.Length == 2 && (split[0] == "-c" || split[0] == "--config"))
+                {
+                    config = split[1];
+                }
+                else if(split[0] == "--minimize")
+                {
+                    minimize = true;
+                }
+            }
+            var full = Path.GetFullPath(config);
+            AppMutex = new Mutex(true, "NaiveGUI_" + Md5(full), out bool created);
+            AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Md5(ExecutablePath + full) + ".lnk";
+            if(created)
+            {
+                MainWindow = new MainWindow(config, File.Exists(AutoRunFile));
+                if(!minimize)
+                {
+                    MainWindow.Show();
+                }
+            }
+            else
+            {
+                MessageBox.Show("There's already an NaiveGUI instance running, please look for its tray icon.\n" +
+                    "If you want to run multiple instances, please copy the program to a different path or use --config/-c=yourconfig.json to specify config path.\n" +
+                    "\n" +
+                    "Config: " + config + "\n" +
+                    "Full Path: " + full, "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }

@@ -4,14 +4,14 @@ using System.Collections.Generic;
 
 using fastJSON;
 
-using NaiveGUI.Model;
+using NaiveGUI.Helper;
 
 namespace NaiveGUI.Data
 {
     /// <summary>
     /// 订阅的数据对象, 每个订阅 URL 可能包含多个服务器组
     /// </summary>
-    public class SubscriptionData : ModelBase
+    public class Subscription : ModelBase, ISubscription
     {
         private readonly MainWindow Main = null;
 
@@ -25,7 +25,10 @@ namespace NaiveGUI.Data
 
         public string LastUpdateTime => LastUpdate == DateTime.MinValue ? "-" : LastUpdate.Value.ToLongTimeString();
 
-        public SubscriptionData(MainWindow main,string name,string url,bool enabled,DateTime lastUpdate)
+        public bool IsReal => true;
+        public Subscription Real => this;
+
+        public Subscription(MainWindow main, string name, string url, bool enabled, DateTime lastUpdate)
         {
             Main = main;
             Name.Value = name;
@@ -67,7 +70,7 @@ namespace NaiveGUI.Data
             */
             try
             {
-                var json = JSON.ToObject<Dictionary<string, List<dynamic>>>(Utils.HttpGetString(URL));
+                var json = JSON.ToObject<Dictionary<string, List<dynamic>>>(App.HttpGetString(URL));
                 Main.Dispatcher.Invoke(() =>
                 {
                     try
@@ -104,7 +107,7 @@ namespace NaiveGUI.Data
                                                 goto CONTINUE2;
                                             }
                                         }
-                                        g.Add(new RemoteConfig(name)
+                                        g.Add(new RemoteConfig(name, ProxyType.NaiveProxy)
                                         {
                                             Remote = new UriBuilder(scheme, host, port)
                                             {
@@ -117,17 +120,17 @@ namespace NaiveGUI.Data
                                     }
                                 }
                                 mainRemotes.Add(new RemoteConfigGroup(group)
-                        {
-                            new RemoteConfig(name)
-                            {
-                                Remote = new UriBuilder(scheme, host, port)
                                 {
-                                    UserName = username,
-                                    Password = password
-                                },
-                                Padding = padding
-                            }
-                        });
+                                    new RemoteConfig(name,ProxyType.NaiveProxy)
+                                    {
+                                        Remote = new UriBuilder(scheme, host, port)
+                                        {
+                                            UserName = username,
+                                            Password = password
+                                        },
+                                        Padding = padding
+                                    }
+                                });
                             CONTINUE2:;
                             }
                         }

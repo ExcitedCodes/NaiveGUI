@@ -96,7 +96,7 @@
                 </LinearGradientBrush>
             </Border.Background>
             <StackPanel>
-                <Image Source="16028985@1x.png" Margin="0,24,0,24" Width="120"/>
+                <Image Source="Resources/logo.png" Margin="0,24,0,24" Width="120"/>
                 <Button Tag="0" Click="ButtonTab_Click">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource TabButtonBase}">
@@ -254,7 +254,7 @@
                 </Button>
             </Grid>
         </Border>
-        <tb:TaskbarIcon x:Name="trayIcon" TrayLeftMouseUp="TrayIcon_TrayLeftMouseUp" IconSource="icon.ico">
+        <tb:TaskbarIcon x:Name="trayIcon" TrayLeftMouseUp="TrayIcon_TrayLeftMouseUp" IconSource="Resources/icon.ico">
             <tb:TaskbarIcon.TrayToolTip>
                 <ToolTip Placement="Mouse">
                     <TextBlock>NaiveGUI - Running</TextBlock>

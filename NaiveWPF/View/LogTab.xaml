@@ -6,13 +6,14 @@
              xmlns:NaiveGUI="clr-namespace:NaiveGUI"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Helper="clr-namespace:NaiveGUI.Helper"
              FontFamily="{DynamicResource MaterialDesignFont}"
              d:DesignHeight="315" d:DesignWidth="580">
     <DockPanel>
         <TextBlock DockPanel.Dock="Top" Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Log</TextBlock>
         <Border Padding="8" BorderBrush="#FFAAAAAA" Background="#33000000" BorderThickness="2" Margin="16,16,16,16">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Name="XD">
-                <NaiveGUI:SelectableTextBlock x:Name="TextBlockLog" TextWrapping="WrapWithOverflow" FontFamily="Consolas"/>
+                <Helper:SelectableTextBlock x:Name="TextBlockLog" TextWrapping="WrapWithOverflow" FontFamily="Consolas"/>
             </ScrollViewer>
         </Border>
     </DockPanel>

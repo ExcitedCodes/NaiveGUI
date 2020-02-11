@@ -40,7 +40,7 @@
             <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Listener</TextBlock>
             <ListView ItemsSource="{Binding Listeners}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Margin="8,0,0,0">
                 <ListView.Resources>
-                    <DataTemplate DataType="{x:Type Data:AddListenerButton}">
+                    <DataTemplate DataType="{x:Type Data:FakeListener}">
                         <Border CornerRadius="2" Width="192" Height="88" BorderThickness="4" Opacity="0.5" BorderBrush="White">
                             <Button Width="192" Height="88" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonAddListener_Click">
                                 <materialDesign:PackIcon Kind="AddCircleOutline" RenderTransformOrigin="0.5,0.5" Foreground="White">
@@ -72,7 +72,7 @@
                                     </VisualState>
                                     <VisualState Name="Selected">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="1"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.8"/>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="6"/>
                                             <DoubleAnimation Storyboard.TargetName="DeleteButton" Storyboard.TargetProperty="Opacity" To="1"/>
                                         </Storyboard>
@@ -101,7 +101,7 @@
                                     ·
                                     <Run Text="{Binding SchemeUpper, Mode=OneWay}"></Run>
                                 </TextBlock>
-                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="../lightning.cur" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD" Margin="0,0,16,16"/>
+                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="../Resources/lightning.cur" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD" Margin="0,0,16,16"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 
-namespace NaiveGUI
+namespace NaiveGUI.Helper
 {
     // Another useful paste
     // https://stackoverflow.com/a/3346055
