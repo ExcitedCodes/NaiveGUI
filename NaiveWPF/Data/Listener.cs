@@ -56,6 +56,7 @@ namespace NaiveGUI.Data
             private set
             {
                 _enabled = value;
+                RaisePropertyChanged("Enabled");
                 RaisePropertyChanged("StatusText");
                 RaisePropertyChanged("StatusColor");
             }
@@ -93,18 +94,19 @@ namespace NaiveGUI.Data
             get => _remote;
             set
             {
-                if(Running && _remote != value)
+                if(_remote == value)
                 {
-                    this._remote = value;
+                    return;
+                }
+                _remote = value;
+                if(Running)
+                {
                     Start();
                 }
-                else
-                {
-                    this._remote = value;
-                }
+                RaisePropertyChanged("Remote");
             }
         }
-        private RemoteConfig _remote;
+        private RemoteConfig _remote = null;
 
         public Process BaseProcess = null;
 

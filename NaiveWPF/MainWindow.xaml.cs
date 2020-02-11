@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Interop;
@@ -165,6 +166,86 @@ namespace NaiveGUI
             DataContext = this;
 
             Logging.PropertyChanged += (s, e) => Save();
+            Listeners.CollectionChanged += (s, e) => 
+            {
+                // ItemSource Binding will cause severe width issue, so we create menu by code...
+                var menu = FindResource("TrayMenu") as ContextMenu;
+                while(menu.Items.Count > 2)
+                {
+                    menu.Items.RemoveAt(0);
+                }
+                for(int i = 0;i < Listeners.Count;i++)
+                {
+                    var item = Listeners[i] as IListener;
+                    if(item.IsReal)
+                    {
+                        var m = new MenuItem()
+                        {
+                            Header = item.Real.Listen.ToString()
+                        };
+                        foreach(var g in Remotes)
+                        {
+                            var group = new MenuItem()
+                            {
+                                Header = g.Name
+                            };
+                            foreach(var r in g)
+                            {
+                                var remote = new MenuItem()
+                                {
+                                    Header = r.Name,
+                                    IsCheckable = true,
+                                    Tag = r
+                                };
+                                if(item.Real.Remote == r)
+                                {
+                                    remote.IsChecked = group.IsChecked = true;
+                                }
+                                remote.Click += (se, ev) =>
+                                {
+                                    item.Real.Remote = r;
+                                    Save();
+                                };
+                                group.Items.Add(remote);
+                            }
+                            m.Items.Add(group);
+                        }
+                        item.Real.PropertyChanged += (se, ev) =>
+                        {
+                            if(ev.PropertyName != "Remote")
+                            {
+                                return;
+                            }
+                            foreach(MenuItem group in m.Items)
+                            {
+                                group.IsChecked = false;
+                                foreach(MenuItem remote in group.Items)
+                                {
+                                    remote.IsChecked = remote.Tag == item.Real.Remote;
+                                    if(remote.IsChecked)
+                                    {
+                                        group.IsChecked = true;
+                                    }
+                                }
+                            }
+                        };
+                        m.Items.Add(new Separator());
+                        // WPF MenuItem doesn't support SubItem+Clickable, so we add a toggle
+                        var toggle = new MenuItem()
+                        {
+                            Header = "Toggle"
+                        };
+                        toggle.Click += (se, ev) => item.Real.ToggleEnabled();
+                        m.Items.Add(toggle);
+                        m.SetBinding(MenuItem.IsCheckedProperty, new Binding("Enabled")
+                        {
+                            Source = item,
+                            Mode = BindingMode.OneWay
+                        });
+                        menu.Items.Insert(i, m);
+                    }
+                }
+            };
 
             Listeners.Add(new FakeListener());
             Subscriptions.Subscriptions.Add(new FakeSubscription());
@@ -211,6 +292,8 @@ namespace NaiveGUI
 
         public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
 
+        public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);
+        
         private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
         {
             Show();
@@ -218,15 +301,26 @@ namespace NaiveGUI
             Topmost = false;
         }
 
-        public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);
-
-        private void WindowDrag(object sender, MouseButtonEventArgs e)
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             App.ReleaseCapture();
             App.SendMessage(new WindowInteropHelper(this).Handle, 0xA1, (IntPtr)0x2, IntPtr.Zero);
         }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            foreach(var l in Listeners)
+            {
+                if(l.IsReal && l.Real.Running)
+                {
+                    l.Real.Stop();
+                }
+            }
+        }
+
         private void ButtonHide_Click(object sender, RoutedEventArgs e) => Hide();
+
+        private void TrayMenu_Exit(object sender, RoutedEventArgs e) => Close();
 
         #region Tab Switching
 

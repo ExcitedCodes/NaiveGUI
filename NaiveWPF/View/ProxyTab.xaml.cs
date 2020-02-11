@@ -128,6 +128,7 @@ namespace NaiveGUI.View
             if(WTF.SelectedItem is RemoteConfig r && Main.CurrentListener != null)
             {
                 Main.CurrentListener.Remote = r;
+                Main.Save();
             }
             SayWTF();
         }
