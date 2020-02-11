@@ -37,7 +37,7 @@
         -->
         <StackPanel>
             <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Listener</TextBlock>
-            <ListView ItemsSource="{Binding Listeners}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}">
+            <ListView ItemsSource="{Binding Listeners}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Margin="8,0,0,0">
                 <ListView.Resources>
                     <DataTemplate DataType="{x:Type Data:AddListenerButton}">
                         <Border CornerRadius="2" Width="192" Height="88" BorderThickness="4" Opacity="0.5" BorderBrush="White">
@@ -51,25 +51,26 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type Data:Listener}">
-                        <Border CornerRadius="2" Width="192" Height="88" Padding="16" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" 
+                        <Border CornerRadius="2" Width="192" Height="88" Padding="16" Cursor="Hand" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" 
                                 d:DataContext="{StaticResource DesignerData_Listener}" MouseEnter="Listener_MouseEvent" MouseLeave="Listener_MouseEvent" Initialized="Listener_Initialized">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup Name="ShadowState">
                                     <VisualState Name="Default">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.3"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="2"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState Name="Hover">
                                         <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.5"/>
-                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="2"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.6"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="3"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualState Name="Selected">
                                         <Storyboard>
                                             <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="1"/>
-                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="8"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="6"/>
                                         </Storyboard>
                                     </VisualState>
                                     <VisualStateGroup.Transitions>
@@ -80,7 +81,7 @@
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="16" RenderingBias="Quality" ShadowDepth="2" Opacity="0"/>
+                                <DropShadowEffect BlurRadius="16" RenderingBias="Quality" ShadowDepth="2" Opacity="0.3"/>
                             </Border.Effect>
                             <Grid>
                                 <TextBlock Foreground="White" FontSize="20" Text="{Binding Listen.Host, Mode=OneWay}"/>
@@ -89,7 +90,7 @@
                                     ·
                                     <Run Text="{Binding SchemeUpper, Mode=OneWay}"></Run>
                                 </TextBlock>
-                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="Hand" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD"/>
+                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="ScrollNS" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD"/>
                             </Grid>
                         </Border>
                     </DataTemplate>

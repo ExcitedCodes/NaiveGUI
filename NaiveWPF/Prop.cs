@@ -10,7 +10,7 @@ namespace NaiveGUI
             set
             {
                 _value = value;
-                RaisePropertyChanged("Value");
+                RaisePropertyChanged();
             }
         }
         private T _value;
@@ -18,6 +18,8 @@ namespace NaiveGUI
         public Prop(T initial = default(T)) => _value = initial;
 
         public override string ToString() => _value.ToString();
+
         public static implicit operator T(Prop<T> p) => p.Value;
+        public static explicit operator Prop<T>(T initial) => new Prop<T>(initial);
     }
 }

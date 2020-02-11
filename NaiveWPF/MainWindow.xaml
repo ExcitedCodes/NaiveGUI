@@ -10,7 +10,7 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}" TextElement.FontWeight="Regular" TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="Auto"
         FontFamily="{DynamicResource MaterialDesignFont}"
-        Title="MainWindow" Height="500" Width="870"
+        Title="MainWindow" Height="500" Width="878"
         WindowStyle="None" WindowState="Normal" ResizeMode="CanResize" MouseDown="WindowDrag"
         AllowsTransparency="True" Background="Transparent">
     <WindowChrome.WindowChrome>
@@ -248,6 +248,7 @@
                         <TranslateTransform Y="0"/>
                     </Border.RenderTransform>
                 </Border>
+                <materialDesign:Snackbar MessageQueue="{Binding snackbarMessageQueue}" Foreground="White" Background="#FF1A1A1D" />
                 <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="32" Height="32" Background="{x:Null}" BorderBrush="{x:Null}" Padding="0" Margin="0,5,5,0" Click="ButtonHide_Click">
                     <Line X1="0" X2="16" Stroke="White" StrokeThickness="1.5" Margin="0,8,0,0" />
                 </Button>

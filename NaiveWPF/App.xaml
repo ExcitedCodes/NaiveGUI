@@ -7,11 +7,25 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Red.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            
+            
+            
+            <Style TargetType="ToggleButton" BasedOn="{StaticResource MaterialDesignSwitchToggleButton}">
+                <Setter Property="Cursor" Value="Hand"></Setter>
+                <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1.2" ScaleY="1.2"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"></Setter>
+            </Style>
             <LinearGradientBrush x:Key="ListenerColor_Active" StartPoint="0,0" EndPoint="0.5,1">
                 <GradientStop Color="#29bce7" Offset="0"/>
                 <GradientStop Color="#019fd9" Offset="1"/>

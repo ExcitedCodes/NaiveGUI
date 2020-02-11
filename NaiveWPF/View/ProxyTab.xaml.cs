@@ -11,7 +11,7 @@ namespace NaiveGUI.View
     /// </summary>
     public partial class ProxyTab : UserControl
     {
-        MainWindow Main;
+        private readonly MainWindow Main = null;
 
         public ProxyTab(MainWindow main)
         {

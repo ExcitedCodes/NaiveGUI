@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace NaiveGUI.Model
 {
@@ -6,6 +7,10 @@ namespace NaiveGUI.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void RaisePropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public bool RaisePropertyChanged([CallerMemberName] string name = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            return PropertyChanged == null;
+        }
     }
 }

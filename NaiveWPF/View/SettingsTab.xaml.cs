@@ -7,7 +7,7 @@ namespace NaiveGUI.View
     /// </summary>
     public partial class SettingsTab : UserControl
     {
-        MainWindow Main;
+        private readonly MainWindow Main = null;
 
         public SettingsTab(MainWindow main)
         {
