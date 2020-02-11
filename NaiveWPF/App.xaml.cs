@@ -158,6 +158,11 @@ namespace NaiveGUI
 
         public static byte[] EncodeByteArray(string data) => data == null ? null : Encoding.UTF8.GetBytes(data);
 
+        /// <summary>
+        /// LOL
+        /// </summary>
+        public static string YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(string message = "", string data = "", string title = "YAAAAAAAAAAAAAAAAAAAAAY") => Microsoft.VisualBasic.Interaction.InputBox(message, title, data);
+
         public Mutex AppMutex = null;
 
         public App() : base()

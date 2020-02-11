@@ -21,7 +21,17 @@ namespace NaiveGUI.View
 
         private void ButtonAddListener_Click(object sender, RoutedEventArgs e)
         {
-            Main.Listeners.Insert(Main.Listeners.Count - 1, new Listener("socks://0.0.0.0:1080", ProxyType.NaiveProxy));
+            #region LOLLLLLLL
+
+            var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input the listening URI\n\nExample:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388", "socks://0.0.0.0:1080");
+            if(uri == "")
+            {
+                return;
+            }
+
+            #endregion
+
+            Main.Listeners.Insert(Main.Listeners.Count - 1, new Listener(uri, ProxyType.NaiveProxy));
             Main.Save();
         }
 
@@ -55,7 +65,7 @@ namespace NaiveGUI.View
                 }
             }
         }
-        
+
         private void Listener_Initialized(object sender, System.EventArgs e)
         {
             var border = sender as Border;

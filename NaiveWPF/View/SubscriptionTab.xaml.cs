@@ -106,7 +106,29 @@ namespace NaiveGUI.View
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            Subscriptions.Insert(Subscriptions.Count - 1, new Subscription(Main, "Subscription", "", false, DateTime.MinValue));
+            #region LOLLLLLLL
+
+            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input Subscription Name\nName can't be duplicate");
+            if(name == "")
+            {
+                return;
+            }
+            foreach(var r in Subscriptions)
+            {
+                if(r.IsReal && r.Real.Name.Value == name)
+                {
+                    return;
+                }
+            }
+            var url = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input Subscription URL\n\nExample:\nhttps://www.baidu.com");
+            if(url == "")
+            {
+                return;
+            }
+
+            #endregion
+
+            Subscriptions.Insert(Subscriptions.Count - 1, new Subscription(Main, name, url, false, DateTime.MinValue));
             Main.Save();
         }
 
