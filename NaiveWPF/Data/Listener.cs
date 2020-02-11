@@ -3,11 +3,12 @@ using System.Text;
 using System.Windows;
 using System.Diagnostics;
 using System.Windows.Media;
-using System.ComponentModel;
+
+using NaiveGUI.Model;
 
 namespace NaiveGUI.Data
 {
-    public class Listener : IListener, INotifyPropertyChanged
+    public class Listener : ModelBase, IListener
     {
         public static string NaivePath = "naive.exe";
 
@@ -39,7 +40,8 @@ namespace NaiveGUI.Data
         public bool IsReal => true;
         public Listener Real => this;
 
-        public int ShadowOpacity => MainWindow.Instance.CurrentListener == this ? 16 : 0;
+        public bool Selected => MainWindow.Instance.CurrentListener == this;
+
         public string StatusText => Enabled ? (Running ? "Active" : "Error") : "Disabled";
         public Brush StatusColor => (Brush)(Enabled ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
 
@@ -193,6 +195,11 @@ namespace NaiveGUI.Data
             try
             {
                 BaseProcess = Process.Start(start);
+                BaseProcess.Exited += (s, e) =>
+                {
+                    RaisePropertyChanged("StatusText");
+                    RaisePropertyChanged("StatusColor");
+                };
                 if(logging)
                 {
                     BaseProcess.OutputDataReceived += LogOutput;
@@ -202,6 +209,8 @@ namespace NaiveGUI.Data
                 }
             }
             catch { }
+            RaisePropertyChanged("StatusText");
+            RaisePropertyChanged("StatusColor");
         }
 
         public void Stop()
@@ -221,13 +230,5 @@ namespace NaiveGUI.Data
             catch { }
             BaseProcess = null;
         }
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        #endregion
     }
 }

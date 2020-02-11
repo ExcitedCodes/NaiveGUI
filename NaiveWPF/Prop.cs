@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
+﻿using NaiveGUI.Model;
 
 namespace NaiveGUI
 {
-    public class Prop<T> : INotifyPropertyChanged
+    public class Prop<T> : ModelBase
     {
         public T Value
         {
@@ -10,12 +10,10 @@ namespace NaiveGUI
             set
             {
                 _value = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Value"));
+                RaisePropertyChanged("Value");
             }
         }
         private T _value;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public Prop(T initial = default(T)) => _value = initial;
 

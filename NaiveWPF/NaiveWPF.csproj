@@ -81,6 +81,7 @@
     <Compile Include="Data\IListener.cs" />
     <Compile Include="Data\Listener.cs" />
     <Compile Include="Data\RemoteConfigGroup.cs" />
+    <Compile Include="Model\ModelBase.cs" />
     <Compile Include="ParentProcessFinder.cs" />
     <Compile Include="SelectableTextBlock.cs" />
     <Compile Include="TabIndexTester.cs" />

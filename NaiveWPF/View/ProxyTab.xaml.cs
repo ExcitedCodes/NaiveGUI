@@ -25,13 +25,58 @@ namespace NaiveGUI.View
             Main.Save();
         }
 
-        private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Listener_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.OriginalSource is TextBlock t && (string)t.Tag == "XD")
+            {
+                return;
+            }
+            var border = sender as Border;
+            if(border.DataContext is Listener l)
+            {
+                VisualStateManager.GoToElementState(border, "Selected", true);
+                Main.CurrentListener = Main.CurrentListener == l ? null : l;
+                SayWTF();
+            }
+        }
+
+        private void Listener_MouseEvent(object sender, MouseEventArgs e)
+        {
+            var border = sender as Border;
+            if(!(border.DataContext as Listener).Selected)
+            {
+                if(border.IsMouseOver)
+                {
+                    VisualStateManager.GoToElementState(border, "Hover", true);
+                }
+                else
+                {
+                    VisualStateManager.GoToElementState(border, "Default", true);
+                }
+            }
+        }
+        
+        private void Listener_Initialized(object sender, System.EventArgs e)
         {
             var border = sender as Border;
             if(border.DataContext is Listener l)
             {
-                Main.CurrentListener = l;
-                SayWTF();
+                l.PropertyChanged += (s, e_) =>
+                {
+                    if(e_.PropertyName == "Selected" && !l.Selected)
+                    {
+                        VisualStateManager.GoToElementState(border, "Default", true);
+                    }
+                };
+            }
+        }
+
+        private void ListenerToggle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var textblock = sender as TextBlock;
+            if(textblock.DataContext is Listener l)
+            {
+                l.ToggleEnabled();
             }
         }
 
