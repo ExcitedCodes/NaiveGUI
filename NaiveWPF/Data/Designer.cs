@@ -24,24 +24,24 @@ namespace NaiveGUI.Data
                 EnabledReal = true,
                 RunningReal = false
             },
-            new AddListenerButton()
+            new FakeListener()
         };
 
         public ObservableCollection<RemoteConfigGroup> Remotes => new ObservableCollection<RemoteConfigGroup>()
         {
             new RemoteConfigGroup("Prprpr")
             {
-                new RemoteConfig("NameA")
+                new RemoteConfig("NameA",ProxyType.NaiveProxy)
                 {
                     Padding = true,
                     Remote = new UriBuilder("https://user:pass@prprpr.pr:3389")
                 },
-                new RemoteConfig("NameB")
+                new RemoteConfig("NameB",ProxyType.NaiveProxy)
                 {
                     Padding = false,
                     Remote = new UriBuilder("https://user:pass@prprpr.pr:3389")
                 },
-                new RemoteConfig("NameA")
+                new RemoteConfig("NameA",ProxyType.NaiveProxy)
                 {
                     Padding = true,
                     Remote = new UriBuilder("https://user:pass@prprpr.pr:3389")
@@ -58,6 +58,6 @@ namespace NaiveGUI.Data
         public bool EnabledReal;
         public bool RunningReal;
 
-        public DesignerListener() : base(new Uri("socks://127.0.0.1:2333")) { }
+        public DesignerListener() : base(new Uri("socks://127.0.0.1:2333"), ProxyType.NaiveProxy) { }
     }
 }

@@ -3,7 +3,7 @@ using System.Windows;
 using System.Reflection;
 using System.Windows.Controls;
 
-namespace NaiveGUI
+namespace NaiveGUI.Helper
 {
     // Reference: https://stackoverflow.com/a/45627524
     public class SelectableTextBlock : TextBlock

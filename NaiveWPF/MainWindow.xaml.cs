@@ -16,6 +16,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 
 using NaiveGUI.View;
 using NaiveGUI.Data;
+using NaiveGUI.Helper;
 
 namespace NaiveGUI
 {
@@ -102,7 +103,7 @@ namespace NaiveGUI
                             var group = new RemoteConfigGroup(g.Key);
                             foreach(KeyValuePair<string, dynamic> r in (Dictionary<string, dynamic>)g.Value)
                             {
-                                group.Add(new RemoteConfig(r.Key)
+                                group.Add(new RemoteConfig(r.Key, ProxyType.NaiveProxy)
                                 {
                                     Remote = new UriBuilder(r.Value["remote"]),
                                     Padding = r.Value.ContainsKey("padding") && r.Value["padding"],
@@ -117,7 +118,7 @@ namespace NaiveGUI
                 {
                     foreach(var l in json["listeners"])
                     {
-                        var listener = new Listener(l["listen"]);
+                        var listener = new Listener(l["listen"], Enum.Parse(typeof(ProxyType), l["type"]));
                         if(l["remote"] is Dictionary<string, dynamic>)
                         {
                             var name = l["remote"]["name"];
@@ -148,9 +149,10 @@ namespace NaiveGUI
                 if(json.ContainsKey("subscriptions"))
                 {
                     var sub = (Dictionary<string, dynamic>)json["subscriptions"];
-                    foreach(Dictionary<string, dynamic> s in sub["data"])
+                    foreach(KeyValuePair<string, dynamic> kv in sub["data"])
                     {
-                        Subscriptions.Subscriptions.Add(new SubscriptionData(this, s["name"], s["url"], s["enable"], DateTime.Parse(s["last_update"])));
+                        var s = (Dictionary<string, dynamic>)kv.Value;
+                        Subscriptions.Subscriptions.Add(new Subscription(this, kv.Key, s["url"], s["enable"], DateTime.Parse(s["last_update"])));
                     }
                     Subscriptions.LastUpdate.Value = DateTime.Parse(sub["last_update"]);
                     Subscriptions.UpdateInterval = (int)sub["update_interval"];
@@ -164,7 +166,8 @@ namespace NaiveGUI
 
             Logging.PropertyChanged += (s, e) => Save();
 
-            Listeners.Add(new AddListenerButton());
+            Listeners.Add(new FakeListener());
+            Subscriptions.Subscriptions.Add(new FakeSubscription());
 
             SwitchTab(0);
         }
@@ -180,6 +183,7 @@ namespace NaiveGUI
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
+                    { "type", l.Real.Type.ToString() },
                     { "enable", l.Real.Enabled },
                     { "listen", l.Real.Listen.ToString() },
                     { "remote", l.Real.Remote == null ? null : new Dictionary<string,object>() {
@@ -193,12 +197,11 @@ namespace NaiveGUI
                 })) },
                 { "subscriptions", new Dictionary<string, object>()
                 {
-                    { "data",Subscriptions.Subscriptions.Select(s => new Dictionary<string,object>()
+                    { "data",Subscriptions.Subscriptions.Where(s => s.IsReal).ToDictionary(s => s.Real.Name.Value,s => new Dictionary<string,object>()
                     {
-                        { "name",s.Name.Value },
-                        { "url",s.URL.Value },
-                        { "enable",s.Enabled.Value },
-                        { "last_update",s.LastUpdate.ToString() }
+                        { "url",s.Real.URL.Value },
+                        { "enable",s.Real.Enabled.Value },
+                        { "last_update",s.Real.LastUpdate.ToString() }
                     })},
                     { "last_update",Subscriptions.LastUpdate.ToString() },
                     { "update_interval",Subscriptions.UpdateInterval },

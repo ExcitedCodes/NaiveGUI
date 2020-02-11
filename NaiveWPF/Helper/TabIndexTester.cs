@@ -1,4 +1,4 @@
-﻿namespace NaiveGUI
+﻿namespace NaiveGUI.Helper
 {
     public class TabIndexTester
     {

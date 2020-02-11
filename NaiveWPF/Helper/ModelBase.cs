@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace NaiveGUI.Model
+namespace NaiveGUI.Helper
 {
     public class ModelBase : INotifyPropertyChanged
     {

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Diagnostics;
 using System.Windows.Media;
 
-using NaiveGUI.Model;
+using NaiveGUI.Helper;
 
 namespace NaiveGUI.Data
 {
@@ -44,6 +44,8 @@ namespace NaiveGUI.Data
 
         public string StatusText => Enabled ? (Running ? "Active" : "Error") : "Disabled";
         public Brush StatusColor => (Brush)(Enabled ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
+
+        public ProxyType Type { get; set; } = ProxyType.Unknown;
 
         /// <summary>
         /// 设置此属性请使用 <see cref="ToggleEnabled"/>
@@ -109,10 +111,11 @@ namespace NaiveGUI.Data
         public int FailCounter = 0;
         public DateTime LastStart = DateTime.Now;
 
-        public Listener(string listen, bool enabled = false) : this(FilterListeningAddress(ref listen), enabled) { }
+        public Listener(string listen, ProxyType type, bool enabled = false) : this(FilterListeningAddress(ref listen), type, enabled) { }
 
-        public Listener(Uri listen, bool enabled = false)
+        public Listener(Uri listen, ProxyType type, bool enabled = false)
         {
+            Type = type;
             Listen = listen;
             Enabled = enabled;
         }

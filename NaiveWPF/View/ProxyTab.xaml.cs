@@ -21,7 +21,7 @@ namespace NaiveGUI.View
 
         private void ButtonAddListener_Click(object sender, RoutedEventArgs e)
         {
-            Main.Listeners.Insert(Main.Listeners.Count - 1, new Listener("socks://0.0.0.0:1080"));
+            Main.Listeners.Insert(Main.Listeners.Count - 1, new Listener("socks://0.0.0.0:1080", ProxyType.NaiveProxy));
             Main.Save();
         }
 
@@ -84,7 +84,6 @@ namespace NaiveGUI.View
         {
             if((sender as Button).DataContext is Listener l)
             {
-                e.Handled = true;
                 if(l.Enabled)
                 {
                     l.ToggleEnabled();

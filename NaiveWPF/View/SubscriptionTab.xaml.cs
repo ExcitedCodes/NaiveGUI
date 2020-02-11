@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 
 using NaiveGUI.Data;
+using NaiveGUI.Helper;
 
 namespace NaiveGUI.View
 {
@@ -17,7 +18,7 @@ namespace NaiveGUI.View
     {
         private readonly MainWindow Main = null;
 
-        public ObservableCollection<SubscriptionData> Subscriptions { get; private set; } = new ObservableCollection<SubscriptionData>();
+        public ObservableCollection<ISubscription> Subscriptions { get; private set; } = new ObservableCollection<ISubscription>();
 
         public bool AutoUpdate
         {
@@ -51,7 +52,7 @@ namespace NaiveGUI.View
 
         public double IntervalOpacity => AutoUpdate ? 1 : 0.5;
 
-        public SubscriptionData CurrentSubscription = null;
+        public Subscription CurrentSubscription = null;
 
         public SubscriptionTab(MainWindow main)
         {
@@ -69,7 +70,7 @@ namespace NaiveGUI.View
             int count = 0;
             foreach(var s in Subscriptions)
             {
-                if(s.Enabled && s.Update(silent))
+                if(s.IsReal && s.Real.Enabled && s.Real.Update(silent))
                 {
                     count++;
                 }
@@ -82,7 +83,7 @@ namespace NaiveGUI.View
         {
             if(e.AddedItems.Count != 0)
             {
-                CurrentSubscription = e.AddedItems[0] as SubscriptionData;
+                CurrentSubscription = e.AddedItems[0] as Subscription;
             }
         }
 
@@ -101,6 +102,21 @@ namespace NaiveGUI.View
                 Main.snackbarMessageQueue.Enqueue(string.Format("Updated {0} subscription{1}.", count, count > 1 ? "s" : ""));
                 Updating.Value = false;
             });
+        }
+
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Subscriptions.Insert(Subscriptions.Count - 1, new Subscription(Main, "Subscription", "", false, DateTime.MinValue));
+            Main.Save();
+        }
+
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if((sender as Button).DataContext is Subscription s)
+            {
+                Subscriptions.Remove(s);
+                Main.Save();
+            }
         }
 
         #region INotifyPropertyChanged

@@ -1,6 +1,4 @@
-﻿using NaiveGUI.Model;
-
-namespace NaiveGUI
+﻿namespace NaiveGUI.Helper
 {
     public class Prop<T> : ModelBase
     {
