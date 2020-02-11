@@ -222,5 +222,7 @@ namespace NaiveGUI
                     "Full Path: " + full, "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
+        private void TrayMenu_Exit(object sender, RoutedEventArgs e) => MainWindow.Close();
     }
 }
