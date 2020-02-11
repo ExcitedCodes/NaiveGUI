@@ -46,7 +46,7 @@ namespace NaiveGUI
                 {
                     if(l.IsReal)
                     {
-                        l.Real.RaisePropertyChanged("ShadowOpacity");
+                        l.Real.RaisePropertyChanged("Selected");
                     }
                 }
             }

@@ -52,7 +52,6 @@ namespace NaiveGUI.Data
 
     public class DesignerListener : Listener
     {
-        public new int ShadowOpacity => 16;
         public override bool Enabled => EnabledReal;
         public override bool Running => RunningReal;
 

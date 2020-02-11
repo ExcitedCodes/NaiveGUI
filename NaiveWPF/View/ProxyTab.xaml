@@ -14,10 +14,7 @@
              TextOptions.TextRenderingMode="Auto"        
              FontFamily="{DynamicResource MaterialDesignFont}" 
              d:DesignWidth="690" d:DesignHeight="600">
-    <UserControl.Resources>
-        <Data:DesignerMainWindow x:Key="designerContext"/>
-    </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" d:DataContext="{StaticResource designerContext}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" d:DataContext="{StaticResource DesignerData_MainWindow}">
         <!--
         <ScrollViewer.Template>
             <ControlTemplate TargetType="{x:Type ScrollViewer}">
@@ -54,9 +51,36 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type Data:Listener}">
-                        <Border CornerRadius="2" Width="192" Height="88" Padding="16" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown">
+                        <Border CornerRadius="2" Width="192" Height="88" Padding="16" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" 
+                                d:DataContext="{StaticResource DesignerData_Listener}" MouseEnter="Listener_MouseEvent" MouseLeave="Listener_MouseEvent" Initialized="Listener_Initialized">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="ShadowState">
+                                    <VisualState Name="Default">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState Name="Hover">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="0.5"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="2"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.Opacity" To="1"/>
+                                            <DoubleAnimation Storyboard.TargetProperty="Effect.(DropShadowEffect.ShadowDepth)" To="8"/>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition To="Default" GeneratedDuration="00:00:00.1"/>
+                                        <VisualTransition To="Hover" GeneratedDuration="00:00:00.1"/>
+                                        <VisualTransition To="Selected" GeneratedDuration="00:00:00.2"/>
+                                    </VisualStateGroup.Transitions>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="16" RenderingBias="Quality" Opacity="{Binding ShadowOpacity}"/>
+                                <DropShadowEffect BlurRadius="16" RenderingBias="Quality" ShadowDepth="2" Opacity="0"/>
                             </Border.Effect>
                             <Grid>
                                 <TextBlock Foreground="White" FontSize="20" Text="{Binding Listen.Host, Mode=OneWay}"/>
@@ -65,9 +89,7 @@
                                     ·
                                     <Run Text="{Binding SchemeUpper, Mode=OneWay}"></Run>
                                 </TextBlock>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                                    <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}"/>
-                                </StackPanel>
+                                <TextBlock Foreground="White" FontSize="12" Text="{Binding StatusText}" Cursor="Hand" HorizontalAlignment="Right" VerticalAlignment="Bottom" MouseLeftButtonDown="ListenerToggle_MouseLeftButtonDown" Tag="XD"/>
                             </Grid>
                         </Border>
                     </DataTemplate>
