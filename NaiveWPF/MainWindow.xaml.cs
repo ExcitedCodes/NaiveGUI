@@ -11,6 +11,7 @@ using System.Windows.Media.Animation;
 using System.Collections.ObjectModel;
 
 using fastJSON;
+using MaterialDesignThemes.Wpf;
 using Hardcodet.Wpf.TaskbarNotification;
 
 using NaiveGUI.View;
@@ -28,8 +29,10 @@ namespace NaiveGUI
         public static ulong Tick = 0;
         public static MainWindow Instance = null;
 
+        public SnackbarMessageQueue snackbarMessageQueue { get; set; } = new SnackbarMessageQueue();
+
         public string ConfigPath = null;
-        
+
         public Prop<bool> Logging { get; set; } = new Prop<bool>();
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
 
@@ -44,16 +47,15 @@ namespace NaiveGUI
                 this._currentListener = value;
                 foreach(var l in Listeners)
                 {
-                    if(l.IsReal)
-                    {
-                        l.Real.RaisePropertyChanged("Selected");
-                    }
+                    l.Real?.RaisePropertyChanged("Selected");
                 }
             }
         }
         private Listener _currentListener = null;
 
         public RemoteConfig CurrentRemote = null;
+
+        public SubscriptionTab Subscriptions { get; set; }
 
         public ObservableCollection<IListener> Listeners { get; set; } = new ObservableCollection<IListener>();
         public ObservableCollection<RemoteConfigGroup> Remotes { get; set; } = new ObservableCollection<RemoteConfigGroup>();
@@ -64,21 +66,21 @@ namespace NaiveGUI
         {
             Instance = this;
 
+            AutoRun.Value = autorun;
+            CurrentTabTester = new TabIndexTester(this);
+            Subscriptions = new SubscriptionTab(this);
             Tabs = new UserControl[] {
                 new ProxyTab(this),
-                new SubscriptionTab(this),
+                Subscriptions,
                 new LogTab(this),
                 new SettingsTab(this)
             };
-            AutoRun.Value = autorun;
-            CurrentTabTester = new TabIndexTester(this);
 
             InitializeComponent();
 
             #region Load Config
 
-            ConfigPath = config;
-            if(File.Exists(ConfigPath))
+            if(File.Exists(config))
             {
                 var json = JSON.ToObject<Dictionary<string, dynamic>>(File.ReadAllText("config.json"));
                 if(json["version"] == 1)
@@ -116,7 +118,7 @@ namespace NaiveGUI
                     foreach(var l in json["listeners"])
                     {
                         var listener = new Listener(l["listen"]);
-                        if(l["remote"] is Dictionary<string,dynamic>)
+                        if(l["remote"] is Dictionary<string, dynamic>)
                         {
                             var name = l["remote"]["name"];
                             var group = l["remote"]["group"];
@@ -143,23 +145,18 @@ namespace NaiveGUI
                         Listeners.Add(listener);
                     }
                 }
-                /*
                 if(json.ContainsKey("subscriptions"))
                 {
                     var sub = (Dictionary<string, dynamic>)json["subscriptions"];
-                    Subscriptions.LastUpdate = DateTime.Parse(sub["last_update"]);
-                    Subscriptions.UpdateInterval = (int)sub["update_interval"];
                     foreach(Dictionary<string, dynamic> s in sub["data"])
                     {
-                        Subscriptions.Add(new SubscriptionData()
-                        {
-                            URL = s["url"],
-                            LastUpdate = DateTime.Parse(s["last_update"])
-                        });
+                        Subscriptions.Subscriptions.Add(new SubscriptionData(this, s["name"], s["url"], s["enable"], DateTime.Parse(s["last_update"])));
                     }
+                    Subscriptions.LastUpdate.Value = DateTime.Parse(sub["last_update"]);
+                    Subscriptions.UpdateInterval = (int)sub["update_interval"];
                 }
-                */
             }
+            ConfigPath = config;
 
             #endregion
 
@@ -174,7 +171,10 @@ namespace NaiveGUI
 
         public void Save()
         {
-            (Tabs[0] as ProxyTab).SayWTF();
+            if(ConfigPath == null)
+            {
+                return;
+            }
             File.WriteAllText(ConfigPath, JSON.ToNiceJSON(new Dictionary<string, object>()
             {
                 { "version", CONFIG_VERSION },
@@ -191,18 +191,18 @@ namespace NaiveGUI
                     { "remote", r.Remote.ToString() },
                     { "padding", r.Padding }
                 })) },
-                /*
                 { "subscriptions", new Dictionary<string, object>()
                 {
-                    { "data",Subscriptions.Select(s => new Dictionary<string,object>()
+                    { "data",Subscriptions.Subscriptions.Select(s => new Dictionary<string,object>()
                     {
-                        { "url",s.URL },
+                        { "name",s.Name.Value },
+                        { "url",s.URL.Value },
+                        { "enable",s.Enabled.Value },
                         { "last_update",s.LastUpdate.ToString() }
                     })},
                     { "last_update",Subscriptions.LastUpdate.ToString() },
                     { "update_interval",Subscriptions.UpdateInterval },
                 }}
-                */
             }));
         }
 

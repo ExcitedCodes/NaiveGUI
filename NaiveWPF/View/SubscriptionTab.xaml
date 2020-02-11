@@ -4,17 +4,96 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NaiveGUI.View"
+             xmlns:Data="clr-namespace:NaiveGUI.Data"
              mc:Ignorable="d" 
-            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-            TextElement.FontWeight="Regular"
-            TextElement.FontSize="13"
-            TextOptions.TextFormattingMode="Ideal" 
-            TextOptions.TextRenderingMode="Auto"        
-            FontFamily="{DynamicResource MaterialDesignFont}"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"        
+             FontFamily="{DynamicResource MaterialDesignFont}"
              d:DesignHeight="315" d:DesignWidth="580">
     <StackPanel>
         <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Subscription</TextBlock>
-        
+        <ListView ItemsSource="{Binding Subscriptions, Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="ListView_SelectionChanged" SelectionMode="Single" Margin="8,0,0,0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <materialDesign:Card x:Name="Border">
+                        <materialDesign:Card.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0,0">
+                                <GradientStop Color="#434892" Offset="0"/>
+                                <GradientStop Color="#363169" Offset="1"/>
+                            </LinearGradientBrush>
+                        </materialDesign:Card.Background>
+                        <StackPanel Orientation="Horizontal" Margin="12">
+                            <CheckBox VerticalAlignment="Center" IsChecked="{Binding Enabled.Value}" RenderTransformOrigin="0.5,0.5" Margin="4,0,4,0" Cursor="Hand" Checked="CheckBox_CheckChanged" Unchecked="CheckBox_CheckChanged">
+                                <CheckBox.RenderTransform>
+                                    <ScaleTransform ScaleX="1.4" ScaleY="1.4"/>
+                                </CheckBox.RenderTransform>
+                            </CheckBox>
+                            <StackPanel Margin="8 0 0 0">
+                                <TextBlock FontWeight="Bold" Text="{Binding Name.Value}" FontSize="16" />
+                                <TextBlock Text="{Binding LastUpdate.Value, Mode=OneWay}" FontSize="14" />
+                            </StackPanel>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Margin" Value="16"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <WrapPanel Orientation="Horizontal" Margin="24,16,24,0">
+            <ToggleButton IsChecked="{Binding AutoUpdate}"/>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Auto Update</TextBlock>
+            <StackPanel Orientation="Horizontal" IsEnabled="{Binding AutoUpdate}">
+                <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" FontSize="16" Margin="16,0,8,0" Opacity="{Binding IntervalOpacity}">Interval:</TextBlock>
+                <TextBox Text="{Binding UpdateInterval}" MinWidth="128" FontSize="16"/>
+            </StackPanel>
+            <Button Margin="16,0,0,0" Click="ButtonUpdate_Click">
+                <Button.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Updating.Value}" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Updating.Value}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Resources>
+                <StackPanel Orientation="Horizontal">
+                    <ProgressBar Value="0" IsIndeterminate="True" Foreground="White" Margin="0,0,8,0"/>
+                    <TextBlock VerticalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="Update Now"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Updating.Value}" Value="True">
+                                        <Setter Property="Text" Value="Updating"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </Button>
+        </WrapPanel>
     </StackPanel>
 </UserControl>

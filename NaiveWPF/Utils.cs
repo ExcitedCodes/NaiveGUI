@@ -11,7 +11,7 @@ namespace NaiveGUI
     {
         public static string DefaultUserAgent = "NaiveGUI/" + Assembly.GetExecutingAssembly().GetName().Version + " (Potato NT) not AppleWebKit (not KHTML, not like Gecko) not Chrome not Safari";
 
-        public static string HttpGetString(string url, Encoding encoding = null, int timeoutMs = -1, bool redirect = false, IWebProxy proxy = null)
+        public static string HttpGetString(string url, Encoding encoding = null, int timeoutMs = 5000, bool redirect = false, IWebProxy proxy = null)
         {
             if(encoding == null)
             {

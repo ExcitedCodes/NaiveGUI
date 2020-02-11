@@ -18,7 +18,7 @@ namespace NaiveGUI.View
              BrushTime = new SolidColorBrush(Color.FromRgb(80, 141, 220)),
              BrushText = new SolidColorBrush(Colors.Silver);
 
-        MainWindow Main;
+        private readonly MainWindow Main = null;
 
         public LogTab(MainWindow main)
         {
