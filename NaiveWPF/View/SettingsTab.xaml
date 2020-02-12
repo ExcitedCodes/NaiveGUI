@@ -19,5 +19,9 @@
             <ToggleButton IsChecked="{Binding AutoRun.Value}" Checked="ToggleButtonAutoRun_Checked" Unchecked="ToggleButtonAutoRun_Unchecked"/>
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Start on boot</TextBlock>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
+            <ToggleButton IsChecked="{Binding Logging.Value}"/>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Enable logging</TextBlock>
+        </StackPanel>
     </StackPanel>
 </UserControl>
