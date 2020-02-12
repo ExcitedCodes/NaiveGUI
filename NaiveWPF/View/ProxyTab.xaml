@@ -15,6 +15,18 @@
              TextOptions.TextRenderingMode="Auto"        
              FontFamily="{DynamicResource MaterialDesignFont}" 
              d:DesignWidth="690" d:DesignHeight="600">
+    <UserControl.Resources>
+        <ContextMenu x:Key="RemoteMenu">
+            <MenuItem Header="Edit" Click="MenuItemEdit_Click"/>
+            <MenuItem Header="Delete" Click="MenuItemDelete_Click"/>
+        </ContextMenu>
+        <ContextMenu x:Key="RemoteGroupMenu">
+            <MenuItem Header="Add Remote" Click="MenuItemAddRemote_Click"/>
+            <Separator/>
+            <MenuItem Header="Rename" Click="MenuItemRename_Click"/>
+            <MenuItem Header="Delete" Click="MenuItemDelete_Click"/>
+        </ContextMenu>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" d:DataContext="{StaticResource DesignerData_MainWindow}">
         <!--
         <ScrollViewer.Template>
@@ -123,15 +135,15 @@
             <TreeView Foreground="White" Margin="16" ItemsSource="{Binding Remotes}" Name="WTF" SelectedItemChanged="WTF_SelectedItemChanged">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MaterialDesignTreeViewItem}">
-                        <Setter Property="IsSelected" Value="{Binding Selected.Value}" />
+                        <Setter Property="IsSelected" Value="{Binding Selected}" />
                     </Style>
                 </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type Data:RemoteConfigGroup}" ItemsSource="{Binding}">
-                        <emoji:TextBlock Text="{Binding Name}" Margin="3 2" FontSize="16" />
+                        <emoji:TextBlock Text="{Binding Name}" Margin="3 2" FontSize="16" MouseDown="TextBlockRemoteGroup_MouseDown" ContextMenu="{StaticResource RemoteGroupMenu}"/>
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type Data:RemoteConfig}">
-                        <emoji:TextBlock Text="{Binding Name}" Margin="3 2" FontSize="16" />
+                        <emoji:TextBlock Text="{Binding Name}" Padding="3 2" FontSize="16" MouseDown="TextBlockRemote_MouseDown" ContextMenu="{StaticResource RemoteMenu}"/>
                     </DataTemplate>
                 </TreeView.Resources>
             </TreeView>

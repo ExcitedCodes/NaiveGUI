@@ -4,12 +4,22 @@ using NaiveGUI.Helper;
 
 namespace NaiveGUI.Data
 {
-    public class RemoteConfig
+    public class RemoteConfig : ModelBase
     {
         /// <summary>
-        /// 原则上 <see cref="Name"/> 和 <see cref="Group"/> 构成唯一索引且均不可为Null
+        /// <see cref="Name"/> 和 <see cref="Group"/> 构成唯一索引且均不可为Null
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string _name;
+
         public RemoteConfigGroup Group { get; set; }
 
         public ProxyType Type { get; set; } = ProxyType.Unknown;
@@ -19,7 +29,16 @@ namespace NaiveGUI.Data
         /// </summary>
         public bool Padding { get; set; } = false;
 
-        public Prop<bool> Selected { get; set; } = new Prop<bool>();
+        public bool Selected
+        {
+            get => _selected;
+            set
+            {
+                _selected = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _selected;
 
         /// <summary>
         /// Listens at addr:port with protocol &lt;proto&gt;.

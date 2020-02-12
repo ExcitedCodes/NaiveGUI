@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 
 using NaiveGUI.Data;
+using System;
 
 namespace NaiveGUI.View
 {
@@ -103,6 +104,86 @@ namespace NaiveGUI.View
             }
         }
 
+        private void AddRemote(object context)
+        {
+            if(context is RemoteConfigGroup g)
+            {
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input name of remote.\nIf there's remote with same name, it will be overrided.");
+                if(name == "")
+                {
+                    return;
+                }
+                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input remote uri.\n\nExample:\nhttps://user:pass@www.baidu.com:6666");
+                if(uri == "")
+                {
+                    return;
+                }
+                bool padding = false;
+                switch(MessageBox.Show("Enable padding?", "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
+                {
+                case MessageBoxResult.Cancel:
+                    return;
+                case MessageBoxResult.Yes:
+                    padding = true;
+                    break;
+                }
+                for(int i = 0;i < g.Count;i++)
+                {
+                    if(g[i].Name == name)
+                    {
+                        g.RemoveAt(i--);
+                    }
+                }
+                g.Add(new RemoteConfig(name, ProxyType.NaiveProxy)
+                {
+                    Remote = new UriBuilder(uri),
+                    Padding = padding
+                });
+                Main.Save();
+            }
+        }
+
+        private void EditRemote(object context)
+        {
+            if(context is RemoteConfig r)
+            {
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input new name of remote.\nIf there's remote with same name, it will be overrided.", r.Name);
+                if(name == "")
+                {
+                    return;
+                }
+                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input new remote uri.\n\nExample:\nhttps://user:pass@www.baidu.com:6666", r.Remote.ToString());
+                if(uri == "")
+                {
+                    return;
+                }
+                bool padding = false;
+                switch(MessageBox.Show("Enable padding?Current status: " + (r.Padding ? "Enabled" : "Disabled"), "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
+                {
+                case MessageBoxResult.Cancel:
+                    return;
+                case MessageBoxResult.Yes:
+                    padding = true;
+                    break;
+                }
+                r.Remote = new UriBuilder(uri);
+                r.Padding = padding;
+                if(name != r.Name)
+                {
+                    var g = r.Group;
+                    for(int i = 0;i < g.Count;i++)
+                    {
+                        if(g[i].Name == name)
+                        {
+                            g.RemoveAt(i--);
+                        }
+                    }
+                    r.Name = name;
+                }
+                Main.Save();
+            }
+        }
+
         bool WTFing = false;
 
         // TODO: Remove this
@@ -113,7 +194,7 @@ namespace NaiveGUI.View
             {
                 foreach(RemoteConfig r in g)
                 {
-                    r.Selected.Value = Main.CurrentListener != null && Main.CurrentListener.Remote == r;
+                    r.Selected = Main.CurrentListener != null && Main.CurrentListener.Remote == r;
                 }
             }
             WTFing = false;
@@ -132,5 +213,77 @@ namespace NaiveGUI.View
             }
             SayWTF();
         }
+
+        private void TextBlockRemote_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ClickCount == 2)
+            {
+                EditRemote((sender as TextBlock).DataContext);
+            }
+        }
+
+        private void TextBlockRemoteGroup_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ClickCount == 2)
+            {
+                AddRemote((sender as TextBlock).DataContext);
+            }
+        }
+
+        private void MenuItemDelete_Click(object sender, RoutedEventArgs e)
+        {
+            var menu = sender as MenuItem;
+            if(menu.DataContext is RemoteConfig r)
+            {
+                r.Group.Remove(r);
+                Main.Save();
+            }
+            else if(menu.DataContext is RemoteConfigGroup g)
+            {
+                if(g.Count == 0 || MessageBox.Show("Are you sure you want to delete group " + g.Name + " and " + g.Count + " remotes inside it?", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                {
+                    Main.Remotes.Remove(g);
+                }
+            }
+        }
+
+        private void MenuItemRename_Click(object sender, RoutedEventArgs e)
+        {
+            if((sender as MenuItem).DataContext is RemoteConfigGroup g)
+            {
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input the new name.\nIf there's group with same name, they will be merged.\nItems with same name will be overrided!", g.Name);
+                if(name == "" || name == g.Name)
+                {
+                    return;
+                }
+                foreach(var search in Main.Remotes)
+                {
+                    if(search.Name == name)
+                    {
+                        foreach(var r in g)
+                        {
+                            foreach(var rsearch in search)
+                            {
+                                if(rsearch.Name == r.Name)
+                                {
+                                    search.Remove(rsearch);
+                                    break;
+                                }
+                            }
+                            search.Add(r);
+                        }
+                        Main.Remotes.Remove(g);
+                        Main.Save();
+                        return;
+                    }
+                }
+                g.Name = name;
+                Main.Save();
+            }
+        }
+
+        private void MenuItemEdit_Click(object sender, RoutedEventArgs e) => EditRemote((sender as MenuItem).DataContext);
+
+        private void MenuItemAddRemote_Click(object sender, RoutedEventArgs e) => AddRemote((sender as MenuItem).DataContext);
     }
 }
