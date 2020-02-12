@@ -77,7 +77,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\Designer.cs" />
     <Compile Include="Data\FakeListener.cs" />
     <Compile Include="Data\FakeSubscription.cs" />
     <Compile Include="Data\IListener.cs" />

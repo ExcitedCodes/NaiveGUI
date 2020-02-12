@@ -1,19 +1,11 @@
-﻿<UserControl x:Class="NaiveGUI.View.ProxyTab"
+﻿<UserControl x:Class="NaiveGUI.View.ProxyTab" mc:Ignorable="d"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NaiveGUI.View"
-             xmlns:Data="clr-namespace:NaiveGUI.Data"
-             mc:Ignorable="d" 
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
-             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-             TextElement.FontWeight="Regular"
-             TextElement.FontSize="13"
-             TextOptions.TextFormattingMode="Ideal" 
-             TextOptions.TextRenderingMode="Auto"        
-             FontFamily="{DynamicResource MaterialDesignFont}" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Data="clr-namespace:NaiveGUI.Data"
              d:DesignWidth="690" d:DesignHeight="600">
     <UserControl.Resources>
         <ContextMenu x:Key="RemoteMenu">
@@ -27,7 +19,7 @@
             <MenuItem Header="Delete" Click="MenuItemDelete_Click"/>
         </ContextMenu>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" d:DataContext="{StaticResource DesignerData_MainWindow}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <ScrollViewer.Template>
             <ControlTemplate TargetType="{x:Type ScrollViewer}">
                 <Grid x:Name="Grid" Background="{TemplateBinding Background}">
@@ -61,8 +53,7 @@
                         </Border>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type Data:Listener}">
-                        <Border CornerRadius="2" Width="192" Height="88" Cursor="Hand" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" 
-                                d:DataContext="{StaticResource DesignerData_Listener}" MouseEnter="Listener_MouseEvent" MouseLeave="Listener_MouseEvent" Initialized="Listener_Initialized">
+                        <Border CornerRadius="2" Width="192" Height="88" Cursor="Hand" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" MouseEnter="Listener_MouseEvent" MouseLeave="Listener_MouseEvent" Initialized="Listener_Initialized">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup Name="ShadowState">
                                     <VisualState Name="Default">

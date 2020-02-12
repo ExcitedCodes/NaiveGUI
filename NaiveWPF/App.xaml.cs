@@ -29,8 +29,11 @@ namespace NaiveGUI
         public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public static string AutoRunFile { get; private set; }
+        public static string DefaultUserAgent = "NaiveGUI/" + Assembly.GetExecutingAssembly().GetName().Version + " (Potato NT) not AppleWebKit (not KHTML, not like Gecko) not Chrome not Safari";
 
         public static App Instance = null;
+
+        #region Assistant Methods
 
         public static bool SetAutoRun(bool start)
         {
@@ -83,8 +86,6 @@ namespace NaiveGUI
             }
             return false;
         }
-
-        public static string DefaultUserAgent = "NaiveGUI/" + Assembly.GetExecutingAssembly().GetName().Version + " (Potato NT) not AppleWebKit (not KHTML, not like Gecko) not Chrome not Safari";
 
         public static string HttpGetString(string url, Encoding encoding = null, int timeoutMs = 5000, bool redirect = false, IWebProxy proxy = null)
         {
@@ -158,10 +159,13 @@ namespace NaiveGUI
 
         public static byte[] EncodeByteArray(string data) => data == null ? null : Encoding.UTF8.GetBytes(data);
 
-        /// <summary>
-        /// LOL
-        /// </summary>
+        #endregion
+
+        #region WTF
+
         public static string YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(string message = "", string data = "", string title = "YAAAAAAAAAAAAAAAAAAAAAY") => Microsoft.VisualBasic.Interaction.InputBox(message, title, data);
+
+        #endregion
 
         public Mutex AppMutex = null;
 
