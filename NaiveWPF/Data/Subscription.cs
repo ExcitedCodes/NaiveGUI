@@ -85,8 +85,8 @@ namespace NaiveGUI.Data
                             foreach(Dictionary<string, dynamic> r in kv.Value)
                             {
                                 // Can't find a better solution in current
-                                string name = r["name"], host = r["host"], scheme = r.ContainsKey("scheme") ? r["scheme"] : "https",
-                                    username = r.ContainsKey("username") ? r["username"] : null, password = r.ContainsKey("password") ? r["password"] : null;
+                                string name = r["name"], host = r["host"].ToString(), scheme = r.ContainsKey("scheme") ? r["scheme"] : "https",
+                                    username = r.ContainsKey("username") ? r["username"].ToString() : null, password = r.ContainsKey("password") ? r["password"].ToString() : null;
                                 int port = r.ContainsKey("port") ? (r["port"] is string ? int.Parse(r["port"]) : (int)r["port"]) : -1;
                                 bool padding = r.ContainsKey("padding") ? (r["padding"] is string ? bool.Parse(r["padding"]) : r["padding"]) : false;
                                 subscribeGroups[group].Add(name);

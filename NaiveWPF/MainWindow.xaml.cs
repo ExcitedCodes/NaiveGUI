@@ -85,7 +85,7 @@ namespace NaiveGUI
 
             if(File.Exists(config))
             {
-                var json = JSON.ToObject<Dictionary<string, dynamic>>(File.ReadAllText("config.json"));
+                var json = JSON.ToObject<Dictionary<string, dynamic>>(File.ReadAllText(config));
                 if(json["version"] == 1)
                 {
                     // TODO: Migrate
