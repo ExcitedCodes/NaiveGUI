@@ -1,9 +1,8 @@
 ﻿<Application x:Class="NaiveGUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:NaiveGUI"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Data="clr-namespace:NaiveGUI.Data"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              Exit="Application_Exit" Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -43,7 +42,7 @@
                 <GradientStop Color="#353535" Offset="1"/>
             </LinearGradientBrush>
             <!--#endregion-->
-            
+
             <!--#region Menu-->
             <!--
             <ContextMenu x:Key="TrayMenu" Placement="MousePoint" ItemsSource="{Binding Listeners}" MaxWidth="200">
@@ -192,11 +191,6 @@
                 <Separator/>
                 <MenuItem Header="Exit" Click="TrayMenu_Exit"/>
             </ContextMenu>
-            <!--#endregion-->
-
-            <!--#region Designer Data-->
-            <Data:DesignerListener x:Key="DesignerData_Listener"/>
-            <Data:DesignerMainWindow x:Key="DesignerData_MainWindow"/>
             <!--#endregion-->
         </ResourceDictionary>
     </Application.Resources>

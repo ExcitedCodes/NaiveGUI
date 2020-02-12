@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Reflection;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.ComponentModel;
@@ -40,7 +39,10 @@ namespace NaiveGUI
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
 
         public UserControl[] Tabs = null;
+        public TabIndexTester CurrentTabTester { get; set; }
         public Prop<int> CurrentTab { get; set; } = new Prop<int>();
+
+        public RemoteConfig CurrentRemote = null;
 
         public Listener CurrentListener
         {
@@ -56,14 +58,10 @@ namespace NaiveGUI
         }
         private Listener _currentListener = null;
 
-        public RemoteConfig CurrentRemote = null;
-
         public SubscriptionTab Subscriptions { get; set; }
 
         public ObservableCollection<IListener> Listeners { get; set; } = new ObservableCollection<IListener>();
         public ObservableCollection<RemoteConfigGroup> Remotes { get; set; } = new ObservableCollection<RemoteConfigGroup>();
-
-        public TabIndexTester CurrentTabTester { get; set; }
 
         public MainWindow(string config, bool autorun)
         {
@@ -72,6 +70,7 @@ namespace NaiveGUI
             AutoRun.Value = autorun;
             CurrentTabTester = new TabIndexTester(this);
             Subscriptions = new SubscriptionTab(this);
+
             Tabs = new UserControl[] {
                 new ProxyTab(this),
                 Subscriptions,
@@ -161,6 +160,10 @@ namespace NaiveGUI
                     Subscriptions.UpdateInterval = (int)sub["update_interval"];
                 }
             }
+            if(Remotes.Count == 0)
+            {
+                Remotes.Add(new RemoteConfigGroup("Default"));
+            }
             ConfigPath = config;
 
             #endregion
@@ -168,103 +171,15 @@ namespace NaiveGUI
             DataContext = this;
 
             Logging.PropertyChanged += (s, e) => Save();
-            Listeners.CollectionChanged += (s, e) => 
-            {
-                // ItemSource Binding will cause severe width issue, so we create menu by code...
-                var menu = FindResource("TrayMenu") as ContextMenu;
-                while(menu.Items.Count > 2)
-                {
-                    menu.Items.RemoveAt(0);
-                }
-                for(int i = 0;i < Listeners.Count;i++)
-                {
-                    var item = Listeners[i] as IListener;
-                    if(item.IsReal)
-                    {
-                        var m = new MenuItem()
-                        {
-                            Header = item.Real.Listen.ToString()
-                        };
-                        foreach(var g in Remotes)
-                        {
-                            var group = new MenuItem()
-                            {
-                                Header = g.Name
-                            };
-                            foreach(var r in g)
-                            {
-                                var remote = new MenuItem()
-                                {
-                                    Header = r.Name,
-                                    IsCheckable = true,
-                                    Tag = r
-                                };
-                                if(item.Real.Remote == r)
-                                {
-                                    remote.IsChecked = group.IsChecked = true;
-                                }
-                                remote.Click += (se, ev) =>
-                                {
-                                    item.Real.Remote = r;
-                                    Save();
-                                };
-                                group.Items.Add(remote);
-                            }
-                            m.Items.Add(group);
-                        }
-                        item.Real.PropertyChanged += (se, ev) =>
-                        {
-                            if(ev.PropertyName != "Remote")
-                            {
-                                return;
-                            }
-                            foreach(var g in m.Items)
-                            {
-                                if(g is Separator)
-                                {
-                                    break;
-                                }
-                                if(g is MenuItem group)
-                                {
-                                    group.IsChecked = false;
-                                    foreach(MenuItem remote in group.Items)
-                                    {
-                                        remote.IsChecked = remote.Tag == item.Real.Remote;
-                                        if(remote.IsChecked)
-                                        {
-                                            group.IsChecked = true;
-                                        }
-                                    }
-                                }
-                            }
-                        };
-                        m.Items.Add(new Separator());
-                        // WPF MenuItem doesn't support SubItem+Clickable, so we add a toggle
-                        var toggle = new MenuItem()
-                        {
-                            Header = "Toggle"
-                        };
-                        toggle.Click += (se, ev) => item.Real.ToggleEnabled();
-                        m.Items.Add(toggle);
-                        m.SetBinding(MenuItem.IsCheckedProperty, new Binding("Enabled")
-                        {
-                            Source = item,
-                            Mode = BindingMode.OneWay
-                        });
-                        menu.Items.Insert(i, m);
-                    }
-                }
-            };
+            Listeners.CollectionChanged += (s, e) => ReloadTrayMenu();
 
-            if(Remotes.Count==0)
-            {
-                Remotes.Add(new RemoteConfigGroup("Default"));
-            }
             Listeners.Add(new FakeListener());
             Subscriptions.Subscriptions.Add(new FakeSubscription());
 
             SwitchTab(0);
         }
+
+        public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
 
         public void Save()
         {
@@ -303,22 +218,9 @@ namespace NaiveGUI
             }));
         }
 
-        public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
-
         public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);
-        
-        private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
-        {
-            Show();
-            Topmost = true; // Still using this in 2020?
-            Topmost = false;
-        }
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            App.ReleaseCapture();
-            App.SendMessage(new WindowInteropHelper(this).Handle, 0xA1, (IntPtr)0x2, IntPtr.Zero);
-        }
+        #region General Events
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -331,9 +233,114 @@ namespace NaiveGUI
             }
         }
 
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            App.ReleaseCapture();
+            App.SendMessage(new WindowInteropHelper(this).Handle, 0xA1, (IntPtr)0x2, IntPtr.Zero);
+        }
+
         private void ButtonHide_Click(object sender, RoutedEventArgs e) => Hide();
 
-        private void TrayMenu_Exit(object sender, RoutedEventArgs e) => Close();
+        #endregion
+
+        #region Tray Icon & Menu
+
+        private void ReloadTrayMenu()
+        {
+            // ItemSource Binding will cause severe width issue, so we create menu by code...
+            var menu = FindResource("TrayMenu") as ContextMenu;
+            while(menu.Items.Count > 2)
+            {
+                menu.Items.RemoveAt(0);
+            }
+            for(int i = 0;i < Listeners.Count;i++)
+            {
+                var item = Listeners[i] as IListener;
+                if(item.IsReal)
+                {
+                    var m = new MenuItem()
+                    {
+                        Header = item.Real.Listen.ToString()
+                    };
+                    foreach(var g in Remotes)
+                    {
+                        var group = new MenuItem()
+                        {
+                            Header = g.Name
+                        };
+                        foreach(var r in g)
+                        {
+                            var remote = new MenuItem()
+                            {
+                                Header = r.Name,
+                                IsCheckable = true,
+                                Tag = r
+                            };
+                            if(item.Real.Remote == r)
+                            {
+                                remote.IsChecked = group.IsChecked = true;
+                            }
+                            remote.Click += (se, ev) =>
+                            {
+                                item.Real.Remote = r;
+                                Save();
+                            };
+                            group.Items.Add(remote);
+                        }
+                        m.Items.Add(group);
+                    }
+                    item.Real.PropertyChanged += (se, ev) =>
+                    {
+                        if(ev.PropertyName != "Remote")
+                        {
+                            return;
+                        }
+                        foreach(var g in m.Items)
+                        {
+                            if(g is Separator)
+                            {
+                                break;
+                            }
+                            if(g is MenuItem group)
+                            {
+                                group.IsChecked = false;
+                                foreach(MenuItem remote in group.Items)
+                                {
+                                    remote.IsChecked = remote.Tag == item.Real.Remote;
+                                    if(remote.IsChecked)
+                                    {
+                                        group.IsChecked = true;
+                                    }
+                                }
+                            }
+                        }
+                    };
+                    m.Items.Add(new Separator());
+                    // WPF MenuItem doesn't support SubItem+Clickable, so we add a toggle
+                    var toggle = new MenuItem()
+                    {
+                        Header = "Toggle"
+                    };
+                    toggle.Click += (se, ev) => item.Real.ToggleEnabled();
+                    m.Items.Add(toggle);
+                    m.SetBinding(MenuItem.IsCheckedProperty, new Binding("Enabled")
+                    {
+                        Source = item,
+                        Mode = BindingMode.OneWay
+                    });
+                    menu.Items.Insert(i, m);
+                }
+            }
+        }
+
+        private void TrayIcon_TrayLeftMouseUp(object sender, RoutedEventArgs e)
+        {
+            Show();
+            Topmost = true; // Still using this in 2020?
+            Topmost = false;
+        }
+
+        #endregion
 
         #region Tab Switching
 
