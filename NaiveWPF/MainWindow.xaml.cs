@@ -254,6 +254,10 @@ namespace NaiveGUI
                 }
             };
 
+            if(Remotes.Count==0)
+            {
+                Remotes.Add(new RemoteConfigGroup("Default"));
+            }
             Listeners.Add(new FakeListener());
             Subscriptions.Subscriptions.Add(new FakeSubscription());
 
