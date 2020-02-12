@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Reflection;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.ComponentModel;
@@ -75,7 +76,8 @@ namespace NaiveGUI
                 new ProxyTab(this),
                 Subscriptions,
                 new LogTab(this),
-                new SettingsTab(this)
+                new SettingsTab(this),
+                new AboutTab()
             };
 
             InitializeComponent();

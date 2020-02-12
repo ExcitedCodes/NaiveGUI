@@ -223,13 +223,47 @@
                         </Style>
                     </Button.Style>
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Wrench">
+                        <materialDesign:PackIcon Kind="Settings">
                             <materialDesign:PackIcon.LayoutTransform>
                                 <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.6" ScaleY="1.6"/>
                             </materialDesign:PackIcon.LayoutTransform>
                         </materialDesign:PackIcon>
                         <Border>
                             <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">Settings</TextBlock>
+                        </Border>
+                    </StackPanel>
+                </Button>
+                <Button Tag="4" Click="ButtonTab_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource TabButtonBase}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentTab.Value}" Value="4">
+                                    <Setter Property="Opacity" Value="1"></Setter>
+                                    <Setter Property="Background" Value="{StaticResource TabGradientSelected}"></Setter>
+                                    <DataTrigger.ExitActions>
+                                        <BeginStoryboard Storyboard="{StaticResource TabDeactiveAnimation}"></BeginStoryboard>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding CurrentTabTester[4]}" Value="False" />
+                                        <Condition Binding="{Binding IsMouseOver, RelativeSource={x:Static RelativeSource.Self}}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Background" Value="{StaticResource TabGradientHover}" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="AboutCircle">
+                            <materialDesign:PackIcon.LayoutTransform>
+                                <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.6" ScaleY="1.6"/>
+                            </materialDesign:PackIcon.LayoutTransform>
+                        </materialDesign:PackIcon>
+                        <Border>
+                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">About</TextBlock>
                         </Border>
                     </StackPanel>
                 </Button>
