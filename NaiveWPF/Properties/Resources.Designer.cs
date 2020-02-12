@@ -59,5 +59,35 @@ namespace NaiveGUI.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似 2020/02/12 周三 
+        /// 的本地化字符串。
+        /// </summary>
+        internal static string BuildDate {
+            get {
+                return ResourceManager.GetString("BuildDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似                     GNU AFFERO GENERAL PUBLIC LICENSE
+        ///                       Version 3, 19 November 2007
+        ///
+        /// Copyright (C) 2007 Free Software Foundation, Inc. &lt;https://fsf.org/&gt;
+        /// Everyone is permitted to copy and distribute verbatim copies
+        /// of this license document, but changing it is not allowed.
+        ///
+        ///                            Preamble
+        ///
+        ///  The GNU Affero General Public License is a free, copyleft license for
+        ///software and other kinds of works, specifically designed to ensure
+        ///cooperation with the community in the [字符串的其余部分被截断]&quot;; 的本地化字符串。
+        /// </summary>
+        internal static string LICENSE {
+            get {
+                return ResourceManager.GetString("LICENSE", resourceCulture);
+            }
+        }
     }
 }
