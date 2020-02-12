@@ -216,15 +216,22 @@ namespace NaiveGUI
                             {
                                 return;
                             }
-                            foreach(MenuItem group in m.Items)
+                            foreach(var g in m.Items)
                             {
-                                group.IsChecked = false;
-                                foreach(MenuItem remote in group.Items)
+                                if(g is Separator)
                                 {
-                                    remote.IsChecked = remote.Tag == item.Real.Remote;
-                                    if(remote.IsChecked)
+                                    break;
+                                }
+                                if(g is MenuItem group)
+                                {
+                                    group.IsChecked = false;
+                                    foreach(MenuItem remote in group.Items)
                                     {
-                                        group.IsChecked = true;
+                                        remote.IsChecked = remote.Tag == item.Real.Remote;
+                                        if(remote.IsChecked)
+                                        {
+                                            group.IsChecked = true;
+                                        }
                                     }
                                 }
                             }
