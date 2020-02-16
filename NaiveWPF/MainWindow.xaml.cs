@@ -88,8 +88,8 @@ namespace NaiveGUI
                 var json = JSON.ToObject<Dictionary<string, dynamic>>(File.ReadAllText(config));
                 if(json["version"] == 1)
                 {
-                    // TODO: Migrate
-                    throw new NotImplementedException();
+                    MessageBox.Show("Old winform configuration is not supported, please migrate the config manually or delete config.json", "Opps", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Environment.Exit(0);
                 }
                 if(json["version"] > CONFIG_VERSION && MessageBox.Show("The config.json has a newer version, continue loading may lost some config. Continue?", "Opps", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
                 {
@@ -177,6 +177,8 @@ namespace NaiveGUI
             Subscriptions.Subscriptions.Add(new FakeSubscription());
 
             SwitchTab(0);
+
+            ReloadTrayMenu();
         }
 
         public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
@@ -252,6 +254,17 @@ namespace NaiveGUI
             while(menu.Items.Count > 2)
             {
                 menu.Items.RemoveAt(0);
+            }
+            if(Listeners.Count == 1 && Listeners[0] is FakeListener)
+            {
+                var item = new MenuItem()
+                {
+                    Header = "No Listener Available",
+                    IsEnabled = false
+                };
+                item.Items.Add(new MenuItem()); // Placeholder
+                menu.Items.Insert(0, item);
+                return;
             }
             for(int i = 0;i < Listeners.Count;i++)
             {
