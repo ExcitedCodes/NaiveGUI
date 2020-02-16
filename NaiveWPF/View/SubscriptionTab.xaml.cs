@@ -18,6 +18,7 @@ namespace NaiveGUI.View
     {
         private readonly MainWindow Main = null;
 
+        public Timer updateTimer = null;
         public ObservableCollection<ISubscription> Subscriptions { get; private set; } = new ObservableCollection<ISubscription>();
 
         public bool AutoUpdate
@@ -59,6 +60,7 @@ namespace NaiveGUI.View
             InitializeComponent();
             Main = main;
             DataContext = this;
+            updateTimer = new Timer((s) => Update(), null, 0, 60000);
         }
 
         public int Update(bool silent = true, bool force = false)
@@ -79,6 +81,7 @@ namespace NaiveGUI.View
             Main.Save();
             return count;
         }
+
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(e.AddedItems.Count != 0)
