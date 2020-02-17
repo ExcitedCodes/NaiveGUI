@@ -11,12 +11,12 @@
     <StackPanel>
         <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0" Text="{lex:Loc Settings_Title}"/>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_StartOnBoot}" Height="24"/>
             <ToggleButton IsChecked="{Binding AutoRun.Value}" Checked="ToggleButtonAutoRun_Checked" Unchecked="ToggleButtonAutoRun_Unchecked"/>
-            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16" Text="{lex:Loc Settings_StartOnBoot}"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
+        <StackPanel Orientation="Horizontal" Margin="24,24,24,0" Height="24">
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Logging}"/>
             <ToggleButton IsChecked="{Binding Logging.Value}"/>
-            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16" Text="{lex:Loc Settings_Logging}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Language}"/>
