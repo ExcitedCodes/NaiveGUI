@@ -3,16 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
              d:DesignHeight="315" d:DesignWidth="580">
     <StackPanel>
-        <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Settings</TextBlock>
+        <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0" Text="{lex:Loc Settings_Title}"/>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <ToggleButton IsChecked="{Binding AutoRun.Value}" Checked="ToggleButtonAutoRun_Checked" Unchecked="ToggleButtonAutoRun_Unchecked"/>
-            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Start on boot</TextBlock>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16" Text="{lex:Loc Settings_StartOnBoot}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <ToggleButton IsChecked="{Binding Logging.Value}"/>
-            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Enable logging</TextBlock>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16" Text="{lex:Loc Settings_Logging}"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Language}"/>
+            <ComboBox MinWidth="120" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Content="{lex:Loc Settings_LanguageAuto}" Tag="{x:Null}"/>
+                <ComboBoxItem Tag="en">English</ComboBoxItem>
+                <ComboBoxItem Tag="zh-CN">中文</ComboBoxItem>
+            </ComboBox>
         </StackPanel>
     </StackPanel>
 </UserControl>

@@ -5,6 +5,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:Helper="clr-namespace:NaiveGUI.Helper"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
              d:DesignHeight="315" d:DesignWidth="580">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
@@ -13,13 +17,15 @@
                 <Run FontSize="14" Text="https://github.com/ExcitedCodes/NaiveGUI/" />
                 <LineBreak/>
                 <LineBreak/>
-                <Run FontSize="16">Version</Run>
+                <Run FontSize="16" Text="{lex:Loc About_Version}"/>
                 <Run FontSize="16" Text="{Binding Version, Mode=OneWay}"/>
                 <Run FontSize="16" Text="{Binding BuildTime, Mode=OneWay}"/>
                 <LineBreak/>
                 <LineBreak/>
-                <Run FontSize="15" Text="Copyright © 2020 ExcitedCodes, 👏 Special thanks to"/>
-                <Run FontSize="15" TextDecorations="Strikethrough">[数据删除]</Run>
+                <Run FontSize="15" Text="{lex:Loc About_Copyright}"/>
+                <Run FontSize="15" Text="© 2020 ExcitedCodes, 👏"/>
+                <Run FontSize="15" Text="{lex:Loc About_SpecialThanksTo}"/>
+                <Run FontSize="15" TextDecorations="Strikethrough" Text="{lex:Loc About_Misty}"/>
             </emoji:TextBlock>
         </StackPanel>
         <Border Padding="8" BorderBrush="#FFAAAAAA" Background="#33000000" BorderThickness="2" Margin="16,16,16,16">

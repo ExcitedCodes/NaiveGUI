@@ -6,17 +6,21 @@
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Data="clr-namespace:NaiveGUI.Data"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
              d:DesignWidth="690" d:DesignHeight="600">
     <UserControl.Resources>
         <ContextMenu x:Key="RemoteMenu">
-            <MenuItem Header="Edit" Click="MenuItemEdit_Click"/>
-            <MenuItem Header="Delete" Click="MenuItemDelete_Click"/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Edit}" Click="MenuItemEdit_Click"/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Delete}" Click="MenuItemDelete_Click"/>
         </ContextMenu>
         <ContextMenu x:Key="RemoteGroupMenu">
-            <MenuItem Header="Add Remote" Click="MenuItemAddRemote_Click"/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Add}" Click="MenuItemAddRemote_Click"/>
             <Separator/>
-            <MenuItem Header="Rename" Click="MenuItemRename_Click"/>
-            <MenuItem Header="Delete" Click="MenuItemDelete_Click"/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Rename}" Click="MenuItemRename_Click"/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Delete}" Click="MenuItemDelete_Click"/>
         </ContextMenu>
     </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -38,7 +42,7 @@
             </ControlTemplate>
         </ScrollViewer.Template>
         <StackPanel>
-            <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Listener</TextBlock>
+            <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0" Text="{lex:Loc Proxy_Listener}"/>
             <ListView ItemsSource="{Binding Listeners}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Margin="8,0,0,0">
                 <ListView.Resources>
                     <DataTemplate DataType="{x:Type Data:FakeListener}">
@@ -119,7 +123,7 @@
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
-            <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Remote</TextBlock>
+            <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0" Text="{lex:Loc Proxy_Remote}"/>
             <TreeView Foreground="White" Margin="16" ItemsSource="{Binding Remotes}" Name="WTF" SelectedItemChanged="WTF_SelectedItemChanged">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource MaterialDesignTreeViewItem}">

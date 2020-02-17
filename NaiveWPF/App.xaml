@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Data="clr-namespace:NaiveGUI.Data"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
              Exit="Application_Exit" Startup="Application_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -56,7 +57,10 @@
                 </ContextMenu.Resources>
             </ContextMenu>
             -->
-            <ContextMenu x:Key="TrayMenu" Placement="MousePoint">
+            <ContextMenu x:Key="TrayMenu" Placement="MousePoint" 
+                         lex:LocalizeDictionary.DesignCulture="en"
+                         lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
+                         lex:ResxLocalizationProvider.DefaultDictionary="Strings">
                 <ContextMenu.Resources>
                     <Style TargetType="{x:Type MenuItem}" BasedOn="{x:Null}">
                         <Setter Property="Padding" Value="8 0 8 0"></Setter>
@@ -189,7 +193,7 @@
                     </Style>
                 </ContextMenu.Resources>
                 <Separator/>
-                <MenuItem Header="Exit" Click="TrayMenu_Exit"/>
+                <MenuItem Header="{lex:Loc Tray_Exit}" Click="TrayMenu_Exit"/>
             </ContextMenu>
             <!--#endregion-->
         </ResourceDictionary>

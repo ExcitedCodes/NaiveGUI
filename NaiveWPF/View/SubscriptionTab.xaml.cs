@@ -102,7 +102,7 @@ namespace NaiveGUI.View
             ThreadPool.QueueUserWorkItem((s) =>
             {
                 var count = Update(false, true);
-                Main.snackbarMessageQueue.Enqueue(string.Format("Updated {0} subscription{1}.", count, count > 1 ? "s" : ""));
+                Main.snackbarMessageQueue.Enqueue(string.Format(MainWindow.GetLocalized("Subscription_UpdateNotification"), count, count > 1 ? "s" : ""));
                 Updating.Value = false;
             });
         }
@@ -111,7 +111,7 @@ namespace NaiveGUI.View
         {
             #region LOLLLLLLL
 
-            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input Subscription Name\nName can't be duplicate");
+            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_1"));
             if(name == "")
             {
                 return;
@@ -123,7 +123,7 @@ namespace NaiveGUI.View
                     return;
                 }
             }
-            var url = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input Subscription URL\n\nExample:\nhttps://www.baidu.com");
+            var url = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_2"));
             if(url == "")
             {
                 return;

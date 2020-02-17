@@ -5,6 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:lex="http://wpflocalizeextension.codeplex.com"
+        lex:LocalizeDictionary.DesignCulture="en"
+        lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
+        lex:ResxLocalizationProvider.DefaultDictionary="Strings"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}" 
         TextElement.FontWeight="Regular"
         TextOptions.TextRenderingMode="Auto"
@@ -126,7 +130,7 @@
                             </materialDesign:PackIcon.LayoutTransform>
                         </materialDesign:PackIcon>
                         <Border>
-                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">Proxy</TextBlock>
+                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Text="{lex:Loc Proxy_Title}"/>
                         </Border>
                     </StackPanel>
                 </Button>
@@ -160,7 +164,7 @@
                             </materialDesign:PackIcon.LayoutTransform>
                         </materialDesign:PackIcon>
                         <Border>
-                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">Subscription</TextBlock>
+                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Text="{lex:Loc Subscription_Title}"/>
                         </Border>
                     </StackPanel>
                 </Button>
@@ -194,7 +198,7 @@
                             </materialDesign:PackIcon.LayoutTransform>
                         </materialDesign:PackIcon>
                         <Border>
-                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">Log</TextBlock>
+                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Text="{lex:Loc Log_Title}"/>
                         </Border>
                     </StackPanel>
                 </Button>
@@ -228,7 +232,7 @@
                             </materialDesign:PackIcon.LayoutTransform>
                         </materialDesign:PackIcon>
                         <Border>
-                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">Settings</TextBlock>
+                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Text="{lex:Loc Settings_Title}"/>
                         </Border>
                     </StackPanel>
                 </Button>
@@ -262,7 +266,7 @@
                             </materialDesign:PackIcon.LayoutTransform>
                         </materialDesign:PackIcon>
                         <Border>
-                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0">About</TextBlock>
+                            <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" Text="{lex:Loc About_Title}"/>
                         </Border>
                     </StackPanel>
                 </Button>
@@ -290,7 +294,7 @@
         <tb:TaskbarIcon x:Name="trayIcon" TrayLeftMouseUp="TrayIcon_TrayLeftMouseUp" IconSource="Resources/icon.ico" ContextMenu="{StaticResource TrayMenu}">
             <tb:TaskbarIcon.TrayToolTip>
                 <ToolTip Placement="Mouse">
-                    <TextBlock>NaiveGUI - Running</TextBlock>
+                    <TextBlock Text="{lex:Loc Tray_Running}"/>
                 </ToolTip>
             </tb:TaskbarIcon.TrayToolTip>
         </tb:TaskbarIcon>

@@ -24,7 +24,7 @@ namespace NaiveGUI.View
         {
             #region LOLLLLLLL
 
-            var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input the listening URI\n\nExample:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388", "socks://0.0.0.0:1080");
+            var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_3"), "socks://0.0.0.0:1080");
             if(uri == "")
             {
                 return;
@@ -108,18 +108,18 @@ namespace NaiveGUI.View
         {
             if(context is RemoteConfigGroup g)
             {
-                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input name of remote.\nIf there's remote with same name, it will be overrided.");
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_4"));
                 if(name == "")
                 {
                     return;
                 }
-                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input remote uri.\n\nExample:\nhttps://user:pass@www.baidu.com:6666");
+                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_5"));
                 if(uri == "")
                 {
                     return;
                 }
                 bool padding = false;
-                switch(MessageBox.Show("Enable padding?", "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
+                switch(MessageBox.Show(MainWindow.GetLocalized("YAAAY_6"), "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
                 {
                 case MessageBoxResult.Cancel:
                     return;
@@ -147,18 +147,18 @@ namespace NaiveGUI.View
         {
             if(context is RemoteConfig r)
             {
-                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input new name of remote.\nIf there's remote with same name, it will be overrided.", r.Name);
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_4"), r.Name);
                 if(name == "")
                 {
                     return;
                 }
-                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input new remote uri.\n\nExample:\nhttps://user:pass@www.baidu.com:6666", r.Remote.ToString());
+                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_5"), r.Remote.ToString());
                 if(uri == "")
                 {
                     return;
                 }
                 bool padding = false;
-                switch(MessageBox.Show("Enable padding?Current status: " + (r.Padding ? "Enabled" : "Disabled"), "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
+                switch(MessageBox.Show(MainWindow.GetLocalized("YAAAY_6") + "Current status:" + (r.Padding ? "Enabled" : "Disabled"), "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
                 {
                 case MessageBoxResult.Cancel:
                     return;
@@ -240,7 +240,7 @@ namespace NaiveGUI.View
             }
             else if(menu.DataContext is RemoteConfigGroup g)
             {
-                if(g.Count == 0 || MessageBox.Show("Are you sure you want to delete group " + g.Name + " and " + g.Count + " remotes inside it?", "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                if(g.Count == 0 || MessageBox.Show(string.Format(MainWindow.GetLocalized("YAAAY_7"), g.Name, g.Count), "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     Main.Remotes.Remove(g);
                 }
@@ -251,7 +251,7 @@ namespace NaiveGUI.View
         {
             if((sender as MenuItem).DataContext is RemoteConfigGroup g)
             {
-                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY("Input the new name.\nIf there's group with same name, they will be merged.\nItems with same name will be overrided!", g.Name);
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_8"), g.Name);
                 if(name == "" || name == g.Name)
                 {
                     return;
