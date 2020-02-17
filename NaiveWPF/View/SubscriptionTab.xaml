@@ -5,9 +5,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Data="clr-namespace:NaiveGUI.Data"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
+             lex:ResxLocalizationProvider.DefaultDictionary="Strings"
              d:DesignHeight="315" d:DesignWidth="580">
     <StackPanel>
-        <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0">Subscription</TextBlock>
+        <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0" Text="{lex:Loc Subscription_Title}"/>
         <ListView ItemsSource="{Binding Subscriptions, Mode=OneWay}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" SelectionChanged="ListView_SelectionChanged" SelectionMode="Single" Margin="16,8,0,8">
             <ListView.Resources>
                 <DataTemplate DataType="{x:Type Data:FakeSubscription}">
@@ -90,9 +94,9 @@
         </ListView>
         <WrapPanel Orientation="Horizontal" Margin="24,0,24,0">
             <ToggleButton IsChecked="{Binding AutoUpdate}"/>
-            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16">Auto Update</TextBlock>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16" Text="{lex:Loc Subscription_AutoUpdate}"/>
             <StackPanel Orientation="Horizontal" IsEnabled="{Binding AutoUpdate}">
-                <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" FontSize="16" Margin="16,0,8,0" Opacity="{Binding IntervalOpacity}">Interval:</TextBlock>
+                <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" FontSize="16" Margin="16,0,8,0" Opacity="{Binding IntervalOpacity}" Text="{lex:Loc Subscription_UpdateInterval}"/>
                 <TextBox Text="{Binding UpdateInterval}" MinWidth="128" FontSize="16"/>
             </StackPanel>
             <Button Margin="16,0,0,0" Click="ButtonUpdate_Click">
@@ -118,10 +122,10 @@
                     <TextBlock VerticalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Text" Value="Update Now"/>
+                                <Setter Property="Text" Value="{lex:BLoc Subscription_UpdateNow}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Updating.Value}" Value="True">
-                                        <Setter Property="Text" Value="Updating"/>
+                                        <Setter Property="Text" Value="{lex:BLoc Subscription_Updating}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

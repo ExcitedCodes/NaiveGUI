@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
+using System.Globalization;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows.Interop;
@@ -13,6 +14,7 @@ using System.Collections.ObjectModel;
 
 using fastJSON;
 using MaterialDesignThemes.Wpf;
+using WPFLocalizeExtension.Engine;
 using Hardcodet.Wpf.TaskbarNotification;
 
 using NaiveGUI.View;
@@ -31,9 +33,17 @@ namespace NaiveGUI
         public static ulong Tick = 0;
         public static MainWindow Instance = null;
 
+        public static LocalizeDictionary Localize => LocalizeDictionary.Instance;
+
+        public static string GetLocalized(string key) => GetLocalized<string>(key);
+
+        public static T GetLocalized<T>(string key) => (T)Localize.GetLocalizedObject(key, null, Localize.Culture);
+
         public SnackbarMessageQueue snackbarMessageQueue { get; set; } = new SnackbarMessageQueue();
 
         public string ConfigPath = null;
+
+        public string Language = null;
 
         public Prop<bool> Logging { get; set; } = new Prop<bool>();
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
@@ -95,6 +105,7 @@ namespace NaiveGUI
                 {
                     Environment.Exit(0);
                 }
+                SetLanguage(json.ContainsKey("language") ? json["language"] : null);
                 Logging.Value = json.ContainsKey("logging") && json["logging"];
                 if(json.ContainsKey("remotes"))
                 {
@@ -193,6 +204,7 @@ namespace NaiveGUI
             {
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
+                { "language", Language },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
                     { "type", l.Real.Type.ToString() },
                     { "enable", l.Real.Enabled },
@@ -221,6 +233,13 @@ namespace NaiveGUI
         }
 
         public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);
+
+        public void SetLanguage(string lang)
+        {
+            Localize.Culture = lang == null ? CultureInfo.CurrentCulture : CultureInfo.CreateSpecificCulture(lang);
+            Language = lang;
+            Save();
+        }
 
         #region General Events
 
@@ -259,7 +278,7 @@ namespace NaiveGUI
             {
                 var item = new MenuItem()
                 {
-                    Header = "No Listener Available",
+                    Header = GetLocalized("Tray_NoListener"),
                     IsEnabled = false
                 };
                 item.Items.Add(new MenuItem()); // Placeholder
@@ -332,7 +351,7 @@ namespace NaiveGUI
                     // WPF MenuItem doesn't support SubItem+Clickable, so we add a toggle
                     var toggle = new MenuItem()
                     {
-                        Header = "Toggle"
+                        Header = GetLocalized("Tray_Toggle")
                     };
                     toggle.Click += (se, ev) => item.Real.ToggleEnabled();
                     m.Items.Add(toggle);
