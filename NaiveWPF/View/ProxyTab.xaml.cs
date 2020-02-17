@@ -240,7 +240,7 @@ namespace NaiveGUI.View
             }
             else if(menu.DataContext is RemoteConfigGroup g)
             {
-                if(g.Count == 0 || MessageBox.Show(string.Format(MainWindow.GetLocalized("YAAAY_7"), g.Name, g.Count), "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                if(g.Count == 0 || MessageBox.Show(string.Format(MainWindow.GetLocalized("Message_DeleteGroup"), g.Name, g.Count), "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
                     Main.Remotes.Remove(g);
                 }
