@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Threading;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Input;
@@ -30,7 +31,6 @@ namespace NaiveGUI
     {
         public const int CONFIG_VERSION = 2;
 
-        public static ulong Tick = 0;
         public static MainWindow Instance = null;
 
         public static LocalizeDictionary Localize => LocalizeDictionary.Instance;
@@ -43,7 +43,7 @@ namespace NaiveGUI
 
         public string ConfigPath = null;
 
-        public string Language = null;
+        public string SelectedLanguage = null;
 
         public Prop<bool> Logging { get; set; } = new Prop<bool>();
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
@@ -72,6 +72,10 @@ namespace NaiveGUI
 
         public ObservableCollection<IListener> Listeners { get; set; } = new ObservableCollection<IListener>();
         public ObservableCollection<RemoteConfigGroup> Remotes { get; set; } = new ObservableCollection<RemoteConfigGroup>();
+
+        // Tick system, TPS = 5, start from 1
+        public ulong Tick = 0;
+        public Timer mainTimer = null;
 
         public MainWindow(string config, bool autorun)
         {
@@ -190,6 +194,18 @@ namespace NaiveGUI
             SwitchTab(0);
 
             ReloadTrayMenu();
+
+            mainTimer = new Timer((s) =>
+            {
+                Tick++;
+                foreach(var l in Listeners)
+                {
+                    if(l.IsReal)
+                    {
+                        l.Real.Tick(Tick);
+                    }
+                }
+            }, null, 0, 200);
         }
 
         public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
@@ -204,7 +220,7 @@ namespace NaiveGUI
             {
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
-                { "language", Language },
+                { "language", SelectedLanguage },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
                     { "type", l.Real.Type.ToString() },
                     { "enable", l.Real.Enabled },
@@ -237,7 +253,7 @@ namespace NaiveGUI
         public void SetLanguage(string lang)
         {
             Localize.Culture = lang == null ? CultureInfo.CurrentCulture : CultureInfo.CreateSpecificCulture(lang);
-            Language = lang;
+            SelectedLanguage = lang;
             Save();
         }
 

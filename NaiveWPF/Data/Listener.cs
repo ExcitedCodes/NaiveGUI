@@ -124,7 +124,7 @@ namespace NaiveGUI.Data
 
         public void Tick(ulong Tick)
         {
-            if(Enabled && Tick % 20 == 0)
+            if(Enabled && Tick % 5 == 0)
             {
                 if(!Running)
                 {
