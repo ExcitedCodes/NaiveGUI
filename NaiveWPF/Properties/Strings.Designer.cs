@@ -106,11 +106,47 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Clear 的本地化字符串。
+        /// </summary>
+        public static string Log_Clear {
+            get {
+                return ResourceManager.GetString("Log_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Save 的本地化字符串。
+        /// </summary>
+        public static string Log_Save {
+            get {
+                return ResourceManager.GetString("Log_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Log 的本地化字符串。
         /// </summary>
         public static string Log_Title {
             get {
                 return ResourceManager.GetString("Log_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Are you sure you want to delete group {0} and {1} remotes inside it? 的本地化字符串。
+        /// </summary>
+        public static string Message_DeleteGroup {
+            get {
+                return ResourceManager.GetString("Message_DeleteGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 You must select a remote before starting listener! Click a remote in the remote list to select it. 的本地化字符串。
+        /// </summary>
+        public static string Message_NoRemote {
+            get {
+                return ResourceManager.GetString("Message_NoRemote", resourceCulture);
             }
         }
         
@@ -277,6 +313,24 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Listener crashed, restarting... 的本地化字符串。
+        /// </summary>
+        public static string Tray_Crashed {
+            get {
+                return ResourceManager.GetString("Tray_Crashed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Listener crashed for too many times, manually maintenance required. 的本地化字符串。
+        /// </summary>
+        public static string Tray_CrashedTooMany {
+            get {
+                return ResourceManager.GetString("Tray_CrashedTooMany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Exit 的本地化字符串。
         /// </summary>
         public static string Tray_Exit {
@@ -363,15 +417,6 @@ namespace NaiveGUI.Properties {
         public static string YAAAY_6 {
             get {
                 return ResourceManager.GetString("YAAAY_6", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Are you sure you want to delete group {0} and {1} remotes inside it? 的本地化字符串。
-        /// </summary>
-        public static string YAAAY_7 {
-            get {
-                return ResourceManager.GetString("YAAAY_7", resourceCulture);
             }
         }
         

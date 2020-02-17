@@ -219,10 +219,25 @@
   <data name="YAAAY_6" xml:space="preserve">
     <value>是否启用填充?</value>
   </data>
-  <data name="YAAAY_7" xml:space="preserve">
+  <data name="Message_DeleteGroup" xml:space="preserve">
     <value>你确定要删除组 {0} 和其中的 {1} 个服务器吗?</value>
   </data>
   <data name="YAAAY_8" xml:space="preserve">
     <value>输入新名称\n如果有同名的组, 它们将被合并\n同名的项将被覆盖!</value>
+  </data>
+  <data name="Log_Clear" xml:space="preserve">
+    <value>清空</value>
+  </data>
+  <data name="Message_NoRemote" xml:space="preserve">
+    <value>启动代理监听器前必须选择一个服务器! 在服务器列表中点击一个项目来选择它.</value>
+  </data>
+  <data name="Tray_Crashed" xml:space="preserve">
+    <value>代理监听器崩溃了, 正在重启...</value>
+  </data>
+  <data name="Tray_CrashedTooMany" xml:space="preserve">
+    <value>代理监听器崩溃次数过多, 请手动修复问题.</value>
+  </data>
+  <data name="Log_Save" xml:space="preserve">
+    <value>保存</value>
   </data>
 </root>

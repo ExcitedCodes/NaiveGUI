@@ -133,11 +133,11 @@ namespace NaiveGUI.Data
                         if(++FailCounter > 3)
                         {
                             Enabled = false;
-                            MainWindow.Instance.BalloonTip(Listen.ToString(), "Listener crashed for too many times, manually maintenance required.");
+                            MainWindow.Instance.BalloonTip(Listen.ToString(), MainWindow.GetLocalized("Tray_CrashedTooMany"));
                             MainWindow.Instance.Save();
                             return;
                         }
-                        MainWindow.Instance.BalloonTip(Listen.ToString(), "Listener crashed, restarting...");
+                        MainWindow.Instance.BalloonTip(Listen.ToString(), MainWindow.GetLocalized("Tray_Crashed"));
                     }
                     Start();
                 }
@@ -152,7 +152,7 @@ namespace NaiveGUI.Data
         {
             if(Remote == null)
             {
-                MessageBox.Show("You must select a remote before starting listener! Tick the checkbox in remote list to select it.", "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MainWindow.GetLocalized("Message_NoRemote"), "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return Enabled = false;
             }
             Enabled = !Enabled;

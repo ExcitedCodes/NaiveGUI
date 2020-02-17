@@ -1,7 +1,11 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.IO;
+using System.Windows.Media;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
+
+using Microsoft.Win32;
 
 namespace NaiveGUI.View
 {
@@ -28,6 +32,7 @@ namespace NaiveGUI.View
 
         public void Log(string raw)
         {
+            bool bottom = ScrollViewerLog.ScrollableHeight - ScrollViewerLog.VerticalOffset < 1;
             if(TextBlockLog.Inlines.Count != 0)
             {
                 AddLineBreak();
@@ -53,6 +58,15 @@ namespace NaiveGUI.View
                 AddRun(match.Groups["Level"].Value + ":" + match.Groups["Source"].Value + " ", levelColor);
                 AddRun(match.Groups["Content"].Value, BrushText);
             }
+            // 4 inlines/row, we also need to remove the 1st linebreak
+            while(TextBlockLog.Inlines.Count > 400 - 1)
+            {
+                TextBlockLog.Inlines.Remove(TextBlockLog.Inlines.FirstInline);
+            }
+            if(bottom)
+            {
+                ScrollViewerLog.ScrollToBottom();
+            }
         }
 
         public void AddRun(string text, Brush color) => TextBlockLog.Inlines.Add(new Run(text)
@@ -61,5 +75,21 @@ namespace NaiveGUI.View
         });
 
         public void AddLineBreak() => TextBlockLog.Inlines.Add(new LineBreak());
+
+        private void ButtonSave_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "Log File|*.log|All Files|*.*",
+                FileName = "NaiveGUI_" + DateTime.Now.ToString("yyyy-MM-dd"),
+                DefaultExt = ".log"
+            };
+            if(dialog.ShowDialog() == true)
+            {
+                File.WriteAllText(dialog.FileName, TextBlockLog.Text);
+            }
+        }
+
+        private void ButtonClear_Click(object sender, System.Windows.RoutedEventArgs e) => TextBlockLog.Inlines.Clear();
     }
 }

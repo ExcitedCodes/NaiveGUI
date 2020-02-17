@@ -219,10 +219,25 @@
   <data name="YAAAY_6" xml:space="preserve">
     <value>Enable padding?</value>
   </data>
-  <data name="YAAAY_7" xml:space="preserve">
+  <data name="Message_DeleteGroup" xml:space="preserve">
     <value>Are you sure you want to delete group {0} and {1} remotes inside it?</value>
   </data>
   <data name="YAAAY_8" xml:space="preserve">
     <value>Input the new name.\nIf there's group with same name, they will be merged.\nItems with same name will be overrided!</value>
+  </data>
+  <data name="Log_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Message_NoRemote" xml:space="preserve">
+    <value>You must select a remote before starting listener! Click a remote in the remote list to select it.</value>
+  </data>
+  <data name="Tray_Crashed" xml:space="preserve">
+    <value>Listener crashed, restarting...</value>
+  </data>
+  <data name="Tray_CrashedTooMany" xml:space="preserve">
+    <value>Listener crashed for too many times, manually maintenance required.</value>
+  </data>
+  <data name="Log_Save" xml:space="preserve">
+    <value>Save</value>
   </data>
 </root>
