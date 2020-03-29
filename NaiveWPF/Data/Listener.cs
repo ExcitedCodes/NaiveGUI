@@ -156,6 +156,7 @@ namespace NaiveGUI.Data
                 return Enabled = false;
             }
             Enabled = !Enabled;
+            MainWindow.Instance.Save();
             if(Enabled)
             {
                 FailCounter = 0;
