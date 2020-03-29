@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:emoji="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:NaiveGUI"
              xmlns:Data="clr-namespace:NaiveGUI.Data"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="en"
@@ -47,6 +48,16 @@
                 <ListView.Resources>
                     <DataTemplate DataType="{x:Type Data:FakeListener}">
                         <Border CornerRadius="2" Width="192" Height="88" BorderThickness="4" Opacity="0.5" BorderBrush="White">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding AllowAddListener.Value, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindow}}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <Button Width="192" Height="88" Background="{x:Null}" BorderBrush="{x:Null}" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonAddListener_Click">
                                 <materialDesign:PackIcon Kind="AddCircleOutline" RenderTransformOrigin="0.5,0.5" Foreground="White">
                                     <materialDesign:PackIcon.RenderTransform>

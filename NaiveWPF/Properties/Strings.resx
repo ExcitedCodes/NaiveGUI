@@ -240,4 +240,7 @@
   <data name="Log_Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Settings_AllowAddListener" xml:space="preserve">
+    <value>Allow adding listener</value>
+  </data>
 </root>

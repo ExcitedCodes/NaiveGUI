@@ -214,6 +214,15 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Allow adding listener 的本地化字符串。
+        /// </summary>
+        public static string Settings_AllowAddListener {
+            get {
+                return ResourceManager.GetString("Settings_AllowAddListener", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Language 的本地化字符串。
         /// </summary>
         public static string Settings_Language {

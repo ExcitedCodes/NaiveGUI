@@ -47,6 +47,7 @@ namespace NaiveGUI
 
         public Prop<bool> Logging { get; set; } = new Prop<bool>();
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
+        public Prop<bool> AllowAddListener { get; set; } = new Prop<bool>();
 
         public UserControl[] Tabs = null;
         public TabIndexTester CurrentTabTester { get; set; }
@@ -111,6 +112,7 @@ namespace NaiveGUI
                 }
                 SetLanguage(json.ContainsKey("language") ? json["language"] : null);
                 Logging.Value = json.ContainsKey("logging") && json["logging"];
+                AllowAddListener.Value = !json.ContainsKey("allow_add_listener") || json["allow_add_listener"];
                 if(json.ContainsKey("remotes"))
                 {
                     foreach(KeyValuePair<string, object> g in json["remotes"])
@@ -186,6 +188,7 @@ namespace NaiveGUI
             DataContext = this;
 
             Logging.PropertyChanged += (s, e) => Save();
+            AllowAddListener.PropertyChanged += (s, e) => Save();
             Listeners.CollectionChanged += (s, e) => ReloadTrayMenu();
 
             Listeners.Add(new FakeListener());
@@ -220,6 +223,7 @@ namespace NaiveGUI
             {
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
+                { "allow_add_listener", AllowAddListener.Value },
                 { "language", SelectedLanguage },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
                     { "type", l.Real.Type.ToString() },

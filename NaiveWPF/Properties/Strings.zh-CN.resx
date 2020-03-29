@@ -240,4 +240,7 @@
   <data name="Log_Save" xml:space="preserve">
     <value>保存</value>
   </data>
+  <data name="Settings_AllowAddListener" xml:space="preserve">
+    <value>允许添加 Listener</value>
+  </data>
 </root>

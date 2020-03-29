@@ -18,6 +18,10 @@
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Logging}"/>
             <ToggleButton IsChecked="{Binding Logging.Value}"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="24,24,24,0" Height="24">
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_AllowAddListener}"/>
+            <ToggleButton IsChecked="{Binding AllowAddListener.Value}"/>
+        </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Language}"/>
             <ComboBox MinWidth="120" SelectionChanged="ComboBox_SelectionChanged">
