@@ -16,7 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         Title="NaiveGUI" Height="500" Width="878" ResizeMode="CanResize"
         AllowsTransparency="True" Background="Transparent" WindowStyle="None"
-        MouseDown="Window_MouseDown" Closed="Window_Closed">
+        MouseDown="Window_MouseDown" Closed="Window_Closed" SizeChanged="Window_SizeChanged">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="3" />
     </WindowChrome.WindowChrome>

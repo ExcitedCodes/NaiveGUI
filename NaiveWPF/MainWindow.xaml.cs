@@ -113,6 +113,14 @@ namespace NaiveGUI
                 SetLanguage(json.ContainsKey("language") ? json["language"] : null);
                 Logging.Value = json.ContainsKey("logging") && json["logging"];
                 AllowAddListener.Value = !json.ContainsKey("allow_add_listener") || json["allow_add_listener"];
+                if(json.ContainsKey("width"))
+                {
+                    Width = json["width"];
+                }
+                if(json.ContainsKey("height"))
+                {
+                    Height = json["height"];
+                }
                 if(json.ContainsKey("remotes"))
                 {
                     foreach(KeyValuePair<string, object> g in json["remotes"])
@@ -223,6 +231,8 @@ namespace NaiveGUI
             {
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
+                { "width", Width },
+                { "height", Height },
                 { "allow_add_listener", AllowAddListener.Value },
                 { "language", SelectedLanguage },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
@@ -279,6 +289,8 @@ namespace NaiveGUI
             App.ReleaseCapture();
             App.SendMessage(new WindowInteropHelper(this).Handle, 0xA1, (IntPtr)0x2, IntPtr.Zero);
         }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e) => Save();
 
         private void ButtonHide_Click(object sender, RoutedEventArgs e) => Hide();
 
