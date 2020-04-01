@@ -48,6 +48,7 @@ namespace NaiveGUI
         public Prop<bool> Logging { get; set; } = new Prop<bool>();
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
         public Prop<bool> AllowAddListener { get; set; } = new Prop<bool>();
+        public Prop<bool> AllowWindowResize { get; set; } = new Prop<bool>();
 
         public UserControl[] Tabs = null;
         public TabIndexTester CurrentTabTester { get; set; }
@@ -113,7 +114,9 @@ namespace NaiveGUI
                 SetLanguage(json.ContainsKey("language") ? json["language"] : null);
                 Logging.Value = json.ContainsKey("logging") && json["logging"];
                 AllowAddListener.Value = !json.ContainsKey("allow_add_listener") || json["allow_add_listener"];
-                if(json.ContainsKey("width"))
+                AllowWindowResize.Value = !json.ContainsKey("allow_window_resize") || json["allow_window_resize"];
+                ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
+                if (json.ContainsKey("width"))
                 {
                     Width = json["width"];
                 }
@@ -197,6 +200,11 @@ namespace NaiveGUI
 
             Logging.PropertyChanged += (s, e) => Save();
             AllowAddListener.PropertyChanged += (s, e) => Save();
+            AllowWindowResize.PropertyChanged += (s, e) =>
+            {
+                ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
+                Save();
+            };
             Listeners.CollectionChanged += (s, e) => ReloadTrayMenu();
 
             Listeners.Add(new FakeListener());
@@ -231,9 +239,10 @@ namespace NaiveGUI
             {
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
-                { "width", Width },
-                { "height", Height },
+                { "width", Dispatcher.Invoke(() => Width) },
+                { "height", Dispatcher.Invoke(() => Height) },
                 { "allow_add_listener", AllowAddListener.Value },
+                { "allow_window_resize", AllowWindowResize.Value },
                 { "language", SelectedLanguage },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
                     { "type", l.Real.Type.ToString() },

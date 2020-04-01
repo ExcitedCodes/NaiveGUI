@@ -243,4 +243,7 @@
   <data name="Settings_AllowAddListener" xml:space="preserve">
     <value>Allow adding listener</value>
   </data>
+  <data name="Settings_AllowWindowResize" xml:space="preserve">
+    <value>Allow window resize</value>
+  </data>
 </root>

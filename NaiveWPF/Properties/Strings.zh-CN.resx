@@ -243,4 +243,7 @@
   <data name="Settings_AllowAddListener" xml:space="preserve">
     <value>允许添加 Listener</value>
   </data>
+  <data name="Settings_AllowWindowResize" xml:space="preserve">
+    <value>允许修改窗口尺寸</value>
+  </data>
 </root>
