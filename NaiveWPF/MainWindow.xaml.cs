@@ -239,8 +239,8 @@ namespace NaiveGUI
             {
                 { "version", CONFIG_VERSION },
                 { "logging", Logging.Value },
-                { "width", Dispatcher.Invoke(() => Width) },
-                { "height", Dispatcher.Invoke(() => Height) },
+                { "width", Dispatcher.Invoke(() => (int)Width) },
+                { "height", Dispatcher.Invoke(() => (int)Height) },
                 { "allow_add_listener", AllowAddListener.Value },
                 { "allow_window_resize", AllowWindowResize.Value },
                 { "language", SelectedLanguage },
