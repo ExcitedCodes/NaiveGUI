@@ -1,5 +1,7 @@
 [中文](#中文)
 
+[由社区提供的视频教程, 感谢视频作者](https://youtu.be/p9MZMAvVLAA?t=510)
+
 # NaiveGUI
 NaiveGUI is a Windows GUI wrapper of [NaïveProxy](https://github.com/klzgrad/naiveproxy).
 
