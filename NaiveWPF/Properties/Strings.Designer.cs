@@ -106,6 +106,69 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Add 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_Add {
+            get {
+                return ResourceManager.GetString("AddRemote_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Save 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_EditSave {
+            get {
+                return ResourceManager.GetString("AddRemote_EditSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Edit Remote 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_EditTitle {
+            get {
+                return ResourceManager.GetString("AddRemote_EditTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Remote Name 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_Name {
+            get {
+                return ResourceManager.GetString("AddRemote_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Enable Padding 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_Padding {
+            get {
+                return ResourceManager.GetString("AddRemote_Padding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Remote 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_Title {
+            get {
+                return ResourceManager.GetString("AddRemote_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Remote URI 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_URI {
+            get {
+                return ResourceManager.GetString("AddRemote_URI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Clear 的本地化字符串。
         /// </summary>
         public static string Log_Clear {
@@ -408,33 +471,6 @@ namespace NaiveGUI.Properties {
         public static string YAAAY_3 {
             get {
                 return ResourceManager.GetString("YAAAY_3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Input name of remote.\nIf there&apos;s remote with same name, it will be overrided. 的本地化字符串。
-        /// </summary>
-        public static string YAAAY_4 {
-            get {
-                return ResourceManager.GetString("YAAAY_4", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Input remote uri.\n\nExample:\nhttps://user:pass@www.baidu.com:6666 的本地化字符串。
-        /// </summary>
-        public static string YAAAY_5 {
-            get {
-                return ResourceManager.GetString("YAAAY_5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Enable padding? 的本地化字符串。
-        /// </summary>
-        public static string YAAAY_6 {
-            get {
-                return ResourceManager.GetString("YAAAY_6", resourceCulture);
             }
         }
         

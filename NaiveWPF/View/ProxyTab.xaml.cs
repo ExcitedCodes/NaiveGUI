@@ -1,9 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
 
 using NaiveGUI.Data;
-using System;
 
 namespace NaiveGUI.View
 {
@@ -103,87 +103,7 @@ namespace NaiveGUI.View
                 Main.Save();
             }
         }
-
-        private void AddRemote(object context)
-        {
-            if(context is RemoteConfigGroup g)
-            {
-                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_4"));
-                if(name == "")
-                {
-                    return;
-                }
-                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_5"));
-                if(uri == "")
-                {
-                    return;
-                }
-                bool padding = false;
-                switch(MessageBox.Show(MainWindow.GetLocalized("YAAAY_6"), "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
-                {
-                case MessageBoxResult.Cancel:
-                    return;
-                case MessageBoxResult.Yes:
-                    padding = true;
-                    break;
-                }
-                for(int i = 0;i < g.Count;i++)
-                {
-                    if(g[i].Name == name)
-                    {
-                        g.RemoveAt(i--);
-                    }
-                }
-                g.Add(new RemoteConfig(name, ProxyType.NaiveProxy)
-                {
-                    Remote = new UriBuilder(uri),
-                    Padding = padding
-                });
-                Main.Save();
-            }
-        }
-
-        private void EditRemote(object context)
-        {
-            if(context is RemoteConfig r)
-            {
-                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_4"), r.Name);
-                if(name == "")
-                {
-                    return;
-                }
-                var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_5"), r.Remote.ToString());
-                if(uri == "")
-                {
-                    return;
-                }
-                bool padding = false;
-                switch(MessageBox.Show(MainWindow.GetLocalized("YAAAY_6") + "Current status:" + (r.Padding ? "Enabled" : "Disabled"), "Another Thing", MessageBoxButton.YesNoCancel, MessageBoxImage.Asterisk))
-                {
-                case MessageBoxResult.Cancel:
-                    return;
-                case MessageBoxResult.Yes:
-                    padding = true;
-                    break;
-                }
-                r.Remote = new UriBuilder(uri);
-                r.Padding = padding;
-                if(name != r.Name)
-                {
-                    var g = r.Group;
-                    for(int i = 0;i < g.Count;i++)
-                    {
-                        if(g[i].Name == name)
-                        {
-                            g.RemoveAt(i--);
-                        }
-                    }
-                    r.Name = name;
-                }
-                Main.Save();
-            }
-        }
-
+        
         bool WTFing = false;
 
         // TODO: Remove this
@@ -218,7 +138,7 @@ namespace NaiveGUI.View
         {
             if(e.ClickCount == 2)
             {
-                EditRemote((sender as TextBlock).DataContext);
+                new AddRemoteWindow((RemoteConfig)(sender as TextBlock).DataContext).ShowDialog();
             }
         }
 
@@ -226,7 +146,7 @@ namespace NaiveGUI.View
         {
             if(e.ClickCount == 2)
             {
-                AddRemote((sender as TextBlock).DataContext);
+                new AddRemoteWindow((RemoteConfigGroup)(sender as TextBlock).DataContext).ShowDialog();
             }
         }
 
@@ -282,8 +202,8 @@ namespace NaiveGUI.View
             }
         }
 
-        private void MenuItemEdit_Click(object sender, RoutedEventArgs e) => EditRemote((sender as MenuItem).DataContext);
+        private void MenuItemEdit_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteConfig)(sender as MenuItem).DataContext).ShowDialog();
 
-        private void MenuItemAddRemote_Click(object sender, RoutedEventArgs e) => AddRemote((sender as MenuItem).DataContext);
+        private void MenuItemAddRemote_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext).ShowDialog();
     }
 }

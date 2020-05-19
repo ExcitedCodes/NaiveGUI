@@ -81,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddRemoteWindow.xaml.cs">
+      <DependentUpon>AddRemoteWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Data\FakeListener.cs" />
     <Compile Include="Data\FakeSubscription.cs" />
     <Compile Include="Data\IListener.cs" />
@@ -120,6 +123,10 @@
     <Compile Include="View\SettingsTab.xaml.cs">
       <DependentUpon>SettingsTab.xaml</DependentUpon>
     </Compile>
+    <Page Include="AddRemoteWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

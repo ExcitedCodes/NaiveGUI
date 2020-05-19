@@ -210,15 +210,6 @@
   <data name="YAAAY_3" xml:space="preserve">
     <value>输入监听URI\n\n示例:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388</value>
   </data>
-  <data name="YAAAY_4" xml:space="preserve">
-    <value>输入服务器名称\n如果存在相同名称, 它将被覆盖</value>
-  </data>
-  <data name="YAAAY_5" xml:space="preserve">
-    <value>输入服务器URI\n\nE示例:\nhttps://user:pass@www.baidu.com:6666</value>
-  </data>
-  <data name="YAAAY_6" xml:space="preserve">
-    <value>是否启用填充?</value>
-  </data>
   <data name="Message_DeleteGroup" xml:space="preserve">
     <value>你确定要删除组 {0} 和其中的 {1} 个服务器吗?</value>
   </data>
@@ -245,5 +236,26 @@
   </data>
   <data name="Settings_AllowWindowResize" xml:space="preserve">
     <value>允许修改窗口尺寸</value>
+  </data>
+  <data name="AddRemote_Add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="AddRemote_Name" xml:space="preserve">
+    <value>服务器名称</value>
+  </data>
+  <data name="AddRemote_Padding" xml:space="preserve">
+    <value>启用 Padding</value>
+  </data>
+  <data name="AddRemote_Title" xml:space="preserve">
+    <value>添加服务器</value>
+  </data>
+  <data name="AddRemote_URI" xml:space="preserve">
+    <value>服务器URI</value>
+  </data>
+  <data name="AddRemote_EditSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="AddRemote_EditTitle" xml:space="preserve">
+    <value>编辑服务器</value>
   </data>
 </root>
