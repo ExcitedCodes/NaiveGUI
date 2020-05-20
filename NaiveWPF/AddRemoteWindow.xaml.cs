@@ -47,6 +47,10 @@ namespace NaiveGUI
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
+            if (RemoteName.Value.Trim() == "" || RemoteURI.Value.Trim() == "")
+            {
+                return;
+            }
             if (Config != null)
             {
                 Config.Remote = new UriBuilder(RemoteURI.Value);

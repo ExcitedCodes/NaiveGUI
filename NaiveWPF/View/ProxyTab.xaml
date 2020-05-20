@@ -145,7 +145,7 @@
                 </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type Data:RemoteConfigGroup}" ItemsSource="{Binding}">
-                        <emoji:TextBlock Text="{Binding Name}" Margin="3 2" FontSize="16" MouseDown="TextBlockRemoteGroup_MouseDown" ContextMenu="{StaticResource RemoteGroupMenu}"/>
+                        <emoji:TextBlock Text="{Binding Name}" Padding="3 2" FontSize="16" MouseDown="TextBlockRemoteGroup_MouseDown" ContextMenu="{StaticResource RemoteGroupMenu}"/>
                     </HierarchicalDataTemplate>
                     <DataTemplate DataType="{x:Type Data:RemoteConfig}">
                         <emoji:TextBlock Text="{Binding Name}" Padding="3 2" FontSize="16" MouseDown="TextBlockRemote_MouseDown" ContextMenu="{StaticResource RemoteMenu}"/>

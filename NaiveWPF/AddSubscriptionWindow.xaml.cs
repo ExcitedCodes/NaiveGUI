@@ -32,6 +32,10 @@ namespace NaiveGUI
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
+            if (SubscriptionName.Value.Trim() == "" || SubscriptionURI.Value.Trim() == "")
+            {
+                return;
+            }
             Subscriptions.Insert(Subscriptions.Count - 1, new Subscription(Main, SubscriptionName.Value, SubscriptionURI.Value, false, DateTime.MinValue));
             Main.Save();
             Close();

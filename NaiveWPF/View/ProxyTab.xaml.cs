@@ -137,7 +137,7 @@ namespace NaiveGUI.View
 
         private void TextBlockRemote_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ClickCount == 2)
+            if (e.ClickCount == 2 && e.ChangedButton == MouseButton.Left)
             {
                 new AddRemoteWindow((RemoteConfig)(sender as TextBlock).DataContext).ShowDialog();
             }
@@ -145,7 +145,7 @@ namespace NaiveGUI.View
 
         private void TextBlockRemoteGroup_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if(e.ClickCount == 2)
+            if (e.ClickCount == 2 && e.ChangedButton == MouseButton.Left)
             {
                 new AddRemoteWindow((RemoteConfigGroup)(sender as TextBlock).DataContext).ShowDialog();
             }

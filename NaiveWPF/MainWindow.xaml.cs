@@ -47,8 +47,8 @@ namespace NaiveGUI
 
         public Prop<bool> Logging { get; set; } = new Prop<bool>();
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
-        public Prop<bool> AllowAddListener { get; set; } = new Prop<bool>();
-        public Prop<bool> AllowWindowResize { get; set; } = new Prop<bool>();
+        public Prop<bool> AllowAddListener { get; set; } = new Prop<bool>(true);
+        public Prop<bool> AllowWindowResize { get; set; } = new Prop<bool>(true);
 
         public UserControl[] Tabs = null;
         public TabIndexTester CurrentTabTester { get; set; }
@@ -111,11 +111,10 @@ namespace NaiveGUI
                 {
                     Environment.Exit(0);
                 }
-                SetLanguage(json.ContainsKey("language") ? json["language"] : null);
+                SetLanguage(json.ContainsKey("language") ? json["language"] : null, false);
                 Logging.Value = json.ContainsKey("logging") && json["logging"];
                 AllowAddListener.Value = !json.ContainsKey("allow_add_listener") || json["allow_add_listener"];
                 AllowWindowResize.Value = !json.ContainsKey("allow_window_resize") || json["allow_window_resize"];
-                ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
                 if (json.ContainsKey("width"))
                 {
                     Width = json["width"];
@@ -188,11 +187,13 @@ namespace NaiveGUI
                     Subscriptions.UpdateInterval = (int)sub["update_interval"];
                 }
             }
+
             if(Remotes.Count == 0)
             {
                 Remotes.Add(new RemoteConfigGroup("Default"));
             }
             ConfigPath = config;
+            ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
 
             #endregion
 
@@ -273,11 +274,14 @@ namespace NaiveGUI
 
         public void BalloonTip(string title, string text, int timeout = 3) => trayIcon.ShowBalloonTip(title, text, BalloonIcon.Error);
 
-        public void SetLanguage(string lang)
+        public void SetLanguage(string lang, bool save = true)
         {
             Localize.Culture = lang == null ? CultureInfo.CurrentCulture : CultureInfo.CreateSpecificCulture(lang);
             SelectedLanguage = lang;
-            Save();
+            if (save)
+            {
+                Save();
+            }
         }
 
         #region General Events
