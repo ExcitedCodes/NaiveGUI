@@ -202,13 +202,19 @@
     <value>没有可用的代理监听器</value>
   </data>
   <data name="YAAAY_3" xml:space="preserve">
-    <value>输入监听URI\n\n示例:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388</value>
+    <value>输入监听URI
+
+示例:
+socks://0.0.0.0:1080
+http://127.0.0.1:8388</value>
   </data>
   <data name="Message_DeleteGroup" xml:space="preserve">
     <value>你确定要删除组 {0} 和其中的 {1} 个服务器吗?</value>
   </data>
   <data name="YAAAY_8" xml:space="preserve">
-    <value>输入新名称\n如果有同名的组, 它们将被合并\n同名的项将被覆盖!</value>
+    <value>输入新名称
+如果有同名的组, 它们将被合并
+同名的项将被覆盖!</value>
   </data>
   <data name="Log_Clear" xml:space="preserve">
     <value>清空</value>

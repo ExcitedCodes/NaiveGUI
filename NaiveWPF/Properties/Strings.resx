@@ -202,13 +202,19 @@
     <value>No Listener Available</value>
   </data>
   <data name="YAAAY_3" xml:space="preserve">
-    <value>Input the listening URI\n\nExample:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388</value>
+    <value>Input the listening URI
+
+Example:
+socks://0.0.0.0:1080
+http://127.0.0.1:8388</value>
   </data>
   <data name="Message_DeleteGroup" xml:space="preserve">
     <value>Are you sure you want to delete group {0} and {1} remotes inside it?</value>
   </data>
   <data name="YAAAY_8" xml:space="preserve">
-    <value>Input the new name.\nIf there's group with same name, they will be merged.\nItems with same name will be overrided!</value>
+    <value>Input the new name.
+If there's group with same name, they will be merged.
+Items with same name will be overrided!</value>
   </data>
   <data name="Log_Clear" xml:space="preserve">
     <value>Clear</value>

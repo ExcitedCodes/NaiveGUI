@@ -484,7 +484,11 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Input the listening URI\n\nExample:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388 的本地化字符串。
+        ///   查找类似 Input the listening URI
+        ///
+        ///Example:
+        ///socks://0.0.0.0:1080
+        ///http://127.0.0.1:8388 的本地化字符串。
         /// </summary>
         public static string YAAAY_3 {
             get {
@@ -493,7 +497,9 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Input the new name.\nIf there&apos;s group with same name, they will be merged.\nItems with same name will be overrided! 的本地化字符串。
+        ///   查找类似 Input the new name.
+        ///If there&apos;s group with same name, they will be merged.
+        ///Items with same name will be overrided! 的本地化字符串。
         /// </summary>
         public static string YAAAY_8 {
             get {
