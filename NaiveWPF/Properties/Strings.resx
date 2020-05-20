@@ -201,12 +201,6 @@
   <data name="Tray_NoListener" xml:space="preserve">
     <value>No Listener Available</value>
   </data>
-  <data name="YAAAY_1" xml:space="preserve">
-    <value>Input Subscription Name\nName can't be duplicate</value>
-  </data>
-  <data name="YAAAY_2" xml:space="preserve">
-    <value>Input Subscription URL\n\nExample:\nhttps://www.google.com</value>
-  </data>
   <data name="YAAAY_3" xml:space="preserve">
     <value>Input the listening URI\n\nExample:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388</value>
   </data>
@@ -257,5 +251,17 @@
   </data>
   <data name="AddRemote_EditTitle" xml:space="preserve">
     <value>Edit Remote</value>
+  </data>
+  <data name="AddSubscription_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddSubscription_Name" xml:space="preserve">
+    <value>Display Name</value>
+  </data>
+  <data name="AddSubscription_Title" xml:space="preserve">
+    <value>Add Subscription</value>
+  </data>
+  <data name="AddSubscription_URI" xml:space="preserve">
+    <value>Subscription URL</value>
   </data>
 </root>

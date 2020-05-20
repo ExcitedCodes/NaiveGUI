@@ -201,12 +201,6 @@
   <data name="Tray_NoListener" xml:space="preserve">
     <value>没有可用的代理监听器</value>
   </data>
-  <data name="YAAAY_1" xml:space="preserve">
-    <value>输入订阅名称\n名称不能重复</value>
-  </data>
-  <data name="YAAAY_2" xml:space="preserve">
-    <value>输入订阅URL\n\n示例:\nhttps://www.baidu.com</value>
-  </data>
   <data name="YAAAY_3" xml:space="preserve">
     <value>输入监听URI\n\n示例:\nsocks://0.0.0.0:1080\nhttp://127.0.0.1:8388</value>
   </data>
@@ -257,5 +251,17 @@
   </data>
   <data name="AddRemote_EditTitle" xml:space="preserve">
     <value>编辑服务器</value>
+  </data>
+  <data name="AddSubscription_Add" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="AddSubscription_Name" xml:space="preserve">
+    <value>显示名称</value>
+  </data>
+  <data name="AddSubscription_Title" xml:space="preserve">
+    <value>添加订阅</value>
+  </data>
+  <data name="AddSubscription_URI" xml:space="preserve">
+    <value>订阅 URL</value>
   </data>
 </root>

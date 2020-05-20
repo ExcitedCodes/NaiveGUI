@@ -107,33 +107,7 @@ namespace NaiveGUI.View
             });
         }
 
-        private void ButtonAdd_Click(object sender, RoutedEventArgs e)
-        {
-            #region LOLLLLLLL
-
-            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_1"));
-            if(name == "")
-            {
-                return;
-            }
-            foreach(var r in Subscriptions)
-            {
-                if(r.IsReal && r.Real.Name.Value == name)
-                {
-                    return;
-                }
-            }
-            var url = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_2"));
-            if(url == "")
-            {
-                return;
-            }
-
-            #endregion
-
-            Subscriptions.Insert(Subscriptions.Count - 1, new Subscription(Main, name, url, false, DateTime.MinValue));
-            Main.Save();
-        }
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e) => new AddSubscriptionWindow(Main, Subscriptions).ShowDialog();
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {

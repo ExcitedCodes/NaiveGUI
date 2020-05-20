@@ -169,6 +169,42 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Add 的本地化字符串。
+        /// </summary>
+        public static string AddSubscription_Add {
+            get {
+                return ResourceManager.GetString("AddSubscription_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Display Name 的本地化字符串。
+        /// </summary>
+        public static string AddSubscription_Name {
+            get {
+                return ResourceManager.GetString("AddSubscription_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Subscription 的本地化字符串。
+        /// </summary>
+        public static string AddSubscription_Title {
+            get {
+                return ResourceManager.GetString("AddSubscription_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Subscription URL 的本地化字符串。
+        /// </summary>
+        public static string AddSubscription_URI {
+            get {
+                return ResourceManager.GetString("AddSubscription_URI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Clear 的本地化字符串。
         /// </summary>
         public static string Log_Clear {
@@ -444,24 +480,6 @@ namespace NaiveGUI.Properties {
         public static string Tray_Toggle {
             get {
                 return ResourceManager.GetString("Tray_Toggle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Input Subscription Name\nName can&apos;t be duplicate 的本地化字符串。
-        /// </summary>
-        public static string YAAAY_1 {
-            get {
-                return ResourceManager.GetString("YAAAY_1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Input Subscription URL\n\nExample:\nhttps://www.google.com 的本地化字符串。
-        /// </summary>
-        public static string YAAAY_2 {
-            get {
-                return ResourceManager.GetString("YAAAY_2", resourceCulture);
             }
         }
         

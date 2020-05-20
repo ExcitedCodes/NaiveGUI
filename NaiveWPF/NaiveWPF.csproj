@@ -81,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddSubscriptionWindow.xaml.cs">
+      <DependentUpon>AddSubscriptionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AddRemoteWindow.xaml.cs">
       <DependentUpon>AddRemoteWindow.xaml</DependentUpon>
     </Compile>
@@ -123,6 +126,10 @@
     <Compile Include="View\SettingsTab.xaml.cs">
       <DependentUpon>SettingsTab.xaml</DependentUpon>
     </Compile>
+    <Page Include="AddSubscriptionWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="AddRemoteWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
