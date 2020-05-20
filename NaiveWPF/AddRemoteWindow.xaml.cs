@@ -34,16 +34,15 @@ namespace NaiveGUI
             text_add.Text = MainWindow.GetLocalized("AddRemote_EditSave");
         }
 
-        public AddRemoteWindow(RemoteConfigGroup group, string URI = null)
+        public AddRemoteWindow(RemoteConfigGroup group, string name = null, string uri = null, bool padding = false)
         {
             InitializeComponent();
             DataContext = this;
             Group = group;
 
-            if (URI != null)
-            {
-                RemoteURI.Value = URI;
-            }
+            RemoteName.Value = name ?? "";
+            RemoteURI.Value = uri ?? "";
+            EnablePadding.Value = padding;
         }
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)

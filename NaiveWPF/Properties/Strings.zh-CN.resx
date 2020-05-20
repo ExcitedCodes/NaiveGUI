@@ -160,7 +160,7 @@
     <value>服务器</value>
   </data>
   <data name="Proxy_RemoteMenu_Add" xml:space="preserve">
-    <value>添加</value>
+    <value>添加服务器</value>
   </data>
   <data name="Proxy_RemoteMenu_Delete" xml:space="preserve">
     <value>删除</value>
@@ -237,6 +237,12 @@ http://127.0.0.1:8388</value>
   <data name="Settings_AllowWindowResize" xml:space="preserve">
     <value>允许修改窗口尺寸</value>
   </data>
+  <data name="Proxy_RemoteMenu_AddGroup" xml:space="preserve">
+    <value>添加组</value>
+  </data>
+  <data name="Proxy_RemoteMenu_Import" xml:space="preserve">
+    <value>从剪贴板导入</value>
+  </data>
   <data name="AddRemote_Add" xml:space="preserve">
     <value>添加</value>
   </data>
@@ -269,5 +275,9 @@ http://127.0.0.1:8388</value>
   </data>
   <data name="AddSubscription_URI" xml:space="preserve">
     <value>订阅 URL</value>
+  </data>
+  <data name="YAAAY_9" xml:space="preserve">
+    <value>输入新组名
+如果存在同名组, 什么都不会发生</value>
   </data>
 </root>

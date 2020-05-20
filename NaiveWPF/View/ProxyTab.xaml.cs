@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Controls;
@@ -205,5 +206,45 @@ namespace NaiveGUI.View
         private void MenuItemEdit_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteConfig)(sender as MenuItem).DataContext).ShowDialog();
 
         private void MenuItemAddRemote_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext).ShowDialog();
+
+        private void MenuItemAddGroup_Click(object sender, RoutedEventArgs e)
+        {
+            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_9"), "", "Add Group");
+            if (name == "")
+            {
+                return;
+            }
+            foreach (var search in Main.Remotes)
+            {
+                if (search.Name == name)
+                {
+                    return;
+                }
+            }
+            Main.Remotes.Add(new RemoteConfigGroup(name));
+            Main.Save();
+        }
+
+        private void MenuItemImport_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var uri = new UriBuilder(Clipboard.GetText());
+                var query = HttpUtility.ParseQueryString(uri.Query);
+
+                var name = query["name"];
+                var padding = query["padding"] != null && query["padding"].ToLower() == "true";
+
+                query.Remove("name");
+                query.Remove("padding");
+                uri.Query = query.Count == 0 ? null : query.ToString();
+
+                new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext, name, uri.ToString(), padding).ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

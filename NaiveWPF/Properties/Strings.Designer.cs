@@ -268,11 +268,20 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
-        ///   查找类似 Add 的本地化字符串。
+        ///   查找类似 Add Remote 的本地化字符串。
         /// </summary>
         public static string Proxy_RemoteMenu_Add {
             get {
                 return ResourceManager.GetString("Proxy_RemoteMenu_Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Add Group 的本地化字符串。
+        /// </summary>
+        public static string Proxy_RemoteMenu_AddGroup {
+            get {
+                return ResourceManager.GetString("Proxy_RemoteMenu_AddGroup", resourceCulture);
             }
         }
         
@@ -291,6 +300,15 @@ namespace NaiveGUI.Properties {
         public static string Proxy_RemoteMenu_Edit {
             get {
                 return ResourceManager.GetString("Proxy_RemoteMenu_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Import from clipboard 的本地化字符串。
+        /// </summary>
+        public static string Proxy_RemoteMenu_Import {
+            get {
+                return ResourceManager.GetString("Proxy_RemoteMenu_Import", resourceCulture);
             }
         }
         
@@ -504,6 +522,16 @@ namespace NaiveGUI.Properties {
         public static string YAAAY_8 {
             get {
                 return ResourceManager.GetString("YAAAY_8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Input the group name.
+        ///If there&apos;s group with same name, nothing will happen. 的本地化字符串。
+        /// </summary>
+        public static string YAAAY_9 {
+            get {
+                return ResourceManager.GetString("YAAAY_9", resourceCulture);
             }
         }
     }

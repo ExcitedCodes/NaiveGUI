@@ -19,7 +19,9 @@
         </ContextMenu>
         <ContextMenu x:Key="RemoteGroupMenu">
             <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Add}" Click="MenuItemAddRemote_Click"/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Import}" Click="MenuItemImport_Click"/>
             <Separator/>
+            <MenuItem Header="{lex:Loc Proxy_RemoteMenu_AddGroup}" Click="MenuItemAddGroup_Click"/>
             <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Rename}" Click="MenuItemRename_Click"/>
             <MenuItem Header="{lex:Loc Proxy_RemoteMenu_Delete}" Click="MenuItemDelete_Click"/>
         </ContextMenu>
