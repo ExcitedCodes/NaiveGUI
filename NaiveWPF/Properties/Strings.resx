@@ -297,4 +297,15 @@ No = Ignore, discard the group</value>
 Yes = Exit app, repair the config manually
 No = Ignore error, discard the remote</value>
   </data>
+  <data name="Message_LeftoverFound" xml:space="preserve">
+    <value>Found {0} possibly leftover naive processes, try to kill them?
+This may be caused by abnormal exit of NaiveGUI.
+
+Yes = Kill them all
+No = Ignore and continue
+Cancel = Exit app</value>
+  </data>
+  <data name="Settings_CheckLeftover" xml:space="preserve">
+    <value>Check for leftover naive process on start</value>
+  </data>
 </root>

@@ -287,6 +287,14 @@ http://127.0.0.1:8388</value>
 是 = 退出程序, 手动修复配置文件
 否 = 忽略错误, 丢弃出错的服务器组</value>
   </data>
+  <data name="Message_LeftoverFound" xml:space="preserve">
+    <value>发现 {0} 个可能的残留 naive 进程, 是否尝试将其关闭?
+这通常是 NaiveGUI 不正常退出造成的残留.
+
+是 = 关闭所有进程
+否 = 忽略并继续
+取消 = 退出程序</value>
+  </data>
   <data name="Message_NewConfigVersion" xml:space="preserve">
     <value>当前 config.json 的版本高于程序支持的最高版本, 继续加载可能导致配置丢失. 继续?</value>
   </data>
@@ -296,5 +304,8 @@ http://127.0.0.1:8388</value>
 
 是 = 退出程序, 手动修复配置文件
 否 = 忽略错误, 丢弃出错的服务器</value>
+  </data>
+  <data name="Settings_CheckLeftover" xml:space="preserve">
+    <value>启动时检查残留的 naive 进程</value>
   </data>
 </root>

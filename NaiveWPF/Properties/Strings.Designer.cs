@@ -254,6 +254,20 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Found {0} possibly leftover naive processes, try to kill them?
+        ///This may be caused by abnormal exit of NaiveGUI.
+        ///
+        ///Yes = Kill them all
+        ///No = Ignore and continue
+        ///Cancel = Exit app 的本地化字符串。
+        /// </summary>
+        public static string Message_LeftoverFound {
+            get {
+                return ResourceManager.GetString("Message_LeftoverFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 The config.json has a newer version, continue loading may lost some config. Continue? 的本地化字符串。
         /// </summary>
         public static string Message_NewConfigVersion {
@@ -380,6 +394,15 @@ namespace NaiveGUI.Properties {
         public static string Settings_AllowWindowResize {
             get {
                 return ResourceManager.GetString("Settings_AllowWindowResize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Check for leftover naive process on start 的本地化字符串。
+        /// </summary>
+        public static string Settings_CheckLeftover {
+            get {
+                return ResourceManager.GetString("Settings_CheckLeftover", resourceCulture);
             }
         }
         

@@ -25,6 +25,9 @@ namespace NaiveGUI
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
+        [DllImport("kernel32.dll")]
+        public static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] uint dwFlags, [Out] StringBuilder lpExeName, [In, Out] ref uint lpdwSize);
+
         public static readonly string ExecutablePath = Process.GetCurrentProcess().MainModule.FileName;
         public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 

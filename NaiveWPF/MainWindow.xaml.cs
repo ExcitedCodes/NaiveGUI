@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Threading;
+using System.Diagnostics;
 using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Input;
@@ -49,6 +51,7 @@ namespace NaiveGUI
         public Prop<bool> AutoRun { get; set; } = new Prop<bool>();
         public Prop<bool> AllowAddListener { get; set; } = new Prop<bool>(true);
         public Prop<bool> AllowWindowResize { get; set; } = new Prop<bool>(true);
+        public Prop<bool> CheckLeftover { get; set; } = new Prop<bool>(true);
 
         public UserControl[] Tabs = null;
         public TabIndexTester CurrentTabTester { get; set; }
@@ -115,6 +118,7 @@ namespace NaiveGUI
                 Logging.Value = json.ContainsKey("logging") && json["logging"];
                 AllowAddListener.Value = !json.ContainsKey("allow_add_listener") || json["allow_add_listener"];
                 AllowWindowResize.Value = !json.ContainsKey("allow_window_resize") || json["allow_window_resize"];
+                CheckLeftover.Value = !json.ContainsKey("check_leftover") || json["check_leftover"];
                 if (json.ContainsKey("width"))
                 {
                     Width = json["width"];
@@ -159,6 +163,9 @@ namespace NaiveGUI
                         }
                     }
                 }
+                
+                SearchLeftoverProcesses(); // TODO: Get this out of config loading procedue
+
                 if(json.ContainsKey("listeners"))
                 {
                     foreach(var l in json["listeners"])
@@ -203,8 +210,12 @@ namespace NaiveGUI
                     Subscriptions.UpdateInterval = (int)sub["update_interval"];
                 }
             }
+            else
+            {
+                SearchLeftoverProcesses(); // TODO: Again, get this out of config loading procedue
+            }
 
-            if(Remotes.Count == 0)
+            if (Remotes.Count == 0)
             {
                 Remotes.Add(new RemoteConfigGroup("Default"));
             }
@@ -217,6 +228,7 @@ namespace NaiveGUI
 
             Logging.PropertyChanged += (s, e) => Save();
             AllowAddListener.PropertyChanged += (s, e) => Save();
+            CheckLeftover.PropertyChanged += (s, e) => Save();
             AllowWindowResize.PropertyChanged += (s, e) =>
             {
                 ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
@@ -260,6 +272,7 @@ namespace NaiveGUI
                 { "height", Dispatcher.Invoke(() => (int)Height) },
                 { "allow_add_listener", AllowAddListener.Value },
                 { "allow_window_resize", AllowWindowResize.Value },
+                { "check_leftover", CheckLeftover.Value },
                 { "language", SelectedLanguage },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
                     { "type", l.Real.Type.ToString() },
@@ -297,6 +310,47 @@ namespace NaiveGUI
             if (save)
             {
                 Save();
+            }
+        }
+
+        public void SearchLeftoverProcesses()
+        {
+            var test = Path.GetFullPath(Listener.NaivePath);
+            var processes = Process.GetProcessesByName("naive").Where(p =>
+            {
+                try
+                {
+                    uint bufferSize = 256;
+                    var sb = new StringBuilder((int)bufferSize - 1);
+                    if (App.QueryFullProcessImageName(p.Handle, 0, sb, ref bufferSize))
+                    {
+                        return Path.GetFullPath(sb.ToString()) == test;
+                    }
+                }
+                catch { }
+                return false;
+            }).ToArray();
+            if (processes.Length != 0)
+            {
+                switch (MessageBox.Show(string.Format(GetLocalized("Message_LeftoverFound"), processes.Length), "Oops", MessageBoxButton.YesNoCancel, MessageBoxImage.Information))
+                {
+                case MessageBoxResult.Yes:
+                    foreach (var p in processes)
+                    {
+                        try
+                        {
+                            p.Kill();
+                            p.WaitForExit(100); // TODO: Customizable wait timeout
+                        }
+                        catch { }
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                default:
+                    Environment.Exit(0);
+                    break;
+                }
             }
         }
 
