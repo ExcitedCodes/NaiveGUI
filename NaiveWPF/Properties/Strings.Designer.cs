@@ -241,11 +241,46 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Something went wrong while parsing group {0}:
+        ///{1}
+        ///
+        ///Yes = Exit app, repair the config manually
+        ///No = Ignore, discard the group 的本地化字符串。
+        /// </summary>
+        public static string Message_GroupParseError {
+            get {
+                return ResourceManager.GetString("Message_GroupParseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 The config.json has a newer version, continue loading may lost some config. Continue? 的本地化字符串。
+        /// </summary>
+        public static string Message_NewConfigVersion {
+            get {
+                return ResourceManager.GetString("Message_NewConfigVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 You must select a remote before starting listener! Click a remote in the remote list to select it. 的本地化字符串。
         /// </summary>
         public static string Message_NoRemote {
             get {
                 return ResourceManager.GetString("Message_NoRemote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Something went wrong while parsing remote(In group {0}):
+        ///{1}
+        ///
+        ///Yes = Exit app, repair the config manually
+        ///No = Ignore error, discard the remote 的本地化字符串。
+        /// </summary>
+        public static string Message_RemoteParseError {
+            get {
+                return ResourceManager.GetString("Message_RemoteParseError", resourceCulture);
             }
         }
         

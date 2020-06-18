@@ -107,7 +107,7 @@ namespace NaiveGUI
                     MessageBox.Show("Old winform configuration is not supported, please migrate the config manually or delete config.json", "Opps", MessageBoxButton.OK, MessageBoxImage.Error);
                     Environment.Exit(0);
                 }
-                if(json["version"] > CONFIG_VERSION && MessageBox.Show("The config.json has a newer version, continue loading may lost some config. Continue?", "Opps", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
+                if (json["version"] > CONFIG_VERSION && MessageBox.Show(GetLocalized("Message_NewConfigVersion"), "Opps", MessageBoxButton.OKCancel, MessageBoxImage.Warning) != MessageBoxResult.OK)
                 {
                     Environment.Exit(0);
                 }
@@ -130,17 +130,33 @@ namespace NaiveGUI
                         try
                         {
                             var group = new RemoteConfigGroup(g.Key);
-                            foreach(KeyValuePair<string, dynamic> r in (Dictionary<string, dynamic>)g.Value)
+                            foreach (KeyValuePair<string, dynamic> r in (Dictionary<string, dynamic>)g.Value)
                             {
-                                group.Add(new RemoteConfig(r.Key, ProxyType.NaiveProxy)
+                                try
                                 {
-                                    Remote = new UriBuilder(r.Value["remote"]),
-                                    Padding = r.Value.ContainsKey("padding") && r.Value["padding"],
-                                });
+                                    group.Add(new RemoteConfig(r.Key, ProxyType.NaiveProxy)
+                                    {
+                                        Remote = new UriBuilder(r.Value["remote"]),
+                                        ExtraHeaders = r.Value.ContainsKey("extra_headers") ? RemoteConfig.ParseExtraHeaders(r.Value["extra_headers"]) : null
+                                    });
+                                }
+                                catch (Exception e)
+                                {
+                                    if (MessageBox.Show(string.Format(GetLocalized("Message_RemoteParseError"), g.Key, e.ToString()), "Error", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                                    {
+                                        Environment.Exit(0);
+                                    }
+                                }
                             }
                             Remotes.Add(group);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            if (MessageBox.Show(string.Format(GetLocalized("Message_GroupParseError"), g.Key, e.ToString()), "Error", MessageBoxButton.YesNo, MessageBoxImage.Error) == MessageBoxResult.Yes)
+                            {
+                                Environment.Exit(0);
+                            }
+                        }
                     }
                 }
                 if(json.ContainsKey("listeners"))

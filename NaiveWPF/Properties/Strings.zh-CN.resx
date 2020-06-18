@@ -280,4 +280,21 @@ http://127.0.0.1:8388</value>
   <data name="AddRemote_ExtraHeaders" xml:space="preserve">
     <value>额外请求头, 每行一个</value>
   </data>
+  <data name="Message_GroupParseError" xml:space="preserve">
+    <value>读取服务器组 {0} 配置时出现错误:
+{1}
+
+是 = 退出程序, 手动修复配置文件
+否 = 忽略错误, 丢弃出错的服务器组</value>
+  </data>
+  <data name="Message_NewConfigVersion" xml:space="preserve">
+    <value>当前 config.json 的版本高于程序支持的最高版本, 继续加载可能导致配置丢失. 继续?</value>
+  </data>
+  <data name="Message_RemoteParseError" xml:space="preserve">
+    <value>读取服务器配置时出现错误 (在组 {0} 中):
+{1}
+
+是 = 退出程序, 手动修复配置文件
+否 = 忽略错误, 丢弃出错的服务器</value>
+  </data>
 </root>

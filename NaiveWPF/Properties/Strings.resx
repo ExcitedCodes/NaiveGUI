@@ -280,4 +280,21 @@ If there's group with same name, nothing will happen.</value>
   <data name="AddRemote_ExtraHeaders" xml:space="preserve">
     <value>Extra Headers, one header per line.</value>
   </data>
+  <data name="Message_GroupParseError" xml:space="preserve">
+    <value>Something went wrong while parsing group {0}:
+{1}
+
+Yes = Exit app, repair the config manually
+No = Ignore, discard the group</value>
+  </data>
+  <data name="Message_NewConfigVersion" xml:space="preserve">
+    <value>The config.json has a newer version, continue loading may lost some config. Continue?</value>
+  </data>
+  <data name="Message_RemoteParseError" xml:space="preserve">
+    <value>Something went wrong while parsing remote(In group {0}):
+{1}
+
+Yes = Exit app, repair the config manually
+No = Ignore error, discard the remote</value>
+  </data>
 </root>
