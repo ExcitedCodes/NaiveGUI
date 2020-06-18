@@ -59,7 +59,11 @@ namespace NaiveGUI.Data
                         "scheme": "https", // optional
                         "username": "UserXD", // optional
                         "password": "Password0", // optional
-                        "padding": true // optional
+                        "extra_headers": [ // optional, must be a string array
+                            "HeaderAAAAA: WTFWTF",
+                            "YAAY: LOLL",
+                            ...
+                        ]
                     },
                     ...
                 ],
@@ -77,6 +81,7 @@ namespace NaiveGUI.Data
                     {
                         var mainRemotes = Main.Remotes;
                         var subscribeGroups = new Dictionary<string, List<string>>();
+
                         // Add or update remotes
                         foreach(var kv in json)
                         {
@@ -88,7 +93,7 @@ namespace NaiveGUI.Data
                                 string name = r["name"], host = r["host"].ToString(), scheme = r.ContainsKey("scheme") ? r["scheme"] : "https",
                                     username = r.ContainsKey("username") ? r["username"].ToString() : null, password = r.ContainsKey("password") ? r["password"].ToString() : null;
                                 int port = r.ContainsKey("port") ? (r["port"] is string ? int.Parse(r["port"]) : (int)r["port"]) : -1;
-                                bool padding = r.ContainsKey("padding") ? (r["padding"] is string ? bool.Parse(r["padding"]) : r["padding"]) : false;
+                                string[] extra_headers = r.ContainsKey("extra_headers") ? RemoteConfig.ParseExtraHeaders(r["extra_headers"]) : null;
                                 subscribeGroups[group].Add(name);
                                 foreach(var g in mainRemotes)
                                 {
@@ -103,7 +108,7 @@ namespace NaiveGUI.Data
                                                 rMain.Remote.Scheme = scheme;
                                                 rMain.Remote.UserName = username;
                                                 rMain.Remote.Password = password;
-                                                rMain.Padding = padding;
+                                                rMain.ExtraHeaders = extra_headers;
                                                 goto CONTINUE2;
                                             }
                                         }
@@ -114,7 +119,7 @@ namespace NaiveGUI.Data
                                                 UserName = username,
                                                 Password = password
                                             },
-                                            Padding = padding
+                                            ExtraHeaders = extra_headers
                                         });
                                         goto CONTINUE2;
                                     }
@@ -128,12 +133,13 @@ namespace NaiveGUI.Data
                                             UserName = username,
                                             Password = password
                                         },
-                                        Padding = padding
+                                        ExtraHeaders = extra_headers
                                     }
                                 });
                             CONTINUE2:;
                             }
                         }
+
                         // Remove remotes
                         foreach(var kv in subscribeGroups)
                         {

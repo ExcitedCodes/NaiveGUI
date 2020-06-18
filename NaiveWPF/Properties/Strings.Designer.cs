@@ -133,20 +133,20 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 Extra Headers, one header per line. 的本地化字符串。
+        /// </summary>
+        public static string AddRemote_ExtraHeaders {
+            get {
+                return ResourceManager.GetString("AddRemote_ExtraHeaders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Remote Name 的本地化字符串。
         /// </summary>
         public static string AddRemote_Name {
             get {
                 return ResourceManager.GetString("AddRemote_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 Enable Padding 的本地化字符串。
-        /// </summary>
-        public static string AddRemote_Padding {
-            get {
-                return ResourceManager.GetString("AddRemote_Padding", resourceCulture);
             }
         }
         

@@ -44,7 +44,11 @@ NaiveGUI 当前只支持一种订阅格式, 每个订阅 URL 可以包含多个�
             "scheme": "https", // 可选
             "username": "UserXD", // 可选
             "password": "Password0", // 可选
-            "padding": true // 可选
+            "extra_headers": [ // 可选, 必须是字符串数组
+                "HeaderAAAAA: WTFWTF",
+                "YAAY: LOLL",
+                ...
+            ]
         },
         ...
     ],
@@ -96,7 +100,11 @@ The following example may not represent the latest subscription format.
             "scheme": "https", // optional
             "username": "UserXD", // optional
             "password": "Password0", // optional
-            "padding": true // optional
+            "extra_headers": [ // optional, must be a string array
+                "HeaderAAAAA: WTFWTF",
+                "YAAY: LOLL",
+                ...
+            ]
         },
         ...
     ],

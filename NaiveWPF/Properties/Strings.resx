@@ -249,9 +249,6 @@ Items with same name will be overrided!</value>
   <data name="AddRemote_Name" xml:space="preserve">
     <value>Remote Name</value>
   </data>
-  <data name="AddRemote_Padding" xml:space="preserve">
-    <value>Enable Padding</value>
-  </data>
   <data name="AddRemote_Title" xml:space="preserve">
     <value>Add Remote</value>
   </data>
@@ -279,5 +276,8 @@ Items with same name will be overrided!</value>
   <data name="YAAAY_9" xml:space="preserve">
     <value>Input the group name.
 If there's group with same name, nothing will happen.</value>
+  </data>
+  <data name="AddRemote_ExtraHeaders" xml:space="preserve">
+    <value>Extra Headers, one header per line.</value>
   </data>
 </root>

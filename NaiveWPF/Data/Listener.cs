@@ -178,9 +178,9 @@ namespace NaiveGUI.Data
             var sb = new StringBuilder();
             sb.Append("--listen=").Append(Listen.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped))
                 .Append(" --proxy=").Append(Remote.Remote.Uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.SafeUnescaped));
-            if(Remote.Padding)
+            if (Remote.ExtraHeaders != null && Remote.ExtraHeaders.Length != 0)
             {
-                sb.Append(" --padding");
+                sb.Append(" --extra-headers=").Append(string.Join("\r\n", Remote.ExtraHeaders));
             }
             // TODO: --host-resolver-rules=
             bool logging = MainWindow.Instance.Logging.Value;

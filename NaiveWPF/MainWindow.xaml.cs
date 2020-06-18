@@ -256,7 +256,7 @@ namespace NaiveGUI
                 }) },
                 { "remotes", Remotes.ToDictionary(g => g.Name,g => g.ToDictionary(r => r.Name,r => new Dictionary<string,object>() {
                     { "remote", r.Remote.ToString() },
-                    { "padding", r.Padding }
+                    { "extra_headers", r.ExtraHeaders ?? new string[0] }
                 })) },
                 { "subscriptions", new Dictionary<string, object>()
                 {

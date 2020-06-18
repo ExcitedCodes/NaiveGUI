@@ -233,13 +233,15 @@ namespace NaiveGUI.View
                 var query = HttpUtility.ParseQueryString(uri.Query);
 
                 var name = query["name"];
-                var padding = query["padding"] != null && query["padding"].ToLower() == "true";
+                var extra_headers = query["extra_headers"];
 
                 query.Remove("name");
                 query.Remove("padding");
+                query.Remove("extra_headers");
+
                 uri.Query = query.Count == 0 ? null : query.ToString();
 
-                new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext, name, uri.ToString(), padding).ShowDialog();
+                new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext, name, uri.ToString(), extra_headers).ShowDialog();
             }
             catch (Exception ex)
             {
