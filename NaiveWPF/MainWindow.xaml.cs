@@ -315,41 +315,44 @@ namespace NaiveGUI
 
         public void SearchLeftoverProcesses()
         {
-            var test = Path.GetFullPath(Listener.NaivePath);
-            var processes = Process.GetProcessesByName("naive").Where(p =>
+            if(CheckLeftover.Value)
             {
-                try
+                var test = Path.GetFullPath(Listener.NaivePath);
+                var processes = Process.GetProcessesByName("naive").Where(p =>
                 {
-                    uint bufferSize = 256;
-                    var sb = new StringBuilder((int)bufferSize - 1);
-                    if (App.QueryFullProcessImageName(p.Handle, 0, sb, ref bufferSize))
+                    try
                     {
-                        return Path.GetFullPath(sb.ToString()) == test;
-                    }
-                }
-                catch { }
-                return false;
-            }).ToArray();
-            if (processes.Length != 0)
-            {
-                switch (MessageBox.Show(string.Format(GetLocalized("Message_LeftoverFound"), processes.Length), "Oops", MessageBoxButton.YesNoCancel, MessageBoxImage.Information))
-                {
-                case MessageBoxResult.Yes:
-                    foreach (var p in processes)
-                    {
-                        try
+                        uint bufferSize = 256;
+                        var sb = new StringBuilder((int)bufferSize - 1);
+                        if (App.QueryFullProcessImageName(p.Handle, 0, sb, ref bufferSize))
                         {
-                            p.Kill();
-                            p.WaitForExit(100); // TODO: Customizable wait timeout
+                            return Path.GetFullPath(sb.ToString()) == test;
                         }
-                        catch { }
                     }
-                    break;
-                case MessageBoxResult.No:
-                    break;
-                default:
-                    Environment.Exit(0);
-                    break;
+                    catch { }
+                    return false;
+                }).ToArray();
+                if (processes.Length != 0)
+                {
+                    switch (MessageBox.Show(string.Format(GetLocalized("Message_LeftoverFound"), processes.Length), "Oops", MessageBoxButton.YesNoCancel, MessageBoxImage.Information))
+                    {
+                    case MessageBoxResult.Yes:
+                        foreach (var p in processes)
+                        {
+                            try
+                            {
+                                p.Kill();
+                                p.WaitForExit(100); // TODO: Customizable wait timeout
+                            }
+                            catch { }
+                        }
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                    default:
+                        Environment.Exit(0);
+                        break;
+                    }
                 }
             }
         }
