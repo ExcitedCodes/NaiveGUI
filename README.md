@@ -23,9 +23,9 @@ NaiveGUI 支持从剪贴板导入单个服务器
 
 将以下格式的 URI 复制到剪贴板, 随后右键任意组名选择 _从剪贴板导入_ 即可
 
-_* __name__ 和 __padding__ 均为可选参数_
+_* __name__ 和 __extra_headers__ 均为可选参数_
 ```
-https://<Username>:<Password>@<Host>:<Port>/?name=<节点名称>&padding=<true/false>
+https://<Username>:<Password>@<Host>:<Port>/?name=<节点名称>&extra_headers=<额外请求头, 使用 LF 分隔>
 ```
 
 ## 订阅
@@ -79,9 +79,9 @@ NaiveGUI allows you to import single remote from clipboard.
 
 Copy a URI with following structure, right-click any group and select _Import from clipboard_ to import
 
-_* __name__ and __padding__ are optional_
+_* __name__ and __extra_headers__ are optional_
 ```
-https://<Username>:<Password>@<Host>:<Port>/?name=<节点名称>&padding=<true/false>
+https://<Username>:<Password>@<Host>:<Port>/?name=<Remote Name>&extra_headers=<Extra Headers, split by LF>
 ```
 
 ## Subscription
