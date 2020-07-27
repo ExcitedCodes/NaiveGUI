@@ -124,7 +124,7 @@ namespace NaiveGUI.Data
                                         goto CONTINUE2;
                                     }
                                 }
-                                mainRemotes.Add(new RemoteConfigGroup(group)
+                                mainRemotes.Add(new RemoteConfigGroup(group, Main)
                                 {
                                     new RemoteConfig(name,ProxyType.NaiveProxy)
                                     {

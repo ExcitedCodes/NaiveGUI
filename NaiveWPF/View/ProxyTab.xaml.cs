@@ -221,7 +221,7 @@ namespace NaiveGUI.View
                     return;
                 }
             }
-            Main.Remotes.Add(new RemoteConfigGroup(name));
+            Main.Remotes.Add(new RemoteConfigGroup(name, Main));
             Main.Save();
         }
 

@@ -133,7 +133,7 @@ namespace NaiveGUI
                     {
                         try
                         {
-                            var group = new RemoteConfigGroup(g.Key);
+                            var group = new RemoteConfigGroup(g.Key, this);
                             foreach (KeyValuePair<string, dynamic> r in (Dictionary<string, dynamic>)g.Value)
                             {
                                 try
@@ -217,7 +217,7 @@ namespace NaiveGUI
 
             if (Remotes.Count == 0)
             {
-                Remotes.Add(new RemoteConfigGroup("Default"));
+                Remotes.Add(new RemoteConfigGroup("Default", this));
             }
             ConfigPath = config;
             ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
@@ -234,6 +234,7 @@ namespace NaiveGUI
                 ResizeMode = AllowWindowResize.Value ? ResizeMode.CanResize : ResizeMode.CanMinimize;
                 Save();
             };
+            Remotes.CollectionChanged += (s, e) => ReloadTrayMenu();
             Listeners.CollectionChanged += (s, e) => ReloadTrayMenu();
 
             Listeners.Add(new FakeListener());
@@ -384,7 +385,7 @@ namespace NaiveGUI
 
         #region Tray Icon & Menu
 
-        private void ReloadTrayMenu()
+        public void ReloadTrayMenu()
         {
             // ItemSource Binding will cause severe width issue, so we create menu by code...
             var menu = FindResource("TrayMenu") as ContextMenu;

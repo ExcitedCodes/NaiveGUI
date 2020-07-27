@@ -14,10 +14,11 @@ namespace NaiveGUI.Data
             }
         }
         private string _name = null;
-
-        public RemoteConfigGroup(string name)
+        
+        public RemoteConfigGroup(string name, MainWindow main)
         {
             Name = name;
+            CollectionChanged += (s, e) => main.ReloadTrayMenu();
         }
 
         public new void Add(RemoteConfig item)
