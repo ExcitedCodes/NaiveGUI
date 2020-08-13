@@ -413,32 +413,62 @@ namespace NaiveGUI
                     {
                         Header = item.Real.Listen.ToString()
                     };
-                    foreach(var g in Remotes)
+                    if(Remotes.Count == 0 || (Remotes.Count == 1 && Remotes[0].Count == 0))
                     {
-                        var group = new MenuItem()
+                        m.Items.Add(new MenuItem()
                         {
-                            Header = g.Name
-                        };
-                        foreach(var r in g)
+                            Header = GetLocalized("Tray_NoRemote"),
+                            IsEnabled = false
+                        });
+                    }
+                    else if (Remotes.Count > 1)
+                    {
+                        foreach (var g in Remotes)
+                        {
+                            var group = new MenuItem()
+                            {
+                                Header = g.Name
+                            };
+                            foreach (var r in g)
+                            {
+                                var remote = new MenuItem()
+                                {
+                                    Header = r.Name,
+                                    IsCheckable = true,
+                                    Tag = r
+                                };
+                                if (item.Real.Remote == r)
+                                {
+                                    remote.IsChecked = group.IsChecked = true;
+                                }
+                                remote.Click += (se, ev) =>
+                                {
+                                    item.Real.Remote = r;
+                                    Save();
+                                };
+                                group.Items.Add(remote);
+                            }
+                            m.Items.Add(group);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var r in Remotes[0])
                         {
                             var remote = new MenuItem()
                             {
                                 Header = r.Name,
                                 IsCheckable = true,
-                                Tag = r
+                                Tag = r,
+                                IsChecked = item.Real.Remote == r
                             };
-                            if(item.Real.Remote == r)
-                            {
-                                remote.IsChecked = group.IsChecked = true;
-                            }
                             remote.Click += (se, ev) =>
                             {
                                 item.Real.Remote = r;
                                 Save();
                             };
-                            group.Items.Add(remote);
+                            m.Items.Add(remote);
                         }
-                        m.Items.Add(group);
                     }
                     item.Real.PropertyChanged += (se, ev) =>
                     {

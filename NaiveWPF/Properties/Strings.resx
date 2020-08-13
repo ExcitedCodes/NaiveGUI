@@ -308,4 +308,7 @@ Cancel = Exit app</value>
   <data name="Settings_CheckLeftover" xml:space="preserve">
     <value>Check for leftover naive process on start</value>
   </data>
+  <data name="Tray_NoRemote" xml:space="preserve">
+    <value>No Remote Available</value>
+  </data>
 </root>

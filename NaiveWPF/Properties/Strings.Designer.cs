@@ -542,6 +542,15 @@ namespace NaiveGUI.Properties {
         }
         
         /// <summary>
+        ///   查找类似 No Remote Available 的本地化字符串。
+        /// </summary>
+        public static string Tray_NoRemote {
+            get {
+                return ResourceManager.GetString("Tray_NoRemote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 NaiveGUI - Running 的本地化字符串。
         /// </summary>
         public static string Tray_Running {

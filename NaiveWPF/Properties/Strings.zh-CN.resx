@@ -308,4 +308,7 @@ http://127.0.0.1:8388</value>
   <data name="Settings_CheckLeftover" xml:space="preserve">
     <value>启动时检查残留的 naive 进程</value>
   </data>
+  <data name="Tray_NoRemote" xml:space="preserve">
+    <value>没有可用的服务器</value>
+  </data>
 </root>
