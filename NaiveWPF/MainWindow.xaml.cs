@@ -427,7 +427,8 @@ namespace NaiveGUI
                         {
                             var group = new MenuItem()
                             {
-                                Header = g.Name
+                                Header = g.Name,
+                                Tag = g
                             };
                             foreach (var r in g)
                             {
@@ -450,6 +451,32 @@ namespace NaiveGUI
                             }
                             m.Items.Add(group);
                         }
+                        item.Real.PropertyChanged += (se, ev) =>
+                        {
+                            if (ev.PropertyName != "Remote")
+                            {
+                                return;
+                            }
+                            foreach (var g in m.Items)
+                            {
+                                if (g is Separator)
+                                {
+                                    break;
+                                }
+                                if (g is MenuItem group)
+                                {
+                                    group.IsChecked = false;
+                                    foreach (MenuItem remote in group.Items)
+                                    {
+                                        remote.IsChecked = remote.Tag == item.Real.Remote;
+                                        if (remote.IsChecked)
+                                        {
+                                            group.IsChecked = true;
+                                        }
+                                    }
+                                }
+                            }
+                        };
                     }
                     else
                     {
@@ -469,33 +496,25 @@ namespace NaiveGUI
                             };
                             m.Items.Add(remote);
                         }
-                    }
-                    item.Real.PropertyChanged += (se, ev) =>
-                    {
-                        if(ev.PropertyName != "Remote")
+                        item.Real.PropertyChanged += (se, ev) =>
                         {
-                            return;
-                        }
-                        foreach(var g in m.Items)
-                        {
-                            if(g is Separator)
+                            if (ev.PropertyName != "Remote")
                             {
-                                break;
+                                return;
                             }
-                            if(g is MenuItem group)
+                            foreach (var g in m.Items)
                             {
-                                group.IsChecked = false;
-                                foreach(MenuItem remote in group.Items)
+                                if (g is Separator)
                                 {
-                                    remote.IsChecked = remote.Tag == item.Real.Remote;
-                                    if(remote.IsChecked)
-                                    {
-                                        group.IsChecked = true;
-                                    }
+                                    break;
+                                }
+                                if (g is MenuItem tmp)
+                                {
+                                    tmp.IsChecked = tmp.Tag == item.Real.Remote;
                                 }
                             }
-                        }
-                    };
+                        };
+                    }
                     m.Items.Add(new Separator());
                     // WPF MenuItem doesn't support SubItem+Clickable, so we add a toggle
                     var toggle = new MenuItem()
