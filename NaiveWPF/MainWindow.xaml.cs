@@ -255,6 +255,20 @@ namespace NaiveGUI
                     }
                 }
             }, null, 0, 200);
+
+            Microsoft.Win32.SystemEvents.SessionEnding += (s, e) =>
+            {
+                ConfigPath = null;
+                mainTimer.Change(Timeout.Infinite, Timeout.Infinite);
+
+                foreach(var l in Listeners)
+                {
+                    if(l.IsReal)
+                    {
+                        l.Real.Stop();
+                    }
+                }
+            };
         }
 
         public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);

@@ -28,6 +28,9 @@ namespace NaiveGUI
         [DllImport("kernel32.dll")]
         public static extern bool QueryFullProcessImageName([In] IntPtr hProcess, [In] uint dwFlags, [Out] StringBuilder lpExeName, [In, Out] ref uint lpdwSize);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern int SetProcessShutdownParameters(int dwLevel, int dwFlags);
+
         public static readonly string ExecutablePath = Process.GetCurrentProcess().MainModule.FileName;
         public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
@@ -214,6 +217,7 @@ namespace NaiveGUI
             AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Md5(ExecutablePath + full) + ".lnk";
             if(created)
             {
+                SetProcessShutdownParameters(0x300, 0);
                 MainWindow = new MainWindow(config, File.Exists(AutoRunFile));
                 if(!minimize)
                 {
