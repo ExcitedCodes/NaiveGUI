@@ -19,9 +19,9 @@
     <StackPanel Margin="8">
         <materialDesign:Card>
             <StackPanel>
-                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddRemote_Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding RemoteName.Value}" Margin="12"/>
-                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddRemote_URI}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="12,8,12,0" Text="{Binding RemoteURI.Value}"/>
-                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddRemote_ExtraHeaders}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="12,8,12,12" Text="{Binding ExtraHeaders.Value}"
+                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddRemote_Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding RemoteName}" Margin="12"/>
+                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddRemote_URI}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="12,8,12,0" Text="{Binding RemoteURI}"/>
+                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddRemote_ExtraHeaders}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="12,8,12,12" Text="{Binding ExtraHeaders}"
                   TextWrapping="Wrap" AcceptsReturn="True"
                   VerticalScrollBarVisibility="Auto" Height="120"/>
             </StackPanel>

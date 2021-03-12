@@ -305,8 +305,8 @@ Yes = Kill them all
 No = Ignore and continue
 Cancel = Exit app</value>
   </data>
-  <data name="Settings_CheckLeftover" xml:space="preserve">
-    <value>Check for leftover naive process on start</value>
+  <data name="Settings_ScanLeftover" xml:space="preserve">
+    <value>Scan for leftover naive processes on start</value>
   </data>
   <data name="Tray_NoRemote" xml:space="preserve">
     <value>No Remote Available</value>

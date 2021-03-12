@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+
+using NaiveGUI.Model;
 
 namespace NaiveGUI.View
 {
@@ -7,21 +10,16 @@ namespace NaiveGUI.View
     /// </summary>
     public partial class SettingsTab : UserControl
     {
-        private readonly MainWindow Main = null;
+        private readonly MainViewModel Model;
 
-        public SettingsTab(MainWindow main)
+        public SettingsTab(MainViewModel model)
         {
             InitializeComponent();
-            DataContext = Main = main;
+            DataContext = Model = model;
         }
 
-        private void ToggleButtonAutoRun_Checked(object sender, System.Windows.RoutedEventArgs e) => App.SetAutoRun(true);
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e) => Model?.SetLanguage((e.AddedItems[0] as ComboBoxItem).Tag as string);
 
-        private void ToggleButtonAutoRun_Unchecked(object sender, System.Windows.RoutedEventArgs e) => App.SetAutoRun(false);
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Main?.SetLanguage((e.AddedItems[0] as ComboBoxItem).Tag as string);
-        }
+        private void Save(object sender, RoutedEventArgs e) => Model.Save();
     }
 }

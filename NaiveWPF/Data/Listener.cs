@@ -4,7 +4,7 @@ using System.Windows;
 using System.Diagnostics;
 using System.Windows.Media;
 
-using NaiveGUI.Helper;
+using NaiveGUI.Model;
 
 namespace NaiveGUI.Data
 {
@@ -15,7 +15,7 @@ namespace NaiveGUI.Data
         public static Uri FilterListeningAddress(ref string input)
         {
             var builder = new UriBuilder(input);
-            switch(builder.Scheme)
+            switch (builder.Scheme)
             {
             case "socks":
             case "http":
@@ -31,7 +31,7 @@ namespace NaiveGUI.Data
 
         public static void LogOutput(object sender, DataReceivedEventArgs e)
         {
-            if(e.Data != null)
+            if (e.Data != null)
             {
                 MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.Log(e.Data.Replace("\r", "").Replace("\n", "")));
             }
@@ -40,7 +40,12 @@ namespace NaiveGUI.Data
         public bool IsReal => true;
         public Listener Real => this;
 
-        public bool Selected => MainWindow.Instance.CurrentListener == this;
+        public bool Selected => MainWindow.Instance.Model.CurrentListener == this;
+
+        public void TEMP_updateSelected()
+        {
+            RaisePropertyChanged(nameof(Selected));
+        }
 
         public string StatusText => Enabled ? (Running ? "Active" : "Error") : "Disabled";
         public Brush StatusColor => (Brush)(Enabled ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
@@ -74,7 +79,7 @@ namespace NaiveGUI.Data
             get => _listen;
             set
             {
-                if(Running && Listen != value)
+                if (Running && Listen != value)
                 {
                     _listen = value;
                     Start();
@@ -94,12 +99,12 @@ namespace NaiveGUI.Data
             get => _remote;
             set
             {
-                if(_remote == value)
+                if (_remote == value)
                 {
                     return;
                 }
                 _remote = value;
-                if(Running)
+                if (Running)
                 {
                     Start();
                 }
@@ -124,40 +129,41 @@ namespace NaiveGUI.Data
 
         public void Tick(ulong Tick)
         {
-            if(Enabled && Tick % 5 == 0)
+            if (!Enabled || Tick % 5 != 0)
             {
-                if(!Running)
+                return;
+            }
+            if (!Running)
+            {
+                if (DateTime.Now - LastStart < TimeSpan.FromSeconds(10))
                 {
-                    if(DateTime.Now - LastStart < TimeSpan.FromSeconds(10))
+                    if (++FailCounter > 3)
                     {
-                        if(++FailCounter > 3)
-                        {
-                            Enabled = false;
-                            MainWindow.Instance.BalloonTip(Listen.ToString(), MainWindow.GetLocalized("Tray_CrashedTooMany"));
-                            MainWindow.Instance.Save();
-                            return;
-                        }
-                        MainWindow.Instance.BalloonTip(Listen.ToString(), MainWindow.GetLocalized("Tray_Crashed"));
+                        Enabled = false;
+                        MainWindow.Instance.BalloonTip(Listen.ToString(), MainViewModel.GetLocalized("Tray_CrashedTooMany"));
+                        MainWindow.Instance.Model.Save();
+                        return;
                     }
-                    Start();
+                    MainWindow.Instance.BalloonTip(Listen.ToString(), MainViewModel.GetLocalized("Tray_Crashed"));
                 }
-                else if(FailCounter != 0 && DateTime.Now - LastStart > TimeSpan.FromSeconds(30))
-                {
-                    FailCounter = 0;
-                }
+                Start();
+            }
+            else if (FailCounter != 0 && DateTime.Now - LastStart > TimeSpan.FromSeconds(30))
+            {
+                FailCounter = 0;
             }
         }
 
         public bool ToggleEnabled()
         {
-            if(Remote == null)
+            if (Remote == null)
             {
-                MessageBox.Show(MainWindow.GetLocalized("Message_NoRemote"), "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(MainViewModel.GetLocalized("Message_NoRemote"), "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return Enabled = false;
             }
             Enabled = !Enabled;
-            MainWindow.Instance.Save();
-            if(Enabled)
+            MainWindow.Instance.Model.Save();
+            if (Enabled)
             {
                 FailCounter = 0;
                 Start();
@@ -183,8 +189,8 @@ namespace NaiveGUI.Data
                 sb.Append(" --extra-headers=").Append(string.Join("\r\n", Remote.ExtraHeaders));
             }
             // TODO: --host-resolver-rules=
-            bool logging = MainWindow.Instance.Logging.Value;
-            if(logging)
+            bool logging = MainWindow.Instance.Model.Logging;
+            if (logging)
             {
                 sb.Append(" --log=\"\"");
             }
@@ -206,7 +212,7 @@ namespace NaiveGUI.Data
                     RaisePropertyChanged("StatusText");
                     RaisePropertyChanged("StatusColor");
                 };
-                if(logging)
+                if (logging)
                 {
                     BaseProcess.OutputDataReceived += LogOutput;
                     BaseProcess.BeginOutputReadLine();
@@ -221,13 +227,13 @@ namespace NaiveGUI.Data
 
         public void Stop()
         {
-            if(BaseProcess == null)
+            if (BaseProcess == null)
             {
                 return;
             }
             try
             {
-                if(!BaseProcess.HasExited && !BaseProcess.CloseMainWindow())
+                if (!BaseProcess.HasExited && !BaseProcess.CloseMainWindow())
                 {
                     BaseProcess.Kill();
                 }

@@ -1,14 +1,16 @@
-﻿namespace NaiveGUI.Helper
+﻿using NaiveGUI.Model;
+
+namespace NaiveGUI.Helper
 {
     public class TabIndexTester
     {
-        public MainWindow Main;
+        public MainViewModel Model;
 
-        public bool this[int offset] => Main.CurrentTab == offset;
+        public bool this[int offset] => Model.CurrentTab == offset;
 
-        public TabIndexTester(MainWindow main)
+        public TabIndexTester(MainViewModel model)
         {
-            Main = main;
+            Model = model;
         }
     }
 }

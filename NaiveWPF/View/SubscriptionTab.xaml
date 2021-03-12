@@ -65,14 +65,14 @@
                                 </materialDesign:PackIcon>
                             </Button>
                             <StackPanel Orientation="Horizontal" Margin="12">
-                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding Enabled.Value}" RenderTransformOrigin="0.5,0.5" Margin="0,0,4,0" Cursor="Hand" Checked="CheckBox_CheckChanged" Unchecked="CheckBox_CheckChanged">
+                                <CheckBox VerticalAlignment="Center" IsChecked="{Binding Enabled}" RenderTransformOrigin="0.5,0.5" Margin="0,0,4,0" Cursor="Hand" Checked="Save" Unchecked="Save">
                                     <CheckBox.RenderTransform>
                                         <ScaleTransform ScaleX="1.4" ScaleY="1.4"/>
                                     </CheckBox.RenderTransform>
                                 </CheckBox>
                                 <StackPanel Margin="8 0 0 0">
-                                    <TextBlock FontWeight="Bold" Text="{Binding Name.Value}" FontSize="16" />
-                                    <TextBlock Text="{Binding LastUpdate.Value, Mode=OneWay}" FontSize="14" />
+                                    <TextBlock FontWeight="Bold" Text="{Binding Name}" FontSize="16" />
+                                    <TextBlock Text="{Binding LastUpdate, Mode=OneWay}" FontSize="14" />
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
@@ -93,17 +93,28 @@
             </ListView.ItemContainerStyle>
         </ListView>
         <WrapPanel Orientation="Horizontal" Margin="24,0,24,0">
-            <ToggleButton IsChecked="{Binding AutoUpdate}"/>
+            <ToggleButton IsChecked="{Binding SubscriptionAutoUpdate}"/>
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="16,0,0,0" FontSize="16" Text="{lex:Loc Subscription_AutoUpdate}"/>
-            <StackPanel Orientation="Horizontal" IsEnabled="{Binding AutoUpdate}">
-                <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" FontSize="16" Margin="16,0,8,0" Opacity="{Binding IntervalOpacity}" Text="{lex:Loc Subscription_UpdateInterval}"/>
-                <TextBox Text="{Binding UpdateInterval}" MinWidth="128" FontSize="16"/>
+            <StackPanel Orientation="Horizontal" IsEnabled="{Binding SubscriptionAutoUpdate}">
+                <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" FontSize="16" Margin="16,0,8,0" Text="{lex:Loc Subscription_UpdateInterval}">
+                    <TextBlock.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignTextBlock}" TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SubscriptionAutoUpdate}" Value="False">
+                                    <Setter Property="Opacity" Value="0.5" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                            <Setter Property="Opacity" Value="1" />
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBox Text="{Binding SubscriptionUpdateInterval}" MinWidth="128" FontSize="16"/>
             </StackPanel>
             <Button Margin="16,0,0,0" Click="ButtonUpdate_Click">
                 <Button.Resources>
                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Updating.Value}" Value="True">
+                            <DataTrigger Binding="{Binding SubscriptionUpdating}" Value="True">
                                 <Setter Property="Foreground" Value="White"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -111,7 +122,7 @@
                     <Style TargetType="ProgressBar" BasedOn="{StaticResource MaterialDesignCircularProgressBar}">
                         <Setter Property="Visibility" Value="Collapsed"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Updating.Value}" Value="True">
+                            <DataTrigger Binding="{Binding SubscriptionUpdating}" Value="True">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -124,7 +135,7 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Text" Value="{lex:BLoc Subscription_UpdateNow}"/>
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Updating.Value}" Value="True">
+                                    <DataTrigger Binding="{Binding SubscriptionUpdating}" Value="True">
                                         <Setter Property="Text" Value="{lex:BLoc Subscription_Updating}"/>
                                     </DataTrigger>
                                 </Style.Triggers>

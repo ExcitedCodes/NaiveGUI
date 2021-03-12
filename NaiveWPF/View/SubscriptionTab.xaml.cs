@@ -1,129 +1,64 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Threading;
-using System.ComponentModel;
 using System.Windows.Controls;
-using System.Runtime.CompilerServices;
-using System.Collections.ObjectModel;
 
 using NaiveGUI.Data;
-using NaiveGUI.Helper;
+using NaiveGUI.Model;
 
 namespace NaiveGUI.View
 {
     /// <summary>
     /// SubscriptionTab.xaml 的交互逻辑
     /// </summary>
-    public partial class SubscriptionTab : UserControl, INotifyPropertyChanged
+    public partial class SubscriptionTab : UserControl
     {
-        private readonly MainWindow Main = null;
+        private readonly MainViewModel Model;
 
         public Timer updateTimer = null;
-        public ObservableCollection<ISubscription> Subscriptions { get; private set; } = new ObservableCollection<ISubscription>();
-
-        public bool AutoUpdate
-        {
-            get => UpdateInterval != -1;
-            set
-            {
-                UpdateInterval = value ? 7200 : -1;
-                RaisePropertyChanged();
-                RaisePropertyChanged("IntervalOpacity");
-            }
-        }
-
-        public int UpdateInterval
-        {
-            get => _updateInterval;
-            set
-            {
-                if(_updateInterval != value)
-                {
-                    _updateInterval = value;
-                    RaisePropertyChanged("UpdateInterval");
-                    Main.Save();
-                }
-            }
-        }
-        private int _updateInterval = -1;
-
-        public Prop<bool> Updating { get; set; } = new Prop<bool>();
-
-        public Prop<DateTime> LastUpdate { get; set; } = new Prop<DateTime>(DateTime.MinValue);
-
-        public double IntervalOpacity => AutoUpdate ? 1 : 0.5;
 
         public Subscription CurrentSubscription = null;
 
-        public SubscriptionTab(MainWindow main)
+        public SubscriptionTab(MainViewModel model)
         {
             InitializeComponent();
-            Main = main;
-            DataContext = this;
-            updateTimer = new Timer((s) => Update(), null, 0, 60000);
-        }
+            DataContext = Model = model;
 
-        public int Update(bool silent = true, bool force = false)
-        {
-            if(!force && (UpdateInterval < 0 || (DateTime.Now - LastUpdate).TotalSeconds < UpdateInterval))
-            {
-                return -1;
-            }
-            int count = 0;
-            foreach(var s in Subscriptions)
-            {
-                if(s.IsReal && s.Real.Enabled && s.Real.Update(silent))
-                {
-                    count++;
-                }
-            }
-            LastUpdate.Value = DateTime.Now;
-            Main.Save();
-            return count;
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems.Count != 0)
+            if (e.AddedItems.Count != 0)
             {
                 CurrentSubscription = e.AddedItems[0] as Subscription;
             }
         }
 
-        private void CheckBox_CheckChanged(object sender, RoutedEventArgs e) => Main.Save();
-
         private void ButtonUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if(Updating)
+            if (Model.SubscriptionUpdating)
             {
                 return;
             }
-            Updating.Value = true;
+            Model.SubscriptionUpdating = true;
             ThreadPool.QueueUserWorkItem((s) =>
             {
-                var count = Update(false, true);
-                Main.snackbarMessageQueue.Enqueue(string.Format(MainWindow.GetLocalized("Subscription_UpdateNotification"), count, count > 1 ? "s" : ""));
-                Updating.Value = false;
+                var count = Model.UpdateSubscription(false, true);
+                Model.SubscriptionUpdating = false;
+                Model.View.snackbarMessageQueue.Enqueue(string.Format(MainViewModel.GetLocalized("Subscription_UpdateNotification"), count, count > 1 ? "s" : ""));
             });
         }
 
-        private void ButtonAdd_Click(object sender, RoutedEventArgs e) => new AddSubscriptionWindow(Main, Subscriptions).ShowDialog();
+        private void ButtonAdd_Click(object sender, RoutedEventArgs e) => new AddSubscriptionWindow(Model).ShowDialog();
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            if((sender as Button).DataContext is Subscription s)
+            if ((sender as Button).DataContext is Subscription s)
             {
-                Subscriptions.Remove(s);
-                Main.Save();
+                Model.Subscriptions.Remove(s);
+                Model.Save();
             }
         }
 
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        #endregion
+        private void Save(object sender, RoutedEventArgs e) => Model.Save();
     }
 }

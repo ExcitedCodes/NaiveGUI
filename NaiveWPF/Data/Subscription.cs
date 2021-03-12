@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using fastJSON;
 
-using NaiveGUI.Helper;
+using NaiveGUI.Model;
 
 namespace NaiveGUI.Data
 {
@@ -13,28 +13,30 @@ namespace NaiveGUI.Data
     /// </summary>
     public class Subscription : ModelBase, ISubscription
     {
-        private readonly MainWindow Main = null;
+        private readonly MainViewModel Main;
 
-        public Prop<string> Name { get; set; } = new Prop<string>();
+        public string Name { get => _name; set => Set(out _name, value); }
+        public string _name = "";
 
-        public Prop<string> URL { get; set; } = new Prop<string>();
+        public string URL { get => _url; set => Set(out _url, value); }
+        public string _url = "";
 
-        public Prop<bool> Enabled { get; set; } = new Prop<bool>();
+        public bool Enabled { get => _enabled; set => Set(out _enabled, value); }
+        public bool _enabled = false;
 
-        public Prop<DateTime> LastUpdate { get; set; } = new Prop<DateTime>();
-
-        public string LastUpdateTime => LastUpdate == DateTime.MinValue ? "-" : LastUpdate.Value.ToLongTimeString();
+        public DateTime LastUpdate { get => _lastUpdate; set => Set(out _lastUpdate, value); }
+        public DateTime _lastUpdate = DateTime.MinValue;
 
         public bool IsReal => true;
         public Subscription Real => this;
 
-        public Subscription(MainWindow main, string name, string url, bool enabled, DateTime lastUpdate)
+        public Subscription(MainViewModel main, string name, string url, bool enabled, DateTime lastUpdate)
         {
             Main = main;
-            Name.Value = name;
-            URL.Value = url;
-            Enabled.Value = enabled;
-            LastUpdate.Value = lastUpdate;
+            Name = name;
+            URL = url;
+            Enabled = enabled;
+            LastUpdate = lastUpdate;
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace NaiveGUI.Data
             try
             {
                 var json = JSON.ToObject<Dictionary<string, List<dynamic>>>(App.HttpGetString(URL));
-                Main.Dispatcher.Invoke(() =>
+                Main.View.Dispatcher.Invoke(() =>
                 {
                     try
                     {
@@ -83,11 +85,11 @@ namespace NaiveGUI.Data
                         var subscribeGroups = new Dictionary<string, List<string>>();
 
                         // Add or update remotes
-                        foreach(var kv in json)
+                        foreach (var kv in json)
                         {
                             var group = kv.Key;
                             subscribeGroups.Add(group, new List<string>());
-                            foreach(Dictionary<string, dynamic> r in kv.Value)
+                            foreach (Dictionary<string, dynamic> r in kv.Value)
                             {
                                 // Can't find a better solution in current
                                 string name = r["name"], host = r["host"].ToString(), scheme = r.ContainsKey("scheme") ? r["scheme"] : "https",
@@ -95,13 +97,13 @@ namespace NaiveGUI.Data
                                 int port = r.ContainsKey("port") ? (r["port"] is string ? int.Parse(r["port"]) : (int)r["port"]) : -1;
                                 string[] extra_headers = r.ContainsKey("extra_headers") ? RemoteConfig.ParseExtraHeaders(r["extra_headers"]) : null;
                                 subscribeGroups[group].Add(name);
-                                foreach(var g in mainRemotes)
+                                foreach (var g in mainRemotes)
                                 {
-                                    if(g.Name == group)
+                                    if (g.Name == group)
                                     {
-                                        foreach(var rMain in g)
+                                        foreach (var rMain in g)
                                         {
-                                            if(rMain.Name == name)
+                                            if (rMain.Name == name)
                                             {
                                                 rMain.Remote.Host = host;
                                                 rMain.Remote.Port = port;
@@ -141,15 +143,15 @@ namespace NaiveGUI.Data
                         }
 
                         // Remove remotes
-                        foreach(var kv in subscribeGroups)
+                        foreach (var kv in subscribeGroups)
                         {
-                            foreach(var g in mainRemotes)
+                            foreach (var g in mainRemotes)
                             {
-                                if(g.Name == kv.Key)
+                                if (g.Name == kv.Key)
                                 {
-                                    for(int i = 0;i < g.Count;i++)
+                                    for (int i = 0; i < g.Count; i++)
                                     {
-                                        if(!kv.Value.Contains(g[i].Name))
+                                        if (!kv.Value.Contains(g[i].Name))
                                         {
                                             g.RemoveAt(i--);
                                         }
@@ -158,12 +160,12 @@ namespace NaiveGUI.Data
                                 }
                             }
                         }
-                        LastUpdate.Value = DateTime.Now;
+                        LastUpdate = DateTime.Now;
                         Main.Save();
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
-                        if(!silent)
+                        if (!silent)
                         {
                             MessageBox.Show("Unable to update " + Name + ": " + e.Message + ".\n\n" + e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
@@ -171,9 +173,9 @@ namespace NaiveGUI.Data
                 });
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                if(!silent)
+                if (!silent)
                 {
                     MessageBox.Show("Unable to update " + Name + ": " + e.Message + ".\n\n" + e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using NaiveGUI.Helper;
+using NaiveGUI.Model;
 
 namespace NaiveGUI.Data
 {
@@ -50,15 +50,7 @@ namespace NaiveGUI.Data
         /// <summary>
         /// <see cref="Name"/> 和 <see cref="Group"/> 构成唯一索引且均不可为Null
         /// </summary>
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                RaisePropertyChanged();
-            }
-        }
+        public string Name { get => _name; set => Set(out _name, value); }
         private string _name;
 
         public RemoteConfigGroup Group { get; set; }
@@ -71,15 +63,7 @@ namespace NaiveGUI.Data
         /// </summary>
         public string[] ExtraHeaders { get; set; } = null;
 
-        public bool Selected
-        {
-            get => _selected;
-            set
-            {
-                _selected = value;
-                RaisePropertyChanged();
-            }
-        }
+        public bool Selected { get => _selected; set => Set(out _selected, value); }
         private bool _selected;
 
         /// <summary>

@@ -12,28 +12,28 @@
         <TextBlock Foreground="#DDFFFFFF" FontSize="26" Margin="24,0,0,0" Text="{lex:Loc Settings_Title}"/>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_StartOnBoot}" Height="24"/>
-            <ToggleButton IsChecked="{Binding AutoRun.Value}" Checked="ToggleButtonAutoRun_Checked" Unchecked="ToggleButtonAutoRun_Unchecked"/>
+            <ToggleButton IsChecked="{Binding AutoRun}"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0" Height="24">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Logging}"/>
-            <ToggleButton IsChecked="{Binding Logging.Value}"/>
+            <ToggleButton IsChecked="{Binding Logging}" Checked="Save" Unchecked="Save"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0" Height="24">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_AllowAddListener}"/>
-            <ToggleButton IsChecked="{Binding AllowAddListener.Value}"/>
+            <ToggleButton IsChecked="{Binding AllowAddListener}" Checked="Save" Unchecked="Save"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0" Height="24">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_AllowWindowResize}"/>
-            <ToggleButton IsChecked="{Binding AllowWindowResize.Value}"/>
+            <ToggleButton IsChecked="{Binding AllowWindowResize}" Checked="Save" Unchecked="Save"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0" Height="24">
-            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_CheckLeftover}"/>
-            <ToggleButton IsChecked="{Binding CheckLeftover.Value}"/>
+            <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_ScanLeftover}"/>
+            <ToggleButton IsChecked="{Binding ScanLeftover}" Checked="Save" Unchecked="Save"/>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="24,24,24,0">
             <TextBlock VerticalAlignment="Center" Foreground="#DDFFFFFF" Margin="0,0,16,0" FontSize="16" Text="{lex:Loc Settings_Language}"/>
             <ComboBox MinWidth="120" SelectionChanged="ComboBox_SelectionChanged">
-                <ComboBoxItem Content="{lex:Loc Settings_LanguageAuto}" Tag="{x:Null}"/>
+                <ComboBoxItem Tag="{x:Null}" Content="{lex:Loc Settings_LanguageAuto}"/>
                 <ComboBoxItem Tag="en">English</ComboBoxItem>
                 <ComboBoxItem Tag="zh-CN">中文</ComboBoxItem>
             </ComboBox>

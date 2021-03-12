@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Controls;
 
 using NaiveGUI.Data;
+using NaiveGUI.Model;
 
 namespace NaiveGUI.View
 {
@@ -13,19 +14,19 @@ namespace NaiveGUI.View
     /// </summary>
     public partial class ProxyTab : UserControl
     {
-        private readonly MainWindow Main = null;
+        private readonly MainViewModel Model;
 
-        public ProxyTab(MainWindow main)
+        public ProxyTab(MainViewModel model)
         {
             InitializeComponent();
-            DataContext = Main = main;
+            DataContext = Model = model;
         }
 
         private void ButtonAddListener_Click(object sender, RoutedEventArgs e)
         {
             #region LOLLLLLLL
 
-            var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_3"), "socks://0.0.0.0:1080");
+            var uri = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainViewModel.GetLocalized("YAAAY_3"), "socks://0.0.0.0:1080");
             if(uri == "")
             {
                 return;
@@ -33,8 +34,8 @@ namespace NaiveGUI.View
 
             #endregion
 
-            Main.Listeners.Insert(Main.Listeners.Count - 1, new Listener(uri, ProxyType.NaiveProxy));
-            Main.Save();
+            Model.Listeners.Insert(Model.Listeners.Count - 1, new Listener(uri, ProxyType.NaiveProxy));
+            Model.Save();
         }
 
         private void Listener_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -47,7 +48,7 @@ namespace NaiveGUI.View
             if(border.DataContext is Listener l)
             {
                 VisualStateManager.GoToElementState(border, "Selected", true);
-                Main.CurrentListener = Main.CurrentListener == l ? null : l;
+                Model.CurrentListener = Model.CurrentListener == l ? null : l;
                 SayWTF();
             }
         }
@@ -100,8 +101,8 @@ namespace NaiveGUI.View
                 {
                     l.ToggleEnabled();
                 }
-                Main.Listeners.Remove(l);
-                Main.Save();
+                Model.Listeners.Remove(l);
+                Model.Save();
             }
         }
         
@@ -111,11 +112,11 @@ namespace NaiveGUI.View
         public void SayWTF()
         {
             WTFing = true;
-            foreach(RemoteConfigGroup g in Main.Remotes)
+            foreach(RemoteConfigGroup g in Model.Remotes)
             {
                 foreach(RemoteConfig r in g)
                 {
-                    r.Selected = Main.CurrentListener != null && Main.CurrentListener.Remote == r;
+                    r.Selected = Model.CurrentListener != null && Model.CurrentListener.Remote == r;
                 }
             }
             WTFing = false;
@@ -127,10 +128,10 @@ namespace NaiveGUI.View
             {
                 return;
             }
-            if(WTF.SelectedItem is RemoteConfig r && Main.CurrentListener != null)
+            if(WTF.SelectedItem is RemoteConfig r && Model.CurrentListener != null)
             {
-                Main.CurrentListener.Remote = r;
-                Main.Save();
+                Model.CurrentListener.Remote = r;
+                Model.Save();
             }
             SayWTF();
         }
@@ -157,13 +158,13 @@ namespace NaiveGUI.View
             if(menu.DataContext is RemoteConfig r)
             {
                 r.Group.Remove(r);
-                Main.Save();
+                Model.Save();
             }
             else if(menu.DataContext is RemoteConfigGroup g)
             {
-                if(g.Count == 0 || MessageBox.Show(string.Format(MainWindow.GetLocalized("Message_DeleteGroup"), g.Name, g.Count), "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
+                if(g.Count == 0 || MessageBox.Show(string.Format(MainViewModel.GetLocalized("Message_DeleteGroup"), g.Name, g.Count), "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
-                    Main.Remotes.Remove(g);
+                    Model.Remotes.Remove(g);
                 }
             }
         }
@@ -172,12 +173,12 @@ namespace NaiveGUI.View
         {
             if((sender as MenuItem).DataContext is RemoteConfigGroup g)
             {
-                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_8"), g.Name);
+                var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainViewModel.GetLocalized("YAAAY_8"), g.Name);
                 if(name == "" || name == g.Name)
                 {
                     return;
                 }
-                foreach(var search in Main.Remotes)
+                foreach(var search in Model.Remotes)
                 {
                     if(search.Name == name)
                     {
@@ -193,13 +194,13 @@ namespace NaiveGUI.View
                             }
                             search.Add(r);
                         }
-                        Main.Remotes.Remove(g);
-                        Main.Save();
+                        Model.Remotes.Remove(g);
+                        Model.Save();
                         return;
                     }
                 }
                 g.Name = name;
-                Main.Save();
+                Model.Save();
             }
         }
 
@@ -209,20 +210,20 @@ namespace NaiveGUI.View
 
         private void MenuItemAddGroup_Click(object sender, RoutedEventArgs e)
         {
-            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainWindow.GetLocalized("YAAAY_9"), "", "Add Group");
+            var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainViewModel.GetLocalized("YAAAY_9"), "", "Add Group");
             if (name == "")
             {
                 return;
             }
-            foreach (var search in Main.Remotes)
+            foreach (var search in Model.Remotes)
             {
                 if (search.Name == name)
                 {
                     return;
                 }
             }
-            Main.Remotes.Add(new RemoteConfigGroup(name, Main));
-            Main.Save();
+            Model.Remotes.Add(new RemoteConfigGroup(name, Model));
+            Model.Save();
         }
 
         private void MenuItemImport_Click(object sender, RoutedEventArgs e)

@@ -96,7 +96,9 @@
     <Compile Include="Data\ProxyType.cs" />
     <Compile Include="Data\RemoteConfigGroup.cs" />
     <Compile Include="Data\Subscription.cs" />
-    <Compile Include="Helper\ModelBase.cs" />
+    <Compile Include="Model\AddRemoteViewModel.cs" />
+    <Compile Include="Model\MainViewModel.cs" />
+    <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Helper\ParentProcessFinder.cs" />
     <Compile Include="Helper\SelectableTextBlock.cs" />
     <Compile Include="Helper\TabIndexTester.cs" />
@@ -114,7 +116,6 @@
     <Compile Include="View\LogTab.xaml.cs">
       <DependentUpon>LogTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Helper\Prop.cs" />
     <Compile Include="View\AboutTab.xaml.cs">
       <DependentUpon>AboutTab.xaml</DependentUpon>
     </Compile>

@@ -45,33 +45,33 @@ namespace NaiveGUI
         {
             try
             {
-                if(start)
+                if (start)
                 {
-                    if(File.Exists(AutoRunFile))
+                    if (File.Exists(AutoRunFile))
                     {
                         return true;
                     }
                     // Don't include IWshRuntimeLibrary here, IWshRuntimeLibrary.File will cause name conflict.
                     var shortcut = (IWshRuntimeLibrary.IWshShortcut)new IWshRuntimeLibrary.WshShell().CreateShortcut(AutoRunFile);
                     shortcut.TargetPath = ExecutablePath;
-                    shortcut.Arguments = "--minimize --config=\"" + (Instance.MainWindow as MainWindow).ConfigPath.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
+                    shortcut.Arguments = "--minimize --config=\"" + (Instance.MainWindow as MainWindow).Model.ConfigPath.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
                     shortcut.Description = "Naive Proxy GUI Auto Start";
                     shortcut.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
                     shortcut.Save();
                 }
-                else if(File.Exists(AutoRunFile))
+                else if (File.Exists(AutoRunFile))
                 {
                     File.Delete(AutoRunFile);
                 }
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                if(IsAdministrator)
+                if (IsAdministrator)
                 {
                     MessageBox.Show("Failed to set autostart status even I have administrator privilege.\nYou may wanted to check your anti-virus software.\n\n" + e.ToString(), "Oops", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-                else if(MessageBox.Show("Failed to set autostart status.\nGenerally this shouldn't happen, do you want to try again as administrator?\nAlso make sure your anti-virus software isn't blocking this progress.", "Oops", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                else if (MessageBox.Show("Failed to set autostart status.\nGenerally this shouldn't happen, do you want to try again as administrator?\nAlso make sure your anti-virus software isn't blocking this progress.", "Oops", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     try
                     {
@@ -95,7 +95,7 @@ namespace NaiveGUI
 
         public static string HttpGetString(string url, Encoding encoding = null, int timeoutMs = 5000, bool redirect = false, IWebProxy proxy = null)
         {
-            if(encoding == null)
+            if (encoding == null)
             {
                 encoding = Encoding.UTF8;
             }
@@ -105,7 +105,7 @@ namespace NaiveGUI
         public static byte[] HttpGetBytes(string url, int timeoutMs = -1, bool redirect = false, IWebProxy proxy = null)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            if(url.StartsWith("//"))
+            if (url.StartsWith("//"))
             {
                 url = "https:" + url;
             }
@@ -114,21 +114,21 @@ namespace NaiveGUI
             request.UserAgent = DefaultUserAgent;
             request.Credentials = CredentialCache.DefaultCredentials;
             request.AllowAutoRedirect = redirect;
-            if(proxy != null)
+            if (proxy != null)
             {
                 request.Proxy = proxy;
             }
-            if(timeoutMs > 0)
+            if (timeoutMs > 0)
             {
                 request.Timeout = timeoutMs;
             }
-            using(var response = request.GetResponse() as HttpWebResponse)
+            using (var response = request.GetResponse() as HttpWebResponse)
             {
-                if(response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.OK)
                 {
                     throw new Exception("Bad HTTP Status(" + url + "):" + response.StatusCode + " " + response.StatusDescription);
                 }
-                using(var ms = new MemoryStream())
+                using (var ms = new MemoryStream())
                 {
                     response.GetResponseStream().CopyTo(ms);
                     return ms.ToArray();
@@ -141,9 +141,9 @@ namespace NaiveGUI
             try
             {
                 StringBuilder Result = new StringBuilder();
-                foreach(byte Temp in new MD5CryptoServiceProvider().ComputeHash(data))
+                foreach (byte Temp in new MD5CryptoServiceProvider().ComputeHash(data))
                 {
-                    if(Temp < 16)
+                    if (Temp < 16)
                     {
                         Result.Append("0");
                         Result.Append(Temp.ToString("x"));
@@ -186,16 +186,16 @@ namespace NaiveGUI
         {
             var config = "config.json";
             var minimize = false;
-            foreach(var a in e.Args)
+            foreach (var a in e.Args)
             {
                 var split = a.Split('=');
-                if(split.Length == 2 && (split[0] == "--autorun"))
+                if (split.Length == 2 && (split[0] == "--autorun"))
                 {
                     // Restricted to the binary itself, sometimes parent is x64 process and there's an exception
                     try
                     {
                         var parent = ParentProcessFinder.GetParentProcess(Process.GetCurrentProcess().Handle);
-                        if(parent != null && parent.Modules[0].FileName == ExecutablePath)
+                        if (parent != null && parent.Modules[0].FileName == ExecutablePath)
                         {
                             SetAutoRun(bool.TryParse(split[1], out bool start) && start);
                         }
@@ -203,11 +203,11 @@ namespace NaiveGUI
                     catch { }
                     return;
                 }
-                if(split.Length == 2 && (split[0] == "-c" || split[0] == "--config"))
+                if (split.Length == 2 && (split[0] == "-c" || split[0] == "--config"))
                 {
                     config = split[1];
                 }
-                else if(split[0] == "--minimize")
+                else if (split[0] == "--minimize")
                 {
                     minimize = true;
                 }
@@ -215,11 +215,11 @@ namespace NaiveGUI
             var full = Path.GetFullPath(config);
             AppMutex = new Mutex(true, "NaiveGUI_" + Md5(full), out bool created);
             AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Md5(ExecutablePath + full) + ".lnk";
-            if(created)
+            if (created)
             {
                 SetProcessShutdownParameters(0x300, 0);
-                MainWindow = new MainWindow(config, File.Exists(AutoRunFile));
-                if(!minimize)
+                MainWindow = new MainWindow(config);
+                if (!minimize)
                 {
                     MainWindow.Show();
                 }

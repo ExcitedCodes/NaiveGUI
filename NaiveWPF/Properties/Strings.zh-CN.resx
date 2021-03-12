@@ -305,8 +305,8 @@ http://127.0.0.1:8388</value>
 是 = 退出程序, 手动修复配置文件
 否 = 忽略错误, 丢弃出错的服务器</value>
   </data>
-  <data name="Settings_CheckLeftover" xml:space="preserve">
-    <value>启动时检查残留的 naive 进程</value>
+  <data name="Settings_ScanLeftover" xml:space="preserve">
+    <value>启动时扫描残留的 naive 进程</value>
   </data>
   <data name="Tray_NoRemote" xml:space="preserve">
     <value>没有可用的服务器</value>

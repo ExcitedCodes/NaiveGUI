@@ -1,52 +1,37 @@
 ﻿using System;
 using System.Windows;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 
 using NaiveGUI.Data;
-using NaiveGUI.Helper;
+using NaiveGUI.Model;
 
 namespace NaiveGUI
 {
     /// <summary>
     /// AddSubscriptionWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class AddSubscriptionWindow : Window, INotifyPropertyChanged
+    public partial class AddSubscriptionWindow : Window
     {
-        private readonly MainWindow Main = null;
+        private readonly MainViewModel Model;
 
-        public ObservableCollection<ISubscription> Subscriptions = null;
-
-        public Prop<string> SubscriptionName { get; set; } = new Prop<string>();
-        public Prop<string> SubscriptionURI { get; set; } = new Prop<string>();
-
-        public AddSubscriptionWindow(MainWindow main, ObservableCollection<ISubscription> subs)
+        public AddSubscriptionWindow(MainViewModel model)
         {
             InitializeComponent();
-            DataContext = this;
-
-            Main = main;
-            Subscriptions = subs;
+            Model = model;
         }
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            if (SubscriptionName.Value.Trim() == "" || SubscriptionURI.Value.Trim() == "")
+            var uri = textBox_URI.Text;
+            var name = textBox_Name.Text;
+
+            if (uri.Trim() == "" || name.Trim() == "")
             {
                 return;
             }
-            Subscriptions.Insert(Subscriptions.Count - 1, new Subscription(Main, SubscriptionName.Value, SubscriptionURI.Value, false, DateTime.MinValue));
-            Main.Save();
+            Model.Subscriptions.Insert(Model.Subscriptions.Count - 1, new Subscription(Model, name, uri, false, DateTime.MinValue));
+            Model.Save();
+
             Close();
         }
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void RaisePropertyChanged([CallerMemberName] string name = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-        #endregion
     }
 }

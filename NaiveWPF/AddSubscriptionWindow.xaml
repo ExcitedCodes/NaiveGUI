@@ -19,8 +19,8 @@
     <StackPanel Margin="8">
         <materialDesign:Card>
             <StackPanel>
-                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddSubscription_Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubscriptionName.Value}" Margin="12"/>
-                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddSubscription_URI}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="12,8,12,12" Text="{Binding SubscriptionURI.Value}"/>
+                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddSubscription_Name}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Text="{Binding SubscriptionName}" Margin="12" Name="textBox_Name"/>
+                <TextBox materialDesign:HintAssist.Hint="{lex:Loc AddSubscription_URI}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="12,8,12,12" Text="{Binding SubscriptionURI}" Name="textBox_URI"/>
             </StackPanel>
         </materialDesign:Card>
         <Button Margin="0,8,0,0" Style="{StaticResource MaterialDesignRaisedDarkButton}" Click="ButtonAdd_Click">

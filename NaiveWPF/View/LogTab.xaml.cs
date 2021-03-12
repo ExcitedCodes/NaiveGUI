@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 
 using Microsoft.Win32;
 
+using NaiveGUI.Model;
+
 namespace NaiveGUI.View
 {
     /// <summary>
@@ -22,23 +24,23 @@ namespace NaiveGUI.View
              BrushTime = new SolidColorBrush(Color.FromRgb(80, 141, 220)),
              BrushText = new SolidColorBrush(Colors.Silver);
 
-        private readonly MainWindow Main = null;
+        private readonly MainViewModel Model;
 
-        public LogTab(MainWindow main)
+        public LogTab(MainViewModel model)
         {
             InitializeComponent();
-            DataContext = Main = main;
+            DataContext = Model = model;
         }
 
         public void Log(string raw)
         {
             bool bottom = ScrollViewerLog.ScrollableHeight - ScrollViewerLog.VerticalOffset < 1;
-            if(TextBlockLog.Inlines.Count != 0)
+            if (TextBlockLog.Inlines.Count != 0)
             {
                 AddLineBreak();
             }
             var match = LogPattern.Match(raw);
-            if(!match.Success)
+            if (!match.Success)
             {
                 AddRun(raw, BrushText);
             }
@@ -46,7 +48,7 @@ namespace NaiveGUI.View
             {
                 AddRun(match.Groups["Time"].Value + " ", BrushTime);
                 var levelColor = BrushInfo;
-                switch(match.Groups["Level"].Value)
+                switch (match.Groups["Level"].Value)
                 {
                 case "WARNING":
                     levelColor = BrushWarning;
@@ -59,11 +61,11 @@ namespace NaiveGUI.View
                 AddRun(match.Groups["Content"].Value, BrushText);
             }
             // 4 inlines/row, we also need to remove the 1st linebreak
-            while(TextBlockLog.Inlines.Count > 400 - 1)
+            while (TextBlockLog.Inlines.Count > 400 - 1)
             {
                 TextBlockLog.Inlines.Remove(TextBlockLog.Inlines.FirstInline);
             }
-            if(bottom)
+            if (bottom)
             {
                 ScrollViewerLog.ScrollToBottom();
             }
@@ -84,7 +86,7 @@ namespace NaiveGUI.View
                 FileName = "NaiveGUI_" + DateTime.Now.ToString("yyyy-MM-dd"),
                 DefaultExt = ".log"
             };
-            if(dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true)
             {
                 File.WriteAllText(dialog.FileName, TextBlockLog.Text);
             }

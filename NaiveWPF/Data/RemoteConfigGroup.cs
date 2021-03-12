@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 
+using NaiveGUI.Model;
+
 namespace NaiveGUI.Data
 {
     public class RemoteConfigGroup : ObservableCollection<RemoteConfig>
@@ -14,11 +16,11 @@ namespace NaiveGUI.Data
             }
         }
         private string _name = null;
-        
-        public RemoteConfigGroup(string name, MainWindow main)
+
+        public RemoteConfigGroup(string name, MainViewModel model)
         {
             Name = name;
-            CollectionChanged += (s, e) => main.ReloadTrayMenu();
+            CollectionChanged += (s, e) => model.ReloadTrayMenu();
         }
 
         public new void Add(RemoteConfig item)
