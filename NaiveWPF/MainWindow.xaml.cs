@@ -40,8 +40,6 @@ namespace NaiveGUI
             };
         }
 
-        public void Log(string raw) => (Tabs[2] as LogTab).Log(raw);
-
         #region General Events
 
         private void Window_Closed(object sender, EventArgs e)

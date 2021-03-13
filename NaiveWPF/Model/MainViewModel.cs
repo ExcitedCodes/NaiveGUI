@@ -154,12 +154,14 @@ namespace NaiveGUI.Model
                     SubscriptionUpdateInterval = (int)sub["update_interval"];
                 }
 
+                Log("Config loaded.");
             }
 
             #endregion
 
             if (ScanLeftover)
             {
+                Log("Scanning for leftover processes...");
                 SearchLeftoverProcesses();
             }
 
@@ -297,6 +299,72 @@ namespace NaiveGUI.Model
             {
                 CurrentTab = id;
                 View.BeginTabStoryboard("TabHideAnimation");
+            }
+        }
+
+        #endregion
+
+        #region Logging
+
+        public ObservableCollection<LogModel> Logs { get; set; } = new ObservableCollection<LogModel>();
+
+        public void Log(string data, int level = 1) => View.Dispatcher.Invoke(() =>
+        {
+            var entry = new LogModel()
+            {
+                Source = "NaiveGUI",
+                Data = data,
+                Time = DateTime.Now.ToString(LogModel.TimeFormat)
+            };
+            switch (level)
+            {
+            case 1:
+                entry.Level = "INFO";
+                break;
+            case 2:
+                entry.Level = "WARNING";
+                entry.LevelColor = LogModel.BrushWarning;
+                break;
+            case 3:
+                entry.Level = "ERROR";
+                entry.LevelColor = LogModel.BrushError;
+                break;
+            }
+            AppendLog(entry);
+        });
+
+        public void LogListener(string source, string data) => View.Dispatcher.Invoke(() =>
+        {
+            var entry = new LogModel()
+            {
+                Source = source,
+                Data = data
+            };
+            var match = LogModel.Pattern.Match(data);
+            if (match.Success)
+            {
+                entry.Time = DateTime.ParseExact(match.Groups["Time"].Value, "MMdd/HHmmss.FFF", CultureInfo.InvariantCulture).ToString(LogModel.TimeFormat);
+                entry.Data = match.Groups["Content"].Value;
+                entry.Level = match.Groups["Level"].Value + ":" + match.Groups["Source"].Value;
+                switch (match.Groups["Level"].Value)
+                {
+                case "WARNING":
+                    entry.LevelColor = LogModel.BrushWarning;
+                    break;
+                case "ERROR":
+                    entry.LevelColor = LogModel.BrushError;
+                    break;
+                }
+            }
+            AppendLog(entry);
+        });
+
+        private void AppendLog(LogModel entry)
+        {
+            Logs.Add(entry);
+            while (Logs.Count > 1024)
+            {
+                Logs.RemoveAt(0);
             }
         }
 

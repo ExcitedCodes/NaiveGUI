@@ -186,6 +186,7 @@ namespace NaiveGUI.Model
                         }
                         LastUpdate = DateTime.Now;
                         Main.Save();
+                        Main.Log("Subscription updated: " + Name);
                     }
                     catch (Exception e)
                     {
@@ -193,6 +194,7 @@ namespace NaiveGUI.Model
                         {
                             MessageBox.Show("Unable to update " + Name + ": " + e.Message + ".\n\n" + e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
+                        Main.Log("Subscription " + Name + ": " + e.ToString(), 3);
                     }
                 });
                 return true;
@@ -203,6 +205,7 @@ namespace NaiveGUI.Model
                 {
                     MessageBox.Show("Unable to update " + Name + ": " + e.Message + ".\n\n" + e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
+                Main.Log("Subscription " + Name + ": " + e.ToString(), 3);
             }
             return false;
         }

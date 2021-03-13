@@ -4,6 +4,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:Helper="clr-namespace:NaiveGUI.Helper"
+             xmlns:Model="clr-namespace:NaiveGUI.Model"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="en"
              lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
@@ -19,9 +20,37 @@
             </StackPanel>
         </Grid>
         <Border Padding="8" BorderBrush="#FFAAAAAA" Background="#33000000" BorderThickness="2" Margin="16,8,16,16">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Name="ScrollViewerLog">
-                <Helper:SelectableTextBlock x:Name="TextBlockLog" TextWrapping="WrapWithOverflow" FontFamily="Consolas"/>
-            </ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Logs, Mode=OneWay}">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type Model:LogModel}">
+                        <Helper:SelectableTextBlock FontFamily="Consolas" TextWrapping="WrapWithOverflow">
+                            <Helper:SelectableTextBlock.Inlines>
+                                <Run Foreground="#508ddc" Text="{Binding Time, Mode=OneTime}"/>
+                                <Run Foreground="Wheat" Text="{Binding Source, Mode=OneTime}"/>
+                                <Run Foreground="{Binding LevelColor, Mode=OneTime}" Text="{Binding Level, Mode=OneTime}"/>
+                                <Run Foreground="Silver" Text="{Binding Data, Mode=OneTime}"/>
+                            </Helper:SelectableTextBlock.Inlines>
+                        </Helper:SelectableTextBlock>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer CanContentScroll="True" ScrollChanged="ScrollViewer_ScrollChanged" HorizontalScrollBarVisibility="Disabled">
+                            <ScrollViewer.Resources>
+                                <Style TargetType="Rectangle">
+                                    <Setter Property="Opacity" Value="0.2" />
+                                </Style>
+                            </ScrollViewer.Resources>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
         </Border>
     </DockPanel>
 </UserControl>

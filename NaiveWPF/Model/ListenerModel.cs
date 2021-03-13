@@ -221,7 +221,7 @@ namespace NaiveGUI.Model
             }
             catch (Exception e)
             {
-                // TODO: Log this error
+                Model.Log(Listen.ToString() + ": " + e.ToString(), 3);
                 return false;
             }
 

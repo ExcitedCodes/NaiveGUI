@@ -96,6 +96,7 @@
     <Compile Include="Model\RemoteGroupModel.cs" />
     <Compile Include="Model\SubscriptionModel.cs" />
     <Compile Include="Model\AddRemoteViewModel.cs" />
+    <Compile Include="Model\LogModel.cs" />
     <Compile Include="Model\MainViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Helper\ParentProcessFinder.cs" />
