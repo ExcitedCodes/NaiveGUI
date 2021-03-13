@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows;
 using System.Diagnostics;
 using System.Windows.Media;
+using System.Globalization;
 
 using NaiveGUI.Model;
 
@@ -11,6 +12,7 @@ namespace NaiveGUI.Data
     public class Listener : ModelBase, IListener
     {
         public static string NaivePath = "naive.exe";
+        public static IdnMapping IDN = new IdnMapping();
 
         public static Uri FilterListeningAddress(ref string input)
         {
@@ -180,15 +182,21 @@ namespace NaiveGUI.Data
                 return false;
             }
 
+            // Escape IDN to punycode
+            var builder = new UriBuilder(Remote.Remote.Uri);
+            builder.Host = IDN.GetAscii(builder.Host);
+
+            // Build start parameter
             var sb = new StringBuilder();
             sb.Append("--log=\"\"")
                 .Append(" --listen=").Append(Listen.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped))
-                .Append(" --proxy=").Append(Remote.Remote.Uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.SafeUnescaped));
+                .Append(" --proxy=").Append(builder.Uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.SafeUnescaped));
             if (Remote.ExtraHeaders != null && Remote.ExtraHeaders.Length != 0)
             {
                 sb.Append(" --extra-headers=").Append(string.Join("\r\n", Remote.ExtraHeaders));
             }
 
+            // Start naive.exe
             try
             {
                 BaseProcess = Process.Start(new ProcessStartInfo(NaivePath, sb.ToString())
