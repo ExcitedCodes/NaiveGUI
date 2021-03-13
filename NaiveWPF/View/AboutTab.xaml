@@ -23,7 +23,7 @@
                 <LineBreak/>
                 <LineBreak/>
                 <Run FontSize="15" Text="{lex:Loc About_Copyright}"/>
-                <Run FontSize="15" Text="© 2020 ExcitedCodes, 👏"/>
+                <Run FontSize="15" Text="© 2020-2021 ExcitedCodes, 👏"/>
                 <Run FontSize="15" Text="{lex:Loc About_SpecialThanksTo}"/>
                 <Run FontSize="15" TextDecorations="Strikethrough" Text="{lex:Loc About_Misty}"/>
             </emoji:TextBlock>
