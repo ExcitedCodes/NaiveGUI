@@ -78,15 +78,15 @@ namespace NaiveGUI.Model
                     {
                         try
                         {
-                            var group = new RemoteConfigGroup(g.Key, this);
+                            var group = new RemoteGroupModel(g.Key, this);
                             foreach (KeyValuePair<string, dynamic> r in (Dictionary<string, dynamic>)g.Value)
                             {
                                 try
                                 {
-                                    group.Add(new RemoteConfig(r.Key)
+                                    group.Add(new RemoteModel(r.Key)
                                     {
                                         Remote = new UriBuilder(r.Value["remote"]),
-                                        ExtraHeaders = r.Value.ContainsKey("extra_headers") ? RemoteConfig.ParseExtraHeaders(r.Value["extra_headers"]) : null
+                                        ExtraHeaders = r.Value.ContainsKey("extra_headers") ? RemoteModel.ParseExtraHeaders(r.Value["extra_headers"]) : null
                                     });
                                 }
                                 catch (Exception e)
@@ -113,7 +113,7 @@ namespace NaiveGUI.Model
                 {
                     foreach (var l in json["listeners"])
                     {
-                        var listener = new Listener(l["listen"]);
+                        var listener = new ListenerModel(this, l["listen"]);
                         if (l["remote"] is Dictionary<string, dynamic>)
                         {
                             var name = l["remote"]["name"];
@@ -148,14 +148,16 @@ namespace NaiveGUI.Model
                     foreach (KeyValuePair<string, dynamic> kv in sub["data"])
                     {
                         var s = (Dictionary<string, dynamic>)kv.Value;
-                        Subscriptions.Add(new Subscription(this, kv.Key, s["url"], s["enable"], DateTime.Parse(s["last_update"])));
+                        Subscriptions.Add(new SubscriptionModel(this, kv.Key, s["url"], s["enable"], DateTime.Parse(s["last_update"])));
                     }
                     SubscriptionLastUpdate = DateTime.Parse(sub["last_update"]);
                     SubscriptionUpdateInterval = (int)sub["update_interval"];
                 }
+
             }
 
-            // TODO: This will conflict with listeners loading logic
+            #endregion
+
             if (ScanLeftover)
             {
                 SearchLeftoverProcesses();
@@ -163,11 +165,9 @@ namespace NaiveGUI.Model
 
             if (Remotes.Count == 0)
             {
-                Remotes.Add(new RemoteConfigGroup("Default", this));
+                Remotes.Add(new RemoteGroupModel("Default", this));
             }
             ConfigPath = config;
-
-            #endregion
 
             Remotes.CollectionChanged += (s, e) => ReloadTrayMenu();
             Listeners.CollectionChanged += (s, e) => ReloadTrayMenu();
@@ -229,9 +229,9 @@ namespace NaiveGUI.Model
 
         public string SelectedLanguage = null;
 
-        public RemoteConfig CurrentRemote = null;
+        public RemoteModel CurrentRemote = null;
 
-        public Listener CurrentListener
+        public ListenerModel CurrentListener
         {
             get => _currentListener;
             set
@@ -247,7 +247,7 @@ namespace NaiveGUI.Model
                 }
             }
         }
-        private Listener _currentListener = null;
+        private ListenerModel _currentListener = null;
 
         #region NaiveGUI Basics
 
@@ -279,7 +279,7 @@ namespace NaiveGUI.Model
         private bool _scanLeftover = true;
 
         public ObservableCollection<IListener> Listeners { get; set; } = new ObservableCollection<IListener>();
-        public ObservableCollection<RemoteConfigGroup> Remotes { get; set; } = new ObservableCollection<RemoteConfigGroup>();
+        public ObservableCollection<RemoteGroupModel> Remotes { get; set; } = new ObservableCollection<RemoteGroupModel>();
 
         #endregion
 
@@ -565,7 +565,7 @@ namespace NaiveGUI.Model
             {
                 return;
             }
-            var test = Path.GetFullPath(Listener.NaivePath);
+            var test = Path.GetFullPath(ListenerModel.NaivePath);
             var processes = Process.GetProcessesByName("naive").Where(p =>
             {
                 try

@@ -16,7 +16,7 @@ namespace NaiveGUI.View
 
         public Timer updateTimer = null;
 
-        public Subscription CurrentSubscription = null;
+        public SubscriptionModel CurrentSubscription = null;
 
         public SubscriptionTab(MainViewModel model)
         {
@@ -29,7 +29,7 @@ namespace NaiveGUI.View
         {
             if (e.AddedItems.Count != 0)
             {
-                CurrentSubscription = e.AddedItems[0] as Subscription;
+                CurrentSubscription = e.AddedItems[0] as SubscriptionModel;
             }
         }
 
@@ -52,7 +52,7 @@ namespace NaiveGUI.View
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            if ((sender as Button).DataContext is Subscription s)
+            if ((sender as Button).DataContext is SubscriptionModel s)
             {
                 Model.Subscriptions.Remove(s);
                 Model.Save();

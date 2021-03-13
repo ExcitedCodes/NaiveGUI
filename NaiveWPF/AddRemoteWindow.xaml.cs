@@ -12,7 +12,7 @@ namespace NaiveGUI
     {
         private readonly AddRemoteViewModel Model;
 
-        public AddRemoteWindow(RemoteConfig config)
+        public AddRemoteWindow(RemoteModel config)
         {
             InitializeComponent();
             DataContext = Model = new AddRemoteViewModel(this, config);
@@ -21,7 +21,7 @@ namespace NaiveGUI
             text_add.Text = MainViewModel.GetLocalized("AddRemote_EditSave");
         }
 
-        public AddRemoteWindow(RemoteConfigGroup group, string name = null, string uri = null, string extra_headers = null)
+        public AddRemoteWindow(RemoteGroupModel group, string name = null, string uri = null, string extra_headers = null)
         {
             InitializeComponent();
             DataContext = Model = new AddRemoteViewModel(this, group, name, uri, extra_headers);

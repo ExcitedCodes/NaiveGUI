@@ -8,7 +8,7 @@ namespace NaiveGUI.Model
     {
         public readonly AddRemoteWindow View;
 
-        public AddRemoteViewModel(AddRemoteWindow view, RemoteConfig config = null)
+        public AddRemoteViewModel(AddRemoteWindow view, RemoteModel config = null)
         {
             View = view;
             Config = config;
@@ -18,7 +18,7 @@ namespace NaiveGUI.Model
             ExtraHeaders = config.ExtraHeaders == null ? "" : string.Join(Environment.NewLine, config.ExtraHeaders);
         }
 
-        public AddRemoteViewModel(AddRemoteWindow view, RemoteConfigGroup group, string name, string uri, string extra_headers)
+        public AddRemoteViewModel(AddRemoteWindow view, RemoteGroupModel group, string name, string uri, string extra_headers)
         {
             View = view;
             Group = group;
@@ -28,8 +28,8 @@ namespace NaiveGUI.Model
             ExtraHeaders = extra_headers ?? "";
         }
 
-        public RemoteConfig Config = null;
-        public RemoteConfigGroup Group = null;
+        public RemoteModel Config = null;
+        public RemoteGroupModel Group = null;
 
         public string RemoteName { get => _remoteName; set => Set(out _remoteName, value); }
         public string _remoteName = "";
@@ -49,7 +49,7 @@ namespace NaiveGUI.Model
             if (Config != null)
             {
                 Config.Remote = new UriBuilder(RemoteURI);
-                Config.ExtraHeaders = RemoteConfig.ParseExtraHeaders(ExtraHeaders);
+                Config.ExtraHeaders = RemoteModel.ParseExtraHeaders(ExtraHeaders);
                 if (RemoteName != Config.Name)
                 {
                     var g = Config.Group;
@@ -72,10 +72,10 @@ namespace NaiveGUI.Model
                         Group.RemoveAt(i--);
                     }
                 }
-                Group.Add(new RemoteConfig(RemoteName)
+                Group.Add(new RemoteModel(RemoteName)
                 {
                     Remote = new UriBuilder(RemoteURI),
-                    ExtraHeaders = RemoteConfig.ParseExtraHeaders(ExtraHeaders)
+                    ExtraHeaders = RemoteModel.ParseExtraHeaders(ExtraHeaders)
                 });
             }
             MainWindow.Instance.Model.Save();

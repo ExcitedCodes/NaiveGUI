@@ -34,7 +34,7 @@ namespace NaiveGUI.View
 
             #endregion
 
-            Model.Listeners.Insert(Model.Listeners.Count - 1, new Listener(uri));
+            Model.Listeners.Insert(Model.Listeners.Count - 1, new ListenerModel(Model, uri));
             Model.Save();
         }
 
@@ -45,7 +45,7 @@ namespace NaiveGUI.View
                 return;
             }
             var border = sender as Border;
-            if(border.DataContext is Listener l)
+            if(border.DataContext is ListenerModel l)
             {
                 VisualStateManager.GoToElementState(border, "Selected", true);
                 Model.CurrentListener = Model.CurrentListener == l ? null : l;
@@ -56,7 +56,7 @@ namespace NaiveGUI.View
         private void Listener_MouseEvent(object sender, MouseEventArgs e)
         {
             var border = sender as Border;
-            if(border.DataContext is Listener l && !l.Selected)
+            if(border.DataContext is ListenerModel l && !l.Selected)
             {
                 if(border.IsMouseOver)
                 {
@@ -72,7 +72,7 @@ namespace NaiveGUI.View
         private void Listener_Initialized(object sender, EventArgs e)
         {
             var border = sender as Border;
-            if(border.DataContext is Listener l)
+            if(border.DataContext is ListenerModel l)
             {
                 l.PropertyChanged += (s, e_) =>
                 {
@@ -87,7 +87,7 @@ namespace NaiveGUI.View
         private void ListenerToggle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var textblock = sender as TextBlock;
-            if(textblock.DataContext is Listener l)
+            if(textblock.DataContext is ListenerModel l)
             {
                 l.Enabled = !l.Enabled;
             }
@@ -95,7 +95,7 @@ namespace NaiveGUI.View
 
         private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            if((sender as Button).DataContext is Listener l)
+            if((sender as Button).DataContext is ListenerModel l)
             {
                 if(l.Enabled)
                 {
@@ -114,9 +114,9 @@ namespace NaiveGUI.View
         public void SayWTF()
         {
             WTFing = true;
-            foreach(RemoteConfigGroup g in Model.Remotes)
+            foreach(RemoteGroupModel g in Model.Remotes)
             {
-                foreach(RemoteConfig r in g)
+                foreach(RemoteModel r in g)
                 {
                     r.Selected = Model.CurrentListener != null && Model.CurrentListener.Remote == r;
                 }
@@ -130,7 +130,7 @@ namespace NaiveGUI.View
             {
                 return;
             }
-            if(WTF.SelectedItem is RemoteConfig r && Model.CurrentListener != null)
+            if(WTF.SelectedItem is RemoteModel r && Model.CurrentListener != null)
             {
                 Model.CurrentListener.Remote = r;
                 Model.Save();
@@ -144,7 +144,7 @@ namespace NaiveGUI.View
         {
             if (e.ClickCount == 2 && e.ChangedButton == MouseButton.Left)
             {
-                new AddRemoteWindow((RemoteConfig)(sender as TextBlock).DataContext).ShowDialog();
+                new AddRemoteWindow((RemoteModel)(sender as TextBlock).DataContext).ShowDialog();
             }
         }
 
@@ -152,19 +152,19 @@ namespace NaiveGUI.View
         {
             if (e.ClickCount == 2 && e.ChangedButton == MouseButton.Left)
             {
-                new AddRemoteWindow((RemoteConfigGroup)(sender as TextBlock).DataContext).ShowDialog();
+                new AddRemoteWindow((RemoteGroupModel)(sender as TextBlock).DataContext).ShowDialog();
             }
         }
 
         private void MenuItemDelete_Click(object sender, RoutedEventArgs e)
         {
             var menu = sender as MenuItem;
-            if(menu.DataContext is RemoteConfig r)
+            if(menu.DataContext is RemoteModel r)
             {
                 r.Group.Remove(r);
                 Model.Save();
             }
-            else if(menu.DataContext is RemoteConfigGroup g)
+            else if(menu.DataContext is RemoteGroupModel g)
             {
                 if(g.Count == 0 || MessageBox.Show(string.Format(MainViewModel.GetLocalized("Message_DeleteGroup"), g.Name, g.Count), "Confirm", MessageBoxButton.OKCancel, MessageBoxImage.Warning) == MessageBoxResult.OK)
                 {
@@ -175,7 +175,7 @@ namespace NaiveGUI.View
 
         private void MenuItemRename_Click(object sender, RoutedEventArgs e)
         {
-            if((sender as MenuItem).DataContext is RemoteConfigGroup g)
+            if((sender as MenuItem).DataContext is RemoteGroupModel g)
             {
                 var name = App.YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(MainViewModel.GetLocalized("YAAAY_8"), g.Name);
                 if(name == "" || name == g.Name)
@@ -208,9 +208,9 @@ namespace NaiveGUI.View
             }
         }
 
-        private void MenuItemEdit_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteConfig)(sender as MenuItem).DataContext).ShowDialog();
+        private void MenuItemEdit_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteModel)(sender as MenuItem).DataContext).ShowDialog();
 
-        private void MenuItemAddRemote_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext).ShowDialog();
+        private void MenuItemAddRemote_Click(object sender, RoutedEventArgs e) => new AddRemoteWindow((RemoteGroupModel)(sender as MenuItem).DataContext).ShowDialog();
 
         private void MenuItemAddGroup_Click(object sender, RoutedEventArgs e)
         {
@@ -226,7 +226,7 @@ namespace NaiveGUI.View
                     return;
                 }
             }
-            Model.Remotes.Add(new RemoteConfigGroup(name, Model));
+            Model.Remotes.Add(new RemoteGroupModel(name, Model));
             Model.Save();
         }
 
@@ -246,7 +246,7 @@ namespace NaiveGUI.View
 
                 uri.Query = query.Count == 0 ? null : query.ToString();
 
-                new AddRemoteWindow((RemoteConfigGroup)(sender as MenuItem).DataContext, name, uri.ToString(), extra_headers).ShowDialog();
+                new AddRemoteWindow((RemoteGroupModel)(sender as MenuItem).DataContext, name, uri.ToString(), extra_headers).ShowDialog();
             }
             catch (Exception ex)
             {

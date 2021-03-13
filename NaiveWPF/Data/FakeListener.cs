@@ -7,7 +7,7 @@ namespace NaiveGUI.Data
         private readonly MainViewModel Model;
 
         public bool IsReal => false;
-        public Listener Real => null;
+        public ListenerModel Real => null;
 
         public bool AllowAddListener => Model.AllowAddListener;
 

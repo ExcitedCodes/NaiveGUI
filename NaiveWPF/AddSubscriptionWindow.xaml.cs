@@ -28,7 +28,7 @@ namespace NaiveGUI
             {
                 return;
             }
-            Model.Subscriptions.Insert(Model.Subscriptions.Count - 1, new Subscription(Model, name, uri, false, DateTime.MinValue));
+            Model.Subscriptions.Insert(Model.Subscriptions.Count - 1, new SubscriptionModel(Model, name, uri, false, DateTime.MinValue));
             Model.Save();
 
             Close();

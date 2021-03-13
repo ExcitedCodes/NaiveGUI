@@ -92,16 +92,16 @@
     <Compile Include="Data\FakeSubscription.cs" />
     <Compile Include="Data\IListener.cs" />
     <Compile Include="Data\ISubscription.cs" />
-    <Compile Include="Data\Listener.cs" />
-    <Compile Include="Data\RemoteConfigGroup.cs" />
-    <Compile Include="Data\Subscription.cs" />
+    <Compile Include="Model\ListenerModel.cs" />
+    <Compile Include="Model\RemoteGroupModel.cs" />
+    <Compile Include="Model\SubscriptionModel.cs" />
     <Compile Include="Model\AddRemoteViewModel.cs" />
     <Compile Include="Model\MainViewModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Helper\ParentProcessFinder.cs" />
     <Compile Include="Helper\SelectableTextBlock.cs" />
     <Compile Include="Helper\TabIndexTester.cs" />
-    <Compile Include="Data\RemoteConfig.cs" />
+    <Compile Include="Model\RemoteModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

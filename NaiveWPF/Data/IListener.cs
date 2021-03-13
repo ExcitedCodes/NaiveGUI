@@ -1,8 +1,10 @@
-﻿namespace NaiveGUI.Data
+﻿using NaiveGUI.Model;
+
+namespace NaiveGUI.Data
 {
     public interface IListener
     {
         bool IsReal { get; }
-        Listener Real { get; }
+        ListenerModel Real { get; }
     }
 }

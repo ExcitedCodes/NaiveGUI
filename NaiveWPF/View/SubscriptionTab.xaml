@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Data="clr-namespace:NaiveGUI.Data"
+             xmlns:Model="clr-namespace:NaiveGUI.Model"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="en"
              lex:ResxLocalizationProvider.DefaultAssembly="NaiveGUI"
@@ -25,7 +26,7 @@
                         </Button>
                     </Border>
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type Data:Subscription}">
+                <DataTemplate DataType="{x:Type Model:SubscriptionModel}">
                     <materialDesign:Card>
                         <materialDesign:Card.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0,0">

@@ -69,7 +69,7 @@
                             </Button>
                         </Border>
                     </DataTemplate>
-                    <DataTemplate DataType="{x:Type Data:Listener}">
+                    <DataTemplate DataType="{x:Type Model:ListenerModel}">
                         <Border CornerRadius="2" Width="192" Height="88" Cursor="Hand" Background="{Binding StatusColor}" PreviewMouseLeftButtonDown="Listener_PreviewMouseLeftButtonDown" MouseEnter="Listener_MouseEvent" MouseLeave="Listener_MouseEvent" Initialized="Listener_Initialized">
                             <VisualStateManager.VisualStateGroups>
                                 <VisualStateGroup Name="ShadowState">
@@ -144,10 +144,10 @@
                     </Style>
                 </TreeView.ItemContainerStyle>
                 <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type Data:RemoteConfigGroup}" ItemsSource="{Binding}">
+                    <HierarchicalDataTemplate DataType="{x:Type Model:RemoteGroupModel}" ItemsSource="{Binding}">
                         <emoji:TextBlock Text="{Binding Name}" Padding="3 2" FontSize="16" MouseDown="TextBlockRemoteGroup_MouseDown" ContextMenu="{StaticResource RemoteGroupMenu}"/>
                     </HierarchicalDataTemplate>
-                    <DataTemplate DataType="{x:Type Data:RemoteConfig}">
+                    <DataTemplate DataType="{x:Type Model:RemoteModel}">
                         <emoji:TextBlock Text="{Binding Name}" Padding="3 2" FontSize="16" MouseDown="TextBlockRemote_MouseDown" ContextMenu="{StaticResource RemoteMenu}"/>
                     </DataTemplate>
                 </TreeView.Resources>
