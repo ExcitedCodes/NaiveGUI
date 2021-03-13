@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Windows;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Windows;
 
 using fastJSON;
 
@@ -76,7 +79,28 @@ namespace NaiveGUI.Data
             */
             try
             {
-                var json = JSON.ToObject<Dictionary<string, List<dynamic>>>(App.HttpGetString(URL));
+                Dictionary<string, List<dynamic>> json;
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11;
+
+                var request = WebRequest.CreateHttp(URL);
+                request.Method = "GET";
+                request.Timeout = 10000;
+                request.UserAgent = "NaiveGUI/" + Assembly.GetExecutingAssembly().GetName().Version;
+                request.AllowAutoRedirect = true;
+
+                using (var response = request.GetResponse() as HttpWebResponse)
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new Exception("Bad HTTP Status: " + response.StatusCode + " " + response.StatusDescription);
+                    }
+                    using (var sr = new StreamReader(response.GetResponseStream()))
+                    {
+                        json = JSON.ToObject<Dictionary<string, List<dynamic>>>(sr.ReadToEnd());
+                    }
+                }
+
                 Main.View.Dispatcher.Invoke(() =>
                 {
                     try
@@ -114,7 +138,7 @@ namespace NaiveGUI.Data
                                                 goto CONTINUE2;
                                             }
                                         }
-                                        g.Add(new RemoteConfig(name, ProxyType.NaiveProxy)
+                                        g.Add(new RemoteConfig(name)
                                         {
                                             Remote = new UriBuilder(scheme, host, port)
                                             {
@@ -128,7 +152,7 @@ namespace NaiveGUI.Data
                                 }
                                 mainRemotes.Add(new RemoteConfigGroup(group, Main)
                                 {
-                                    new RemoteConfig(name,ProxyType.NaiveProxy)
+                                    new RemoteConfig(name)
                                     {
                                         Remote = new UriBuilder(scheme, host, port)
                                         {

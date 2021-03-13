@@ -34,7 +34,7 @@ namespace NaiveGUI.View
 
             #endregion
 
-            Model.Listeners.Insert(Model.Listeners.Count - 1, new Listener(uri, ProxyType.NaiveProxy));
+            Model.Listeners.Insert(Model.Listeners.Count - 1, new Listener(uri));
             Model.Save();
         }
 
@@ -69,7 +69,7 @@ namespace NaiveGUI.View
             }
         }
 
-        private void Listener_Initialized(object sender, System.EventArgs e)
+        private void Listener_Initialized(object sender, EventArgs e)
         {
             var border = sender as Border;
             if(border.DataContext is Listener l)
@@ -106,10 +106,11 @@ namespace NaiveGUI.View
                 Model.Save();
             }
         }
-        
+
+        #region WTF, TODO: remove
+
         bool WTFing = false;
 
-        // TODO: Remove this
         public void SayWTF()
         {
             WTFing = true;
@@ -136,6 +137,8 @@ namespace NaiveGUI.View
             }
             SayWTF();
         }
+
+        #endregion
 
         private void TextBlockRemote_MouseDown(object sender, MouseButtonEventArgs e)
         {

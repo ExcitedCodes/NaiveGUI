@@ -55,8 +55,6 @@ namespace NaiveGUI.Data
 
         public RemoteConfigGroup Group { get; set; }
 
-        public ProxyType Type { get; set; } = ProxyType.Unknown;
-
         /// <summary>
         /// Extra headers split by CRLF, each element contains one header
         /// Pass --extra_headers only when this value is a string array and element count > 0
@@ -75,10 +73,9 @@ namespace NaiveGUI.Data
             Port = -1
         };
 
-        public RemoteConfig(string name, ProxyType type)
+        public RemoteConfig(string name)
         {
             Name = name;
-            Type = type;
         }
     }
 }

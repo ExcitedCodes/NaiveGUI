@@ -51,8 +51,6 @@ namespace NaiveGUI.Data
 
         #region Listener Logic
 
-        public ProxyType Type { get; set; } = ProxyType.Unknown;
-
         public bool Enabled
         {
             get => _enabled;
@@ -128,11 +126,10 @@ namespace NaiveGUI.Data
 
         public Process BaseProcess = null;
 
-        public Listener(string listen, ProxyType type, bool enabled = false) : this(FilterListeningAddress(ref listen), type, enabled) { }
+        public Listener(string listen, bool enabled = false) : this(FilterListeningAddress(ref listen), enabled) { }
 
-        public Listener(Uri listen, ProxyType type, bool enabled = false)
+        public Listener(Uri listen, bool enabled = false)
         {
-            Type = type;
             Listen = listen;
             Enabled = enabled;
         }

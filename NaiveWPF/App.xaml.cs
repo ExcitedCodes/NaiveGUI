@@ -1,14 +1,12 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.Windows;
-using System.Threading;
-using System.Reflection;
 using System.Diagnostics;
-using System.Security.Principal;
-using System.Security.Cryptography;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Windows;
 
 using NaiveGUI.Helper;
 
@@ -35,7 +33,6 @@ namespace NaiveGUI
         public static readonly bool IsAdministrator = new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public static string AutoRunFile { get; private set; }
-        public static string DefaultUserAgent = "NaiveGUI/" + Assembly.GetExecutingAssembly().GetName().Version + " (Potato NT) not AppleWebKit (not KHTML, not like Gecko) not Chrome not Safari";
 
         public static App Instance = null;
 
@@ -93,81 +90,11 @@ namespace NaiveGUI
             return false;
         }
 
-        public static string HttpGetString(string url, Encoding encoding = null, int timeoutMs = 5000, bool redirect = false, IWebProxy proxy = null)
-        {
-            if (encoding == null)
-            {
-                encoding = Encoding.UTF8;
-            }
-            return encoding.GetString(HttpGetBytes(url, timeoutMs, redirect, proxy));
-        }
-
-        public static byte[] HttpGetBytes(string url, int timeoutMs = -1, bool redirect = false, IWebProxy proxy = null)
-        {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            if (url.StartsWith("//"))
-            {
-                url = "https:" + url;
-            }
-            var request = WebRequest.CreateHttp(url);
-            request.Method = "GET";
-            request.UserAgent = DefaultUserAgent;
-            request.Credentials = CredentialCache.DefaultCredentials;
-            request.AllowAutoRedirect = redirect;
-            if (proxy != null)
-            {
-                request.Proxy = proxy;
-            }
-            if (timeoutMs > 0)
-            {
-                request.Timeout = timeoutMs;
-            }
-            using (var response = request.GetResponse() as HttpWebResponse)
-            {
-                if (response.StatusCode != HttpStatusCode.OK)
-                {
-                    throw new Exception("Bad HTTP Status(" + url + "):" + response.StatusCode + " " + response.StatusDescription);
-                }
-                using (var ms = new MemoryStream())
-                {
-                    response.GetResponseStream().CopyTo(ms);
-                    return ms.ToArray();
-                }
-            }
-        }
-
-        public static string Md5(byte[] data)
-        {
-            try
-            {
-                StringBuilder Result = new StringBuilder();
-                foreach (byte Temp in new MD5CryptoServiceProvider().ComputeHash(data))
-                {
-                    if (Temp < 16)
-                    {
-                        Result.Append("0");
-                        Result.Append(Temp.ToString("x"));
-                    }
-                    else
-                    {
-                        Result.Append(Temp.ToString("x"));
-                    }
-                }
-                return Result.ToString();
-            }
-            catch
-            {
-                return "0000000000000000";
-            }
-        }
-
-        public static string Md5(string Data) => Md5(EncodeByteArray(Data));
-
-        public static byte[] EncodeByteArray(string data) => data == null ? null : Encoding.UTF8.GetBytes(data);
+        public static string MD5(string data) => BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(data)), 0, 16).ToString().Replace("-", "");
 
         #endregion
 
-        #region WTF
+        #region WTF, TODO: remove
 
         public static string YAAYYYYYAAAAAAAAAAYYYYYYYYYYVBYAAAAAAAAAAAY(string message = "", string data = "", string title = "YAAAAAAAAAAAAAAAAAAAAAY") => Microsoft.VisualBasic.Interaction.InputBox(message, title, data);
 
@@ -213,8 +140,8 @@ namespace NaiveGUI
                 }
             }
             var full = Path.GetFullPath(config);
-            AppMutex = new Mutex(true, "NaiveGUI_" + Md5(full), out bool created);
-            AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + Md5(ExecutablePath + full) + ".lnk";
+            AppMutex = new Mutex(true, "NaiveGUI_" + MD5(full), out bool created);
+            AutoRunFile = Environment.GetFolderPath(Environment.SpecialFolder.Startup) + "\\NaiveGUI_" + MD5(ExecutablePath + full) + ".lnk";
             if (created)
             {
                 SetProcessShutdownParameters(0x300, 0);

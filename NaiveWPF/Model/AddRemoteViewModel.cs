@@ -72,7 +72,7 @@ namespace NaiveGUI.Model
                         Group.RemoveAt(i--);
                     }
                 }
-                Group.Add(new RemoteConfig(RemoteName, ProxyType.NaiveProxy)
+                Group.Add(new RemoteConfig(RemoteName)
                 {
                     Remote = new UriBuilder(RemoteURI),
                     ExtraHeaders = RemoteConfig.ParseExtraHeaders(ExtraHeaders)

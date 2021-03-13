@@ -83,7 +83,7 @@ namespace NaiveGUI.Model
                             {
                                 try
                                 {
-                                    group.Add(new RemoteConfig(r.Key, ProxyType.NaiveProxy)
+                                    group.Add(new RemoteConfig(r.Key)
                                     {
                                         Remote = new UriBuilder(r.Value["remote"]),
                                         ExtraHeaders = r.Value.ContainsKey("extra_headers") ? RemoteConfig.ParseExtraHeaders(r.Value["extra_headers"]) : null
@@ -113,7 +113,7 @@ namespace NaiveGUI.Model
                 {
                     foreach (var l in json["listeners"])
                     {
-                        var listener = new Listener(l["listen"], Enum.Parse(typeof(ProxyType), l["type"]));
+                        var listener = new Listener(l["listen"]);
                         if (l["remote"] is Dictionary<string, dynamic>)
                         {
                             var name = l["remote"]["name"];
@@ -526,7 +526,6 @@ namespace NaiveGUI.Model
                 { "check_leftover", ScanLeftover },
                 { "language", SelectedLanguage },
                 { "listeners", Listeners.Where(l => l.IsReal).Select(l => new Dictionary<string, object>() {
-                    { "type", l.Real.Type.ToString() },
                     { "enable", l.Real.Enabled },
                     { "listen", l.Real.Listen.ToString() },
                     { "remote", l.Real.Remote == null ? null : new Dictionary<string,object>() {
