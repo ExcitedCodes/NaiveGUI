@@ -44,7 +44,7 @@ namespace NaiveGUI.View
             {
                 var count = Model.UpdateSubscription(false, true);
                 Model.SubscriptionUpdating = false;
-                Model.View.snackbarMessageQueue.Enqueue(string.Format(MainViewModel.GetLocalized("Subscription_UpdateNotification"), count, count > 1 ? "s" : ""));
+                Model.snackbarMessageQueue.Enqueue(string.Format(MainViewModel.GetLocalized("Subscription_UpdateNotification"), count, count > 1 ? "s" : ""));
             });
         }
 

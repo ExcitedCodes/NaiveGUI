@@ -54,7 +54,7 @@
                                 <Style TargetType="Border">
                                     <Setter Property="Visibility" Value="Collapsed"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding AllowAddListener, RelativeSource={RelativeSource AncestorType={x:Type Model:MainViewModel}}}" Value="True">
+                                        <DataTrigger Binding="{Binding AllowAddListener}" Value="True">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                     </Style.Triggers>

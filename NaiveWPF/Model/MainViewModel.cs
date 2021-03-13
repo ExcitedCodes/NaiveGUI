@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 
 using fastJSON;
+using MaterialDesignThemes.Wpf;
 using WPFLocalizeExtension.Engine;
 
 using NaiveGUI.Data;
@@ -33,7 +34,7 @@ namespace NaiveGUI.Model
 
         // Tick system, TPS = 5, start from 1
         public ulong Tick = 0;
-        public Timer mainTimer = null;
+        public Thread mainTicker = null;
 
         public string ConfigPath = null;
 
@@ -58,7 +59,6 @@ namespace NaiveGUI.Model
 
                 SetLanguage(json.ContainsKey("language") ? json["language"] : null, false);
 
-                Logging = json.ContainsKey("logging") && json["logging"];
                 AllowAddListener = !json.ContainsKey("allow_add_listener") || json["allow_add_listener"];
                 AllowWindowResize = !json.ContainsKey("allow_window_resize") || json["allow_window_resize"];
                 ScanLeftover = !json.ContainsKey("check_leftover") || json["check_leftover"];
@@ -136,7 +136,7 @@ namespace NaiveGUI.Model
                         }
                         if (l.ContainsKey("enable") && l["enable"])
                         {
-                            listener.ToggleEnabled();
+                            listener.Enabled = true;
                         }
                         Listeners.Add(listener);
                     }
@@ -158,7 +158,7 @@ namespace NaiveGUI.Model
             // TODO: This will conflict with listeners loading logic
             if (ScanLeftover)
             {
-                // SearchLeftoverProcesses();
+                SearchLeftoverProcesses();
             }
 
             if (Remotes.Count == 0)
@@ -172,40 +172,60 @@ namespace NaiveGUI.Model
             Remotes.CollectionChanged += (s, e) => ReloadTrayMenu();
             Listeners.CollectionChanged += (s, e) => ReloadTrayMenu();
 
-            Listeners.Add(new FakeListener());
+            Listeners.Add(new FakeListener(this));
             Subscriptions.Add(new FakeSubscription());
 
             SwitchTab(0);
 
             ReloadTrayMenu();
 
-            mainTimer = new Timer(s =>
+            mainTicker = new Thread(new ThreadStart(() =>
             {
-                Tick++;
-                foreach (var l in Listeners)
+                while (true)
                 {
-                    if (l.IsReal)
+                    Tick++;
+                    try
                     {
-                        l.Real.Tick(Tick);
+                        foreach (var l in Listeners)
+                        {
+                            if (l.IsReal)
+                            {
+                                l.Real.Tick();
+                            }
+                        }
                     }
+                    catch (ThreadAbortException)
+                    {
+                        break;
+                    }
+                    catch { }
+                    Thread.Sleep(200);
                 }
-            }, null, 0, 200);
+            }))
+            {
+                IsBackground = true
+            };
+            mainTicker.Start();
+
             subscriptionTimer = new Timer(s => UpdateSubscription(), null, 0, 60000);
 
             Microsoft.Win32.SystemEvents.SessionEnding += (s, e) =>
             {
                 ConfigPath = null;
-                mainTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                mainTicker.Abort();
 
                 foreach (var l in Listeners)
                 {
                     if (l.IsReal)
                     {
+                        l.Real.Enabled = false;
                         l.Real.Stop();
                     }
                 }
             };
         }
+
+        public SnackbarMessageQueue snackbarMessageQueue { get; set; } = new SnackbarMessageQueue();
 
         public string SelectedLanguage = null;
 
@@ -219,7 +239,11 @@ namespace NaiveGUI.Model
                 Set(out _currentListener, value);
                 foreach (var l in Listeners)
                 {
-                    l.Real?.TEMP_updateSelected();
+                    if (!l.IsReal)
+                    {
+                        continue;
+                    }
+                    l.Real.Selected = l.Real == _currentListener;
                 }
             }
         }
@@ -236,9 +260,6 @@ namespace NaiveGUI.Model
                 RaisePropertyChanged();
             }
         }
-
-        public bool Logging { get => _logging; set => Set(out _logging, value); }
-        private bool _logging = true;
 
         public bool AllowAddListener { get => _allowAddListener; set => Set(out _allowAddListener, value); }
         private bool _allowAddListener = true;
@@ -476,7 +497,7 @@ namespace NaiveGUI.Model
                     {
                         Header = GetLocalized("Tray_Toggle")
                     };
-                    toggle.Click += (se, ev) => item.Real.ToggleEnabled();
+                    toggle.Click += (se, ev) => item.Real.Enabled = !item.Real.Enabled;
                     m.Items.Add(toggle);
 
                     m.SetBinding(MenuItem.IsCheckedProperty, new Binding("Enabled")
@@ -498,7 +519,6 @@ namespace NaiveGUI.Model
             File.WriteAllText(ConfigPath, JSON.ToNiceJSON(new Dictionary<string, object>()
             {
                 { "version", CONFIG_VERSION },
-                { "logging", Logging },
                 { "width", View.Dispatcher.Invoke(() => (int)View.Width) },
                 { "height", View.Dispatcher.Invoke(() => (int)View.Height) },
                 { "allow_add_listener", AllowAddListener },

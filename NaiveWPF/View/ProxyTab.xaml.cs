@@ -89,7 +89,7 @@ namespace NaiveGUI.View
             var textblock = sender as TextBlock;
             if(textblock.DataContext is Listener l)
             {
-                l.ToggleEnabled();
+                l.Enabled = !l.Enabled;
             }
         }
 
@@ -99,7 +99,8 @@ namespace NaiveGUI.View
             {
                 if(l.Enabled)
                 {
-                    l.ToggleEnabled();
+                    l.Enabled = false;
+                    l.Stop();
                 }
                 Model.Listeners.Remove(l);
                 Model.Save();

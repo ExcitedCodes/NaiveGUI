@@ -23,7 +23,6 @@ namespace NaiveGUI
         public static MainWindow Instance;
 
         public UserControl[] Tabs = null;
-        public SnackbarMessageQueue snackbarMessageQueue { get; set; } = new SnackbarMessageQueue();
 
         public MainWindow(string config)
         {
@@ -51,6 +50,7 @@ namespace NaiveGUI
             {
                 if (l.IsReal && l.Real.Running)
                 {
+                    l.Real.Enabled = false;
                     l.Real.Stop();
                 }
             }

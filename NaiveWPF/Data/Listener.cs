@@ -29,70 +29,82 @@ namespace NaiveGUI.Data
             return builder.Uri;
         }
 
-        public static void LogOutput(object sender, DataReceivedEventArgs e)
-        {
-            if (e.Data != null)
-            {
-                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.Log(e.Data.Replace("\r", "").Replace("\n", "")));
-            }
-        }
-
         public bool IsReal => true;
         public Listener Real => this;
 
-        public bool Selected => MainWindow.Instance.Model.CurrentListener == this;
+        #region WPF Properties
 
-        public void TEMP_updateSelected()
-        {
-            RaisePropertyChanged(nameof(Selected));
-        }
+        public bool Selected { get => _selected; set => Set(out _selected, value); }
+        private bool _selected = false;
 
-        public string StatusText => Enabled ? (Running ? "Active" : "Error") : "Disabled";
-        public Brush StatusColor => (Brush)(Enabled ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
+        public string SchemeUpper => Listen.Scheme.ToUpper();
+
+        [SourceBinding(nameof(Enabled), nameof(Running), nameof(Started))]
+        public string StatusText => Enabled ? (Started ? (Running ? "Active" : "Error") : "Pending") : "Disabled";
+
+        [SourceBinding(nameof(Enabled), nameof(Running), nameof(Started))]
+        public Brush StatusColor => (Brush)(Enabled && Started ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
+
+        #endregion
+
+        #region Listener Logic
 
         public ProxyType Type { get; set; } = ProxyType.Unknown;
 
-        /// <summary>
-        /// 设置此属性请使用 <see cref="ToggleEnabled"/>
-        /// </summary>
-        public virtual bool Enabled
+        public bool Enabled
         {
             get => _enabled;
-            private set
+            set
             {
-                _enabled = value;
-                RaisePropertyChanged("Enabled");
-                RaisePropertyChanged("StatusText");
-                RaisePropertyChanged("StatusColor");
+                if (value)
+                {
+                    if (Remote == null)
+                    {
+                        MessageBox.Show(MainViewModel.GetLocalized("Message_NoRemote"), "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+                    Started = false;
+                    FailCounter = 0;
+                }
+                else
+                {
+                    FailCounter = 0;
+                    WaitTick = 0;
+                }
+                Set(out _enabled, value);
             }
         }
         private bool _enabled;
 
-        public virtual bool Running => BaseProcess != null && !BaseProcess.HasExited;
+        public bool Started { get => _started; set => Set(out _started, value); }
+        private bool _started = false;
+
+        public bool Running => BaseProcess != null && !BaseProcess.HasExited;
+
+        public int WaitTick = 0, FailCounter = 0;
 
         /// <summary>
         /// Listens at addr:port with protocol &lt;proto&gt;.
         /// Allowed values for proto: "socks", "http", "redir".
         /// </summary>
-        public virtual Uri Listen
+        public Uri Listen
         {
             get => _listen;
             set
             {
-                if (Running && Listen != value)
+                if (_listen == value)
                 {
-                    _listen = value;
-                    Start();
+                    return;
                 }
-                else
+                _listen = value;
+                Set(out _listen, value);
+                if (Running)
                 {
-                    _listen = value;
+                    Stop();
                 }
             }
         }
         private Uri _listen = null;
-
-        public virtual string SchemeUpper => Listen.Scheme.ToUpper();
 
         public RemoteConfig Remote
         {
@@ -103,20 +115,16 @@ namespace NaiveGUI.Data
                 {
                     return;
                 }
-                _remote = value;
+                Set(out _remote, value);
                 if (Running)
                 {
-                    Start();
+                    Stop();
                 }
-                RaisePropertyChanged("Remote");
             }
         }
         private RemoteConfig _remote = null;
 
         public Process BaseProcess = null;
-
-        public int FailCounter = 0;
-        public DateTime LastStart = DateTime.Now;
 
         public Listener(string listen, ProxyType type, bool enabled = false) : this(FilterListeningAddress(ref listen), type, enabled) { }
 
@@ -127,120 +135,118 @@ namespace NaiveGUI.Data
             Enabled = enabled;
         }
 
-        public void Tick(ulong Tick)
+        public void HandleOutput(object sender, DataReceivedEventArgs e)
         {
-            if (!Enabled || Tick % 5 != 0)
+            if (e.Data != null)
             {
+                MainWindow.Instance.Dispatcher.Invoke(() => MainWindow.Instance.Log(e.Data.Replace("\r", "").Replace("\n", "")));
+            }
+        }
+
+        public void Tick()
+        {
+            if (WaitTick > 0)
+            {
+                WaitTick--;
                 return;
             }
-            if (!Running)
+            if (Enabled)
             {
-                if (DateTime.Now - LastStart < TimeSpan.FromSeconds(10))
+                if (!Running && (Started || !Start()))
                 {
+                    Started = false;
                     if (++FailCounter > 3)
                     {
                         Enabled = false;
+                        FailCounter = 0;
                         MainWindow.Instance.BalloonTip(Listen.ToString(), MainViewModel.GetLocalized("Tray_CrashedTooMany"));
                         MainWindow.Instance.Model.Save();
                         return;
                     }
+                    WaitTick = 5 * 5;
                     MainWindow.Instance.BalloonTip(Listen.ToString(), MainViewModel.GetLocalized("Tray_Crashed"));
                 }
-                Start();
             }
-            else if (FailCounter != 0 && DateTime.Now - LastStart > TimeSpan.FromSeconds(30))
-            {
-                FailCounter = 0;
-            }
-        }
-
-        public bool ToggleEnabled()
-        {
-            if (Remote == null)
-            {
-                MessageBox.Show(MainViewModel.GetLocalized("Message_NoRemote"), "Oops", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return Enabled = false;
-            }
-            Enabled = !Enabled;
-            MainWindow.Instance.Model.Save();
-            if (Enabled)
-            {
-                FailCounter = 0;
-                Start();
-            }
-            else
+            else if (Running)
             {
                 Stop();
             }
-            return Enabled;
         }
 
-        /// <summary>
-        /// Will restart if already running
-        /// </summary>
-        public void Start()
+        public bool Start()
         {
-            Stop();
+            if (Running)
+            {
+                return false;
+            }
+
             var sb = new StringBuilder();
-            sb.Append("--listen=").Append(Listen.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped))
+            sb.Append("--log=\"\"")
+                .Append(" --listen=").Append(Listen.GetComponents(UriComponents.SchemeAndServer, UriFormat.SafeUnescaped))
                 .Append(" --proxy=").Append(Remote.Remote.Uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.UserInfo, UriFormat.SafeUnescaped));
             if (Remote.ExtraHeaders != null && Remote.ExtraHeaders.Length != 0)
             {
                 sb.Append(" --extra-headers=").Append(string.Join("\r\n", Remote.ExtraHeaders));
             }
-            // TODO: --host-resolver-rules=
-            bool logging = MainWindow.Instance.Model.Logging;
-            if (logging)
-            {
-                sb.Append(" --log=\"\"");
-            }
-            // TODO: --log-net-log, --ssl-key-log-file
-            var start = new ProcessStartInfo(NaivePath, sb.ToString())
-            {
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                UseShellExecute = !logging,
-                RedirectStandardError = logging,
-                RedirectStandardOutput = logging
-            };
-            LastStart = DateTime.Now;
+
             try
             {
-                BaseProcess = Process.Start(start);
-                BaseProcess.Exited += (s, e) =>
+                BaseProcess = Process.Start(new ProcessStartInfo(NaivePath, sb.ToString())
                 {
-                    RaisePropertyChanged("StatusText");
-                    RaisePropertyChanged("StatusColor");
-                };
-                if (logging)
-                {
-                    BaseProcess.OutputDataReceived += LogOutput;
-                    BaseProcess.BeginOutputReadLine();
-                    BaseProcess.ErrorDataReceived += LogOutput;
-                    BaseProcess.BeginErrorReadLine();
-                }
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    RedirectStandardOutput = true
+                });
+
+                BaseProcess.Exited += (s, e) => RaisePropertyChanged(nameof(Running));
+                BaseProcess.EnableRaisingEvents = true;
+
+                BaseProcess.OutputDataReceived += HandleOutput;
+                BaseProcess.BeginOutputReadLine();
+                BaseProcess.ErrorDataReceived += HandleOutput;
+                BaseProcess.BeginErrorReadLine();
+
+                Started = true;
+                WaitTick = 5 * 2;
             }
-            catch { }
-            RaisePropertyChanged("StatusText");
-            RaisePropertyChanged("StatusColor");
+            catch (Exception e)
+            {
+                // TODO: Log this error
+                return false;
+            }
+
+            RaisePropertyChanged(nameof(Running));
+            return true;
         }
 
         public void Stop()
         {
-            if (BaseProcess == null)
-            {
-                return;
-            }
             try
             {
+                if (!Running)
+                {
+                    return;
+                }
                 if (!BaseProcess.HasExited && !BaseProcess.CloseMainWindow())
                 {
                     BaseProcess.Kill();
                 }
-                BaseProcess.Dispose();
             }
             catch { }
-            BaseProcess = null;
+            finally
+            {
+                Started = false;
+                FailCounter = 0;
+                if (BaseProcess != null)
+                {
+                    BaseProcess.Dispose();
+                    BaseProcess = null;
+                }
+            }
         }
+
+        #endregion
     }
 }

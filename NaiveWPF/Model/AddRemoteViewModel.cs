@@ -31,7 +31,7 @@ namespace NaiveGUI.Model
         public RemoteConfig Config = null;
         public RemoteConfigGroup Group = null;
 
-        public string RemoteName { get => RemoteName; set => Set(out _remoteName, value); }
+        public string RemoteName { get => _remoteName; set => Set(out _remoteName, value); }
         public string _remoteName = "";
 
         public string RemoteURI { get => _remoteURI; set => Set(out _remoteURI, value); }
