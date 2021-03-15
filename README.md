@@ -15,7 +15,7 @@ NaiveGUI 是一个 [NaïveProxy](https://github.com/klzgrad/naiveproxy) 的  Win
 3. 移动 _naive.exe_ 到 _NaiveGUI.exe_ 的相同目录下
 4. 启动 _NaiveGUI.exe_, 点击加号按钮来创建代理监听器
 5. 双击(或者右击并选择 "添加") 在 __服务器__ 一节中的 __Default__ 组, 创建一个新的服务器
-6. 选择一个代理监听器, 当代理监听器被选中(注意更深的阴影), 左键点击任意服务器并将它关联到监听器
+6. 选择一个代理监听器, 当代理监听器被选中(注意更暗的背景), 左键点击任意服务器来将它关联到监听器
 7. 点击代理监听器卡片右下角的 `Disabled` 字样, 如果卡片变蓝, 它代表你的代理监听器开始工作了!
 
 ## 导入单个服务器
@@ -71,7 +71,7 @@ It also provides useful features like subscription, auto start, log highlighting
 3. Move the _naive.exe_ to the same folder of _NaiveGUI.exe_
 4. Start _NaiveGUI.exe_, click the plus button to create listeners
 5. Double-click(or right click and select "Add") the __Default__ group in the __Remote__ section, create a new remote
-6. Select the listener, when the listener is selected(Notice the deep shadow), left-click any remote to associate it with your listener
+6. Select the listener, when the listener is selected(The background will be darker), left-click any remote to associate it with your listener
 7. Click the `Disabled` located at the right buttom of listener card, if the card become blue, it means your listener is working!
 
 ## Import Single Remote

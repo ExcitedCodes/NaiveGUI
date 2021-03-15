@@ -34,10 +34,6 @@
                 <GradientStop Color="#29bce7" Offset="0"/>
                 <GradientStop Color="#019fd9" Offset="1"/>
             </LinearGradientBrush>
-            <LinearGradientBrush x:Key="ListenerColor_Error" StartPoint="0,0" EndPoint="0.5,1">
-                <GradientStop Color="#f96c6c" Offset="0"/>
-                <GradientStop Color="#da4d4d" Offset="1"/>
-            </LinearGradientBrush>
             <LinearGradientBrush x:Key="ListenerColor_Disabled" StartPoint="0,0" EndPoint="0.5,1">
                 <GradientStop Color="#707070" Offset="0"/>
                 <GradientStop Color="#353535" Offset="1"/>

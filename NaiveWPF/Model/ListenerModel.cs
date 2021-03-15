@@ -44,10 +44,35 @@ namespace NaiveGUI.Model
         public string SchemeUpper => Listen.Scheme.ToUpper();
 
         [SourceBinding(nameof(Enabled), nameof(Running), nameof(Started))]
-        public string StatusText => Enabled ? (Started ? (Running ? "Active" : "Error") : "Pending") : "Disabled";
+        public string StatusText => Enabled ? (Running ? "Active" : "Pending") : "Disabled";
 
-        [SourceBinding(nameof(Enabled), nameof(Running), nameof(Started))]
-        public Brush StatusColor => (Brush)(Enabled && Started ? (Running ? App.Instance.Resources["ListenerColor_Active"] : App.Instance.Resources["ListenerColor_Error"]) : App.Instance.Resources["ListenerColor_Disabled"]);
+        [SourceBinding(nameof(Enabled), nameof(Running), nameof(Started), nameof(Selected))]
+        public LinearGradientBrush StatusColor
+        {
+            get
+            {
+                var brush = (LinearGradientBrush)App.Instance.Resources["ListenerColor_Disabled"];
+                if (Enabled && Running)
+                {
+                    brush = (LinearGradientBrush)App.Instance.Resources["ListenerColor_Active"];
+                }
+                if (Selected)
+                {
+                    const double factor = 0.9;
+
+                    brush = brush.CloneCurrentValue();
+                    foreach (var stop in brush.GradientStops)
+                    {
+                        var color = stop.Color;
+                        color.R = (byte)(color.R * factor);
+                        color.G = (byte)(color.G * factor);
+                        color.B = (byte)(color.B * factor);
+                        stop.Color = color;
+                    }
+                }
+                return brush;
+            }
+        }
 
         #endregion
 
